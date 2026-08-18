@@ -593,8 +593,9 @@ addLayer("h", {
     },
     effectDescription() { return "which are boosting ALL previous gains by "+format(tmp.h.effect)+"x" },
     prestigeButtonText() {
-        let gain = tmp.h.resetGain
-        let at = tmp.h.nextAt
+        // Use tmp if it's already a Decimal, otherwise compute directly (tmp is {} during first updateTemp)
+        let gain = (typeof tmp !== 'undefined' && tmp.h && tmp.h.resetGain instanceof Decimal) ? tmp.h.resetGain : getResetGain(this.layer)
+        let at = (typeof tmp !== 'undefined' && tmp.h && tmp.h.nextAt instanceof Decimal) ? tmp.h.nextAt : getNextAt(this.layer)
         if (gain.gte(1)) return "Reset for <b>"+formatWhole(gain)+"</b> hyper points<br>Next at "+formatWhole(at)+" time shards"
         return "Need "+formatWhole(at)+" time shards ("+formatWhole(player.t.points)+"/"+formatWhole(at)+")"
     },
