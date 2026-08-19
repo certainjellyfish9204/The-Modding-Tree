@@ -962,6 +962,12 @@ addLayer("a", {
         51: { name: "No Prestige Speedrun", done(){ return player.points.gte(1e6) && player.p.best.lte(0)}, tooltip: "Reach 1e6 points with 0 prestige. Impossible?", unlocked(){ return player.p.unlocked } },
         52: { name: "Collector", done(){ return hasUpgrade('p',42) && hasUpgrade('b',33) && hasUpgrade('g',33) && hasUpgrade('m',32) }, tooltip: "Get all row 1 final upgrades.", unlocked(){ return player.e.unlocked } },
         53: { name: "Completionist", done(){ return Object.keys(player.a.achievements).length>=20}, tooltip: "Get 20 achievements.", unlocked(){ return player.a.achievements.length>=10} },
+        // Singularity achievements (v0.7)
+        61: { name: "Singularity!", done(){ return player.s2 && player.s2.best.gte(1)}, tooltip: "Get 1 singularity.", unlocked(){ return player.s2 && player.s2.unlocked} },
+        62: { name: "Grid Collapse", done(){ return player.s2 && player.s2.grid.filter(v=>v===2).length >= 5}, tooltip: "Get 5 Singulons on the Collapse Grid.", unlocked(){ return player.s2 && hasUpgrade('s2',21)} },
+        63: { name: "Rift Master", done(){ return hasChallenge('s2',11) && hasChallenge('s2',12)}, tooltip: "Complete both Singularity Rift Alpha and Omega.", unlocked(){ return player.s2 && hasUpgrade('s2',23)} },
+        64: { name: "Multiverse Collapse", done(){ return player.s2 && player.s2.best.gte(10)}, tooltip: "Get 10 singularities.", unlocked(){ return player.s2 && player.s2.best.gte(5)} },
+        65: { name: "Absolute Singularity", done(){ return player.s2 && player.s2.best.gte(20)}, tooltip: "Reach 20 singularities. ULTIMATE VICTORY!", unlocked(){ return player.s2 && player.s2.best.gte(15)} },
     },
     tabFormat: ["main-display", "achievements"],
     achievementPopups: true,

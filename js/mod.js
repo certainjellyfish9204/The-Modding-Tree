@@ -3,7 +3,7 @@ let modInfo = {
 	id: "classicPlusFull", // <- keep this unique! Change if you fork
 	author: "You",
 	pointsName: "points",
-	modFiles: ["layers.js", "layers/universe.js", "layers/reality.js", "tree.js"],
+	modFiles: ["layers.js", "layers/universe.js", "layers/reality.js", "layers/singularity.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -13,11 +13,23 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.6",
-	name: "Fractured Reality",
+	num: "0.7",
+	name: "Singularity",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.7 - Singularity (Developer Preview)</h3><br>
+		- <b>NEW ROW 6: Singularity (S)</b> — the ultimate endgame layer, merging Universe (U) and Reality (R) branches<br>
+		- Singularities collapse all multiverse timelines into a single point of infinite power<br>
+		- <b>Collapse Grid</b> (3x3) — compress tiles (⬛→🔮→✦) for exponential bonuses. Grid Mastery auto-compresses.<br>
+		- <b>Singularity Field</b> — passive multiplier that grows over time (unlocks at S upgrade 14)<br>
+		- <b>10 upgrades</b>: Timeline Collapse, Dimensional Crunch, Multiverse Merge, Singularity Field, Collapse Grid, Singulon Amplifier, Rift Breaker, Eternal Singularity, Grid Mastery, Absolute Singularity<br>
+		- <b>2 buyables</b>: Singulon Core (amplifies S effect), Timeline Compressor (boosts all points)<br>
+		- <b>3 Rift Challenges</b>: Singularity Rift Alpha (all effects ^0.1), Rift Omega (all effects disabled), Collapsed Timeline (auto-resets)<br>
+		- <b>5 milestones</b>: from 1 to 20 Singularities, culminating in ULTIMATE VICTORY<br>
+		- <b>2 clickables</b>: Compress Tile (spend S to compress grid), Grid Overload (mass compress)<br>
+		- New endgame: 20 Singularities, 25 U + 25 R, or 1e500 points<br>
+		- <i>Developer Preview — balance may change!</i><br><br>
 	<h3>v0.6 - Fractured Reality</h3><br>
 		- <b>NEW ROW 5 BRANCH: Reality (R)</b> — a full second path branching directly from Eternity alongside Universe<br>
 		- Reality Shards, Stability, two Dimension buyables, nine upgrades, five milestones, two Reality Fracture challenges, and automation<br>
@@ -61,7 +73,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		- Added things.<br>
 		- Added stuff.`
 
-let winText = `Congratulations! You have mastered the Classic+ Tree v0.6! <br><br> You reached 25 Universe Points, 25 Reality Shards, or 1e500 points. Explore the five universes through U, stabilize the main timeline through R, and switch notations in Options → Notation.`
+let winText = `Congratulations! You have mastered the Classic+ Tree v0.7 — THE SINGULARITY! <br><br> You reached 20 Singularities, 25 Universe Points, 25 Reality Shards, or 1e500 points. You collapsed all timelines into a single point of infinite power. The multiverse is yours.`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
@@ -105,6 +117,13 @@ function getPointGen() {
 	if (tmp.r && tmp.r.effect && !inChallenge('r', 11)) gain = gain.times(tmp.r.effect)
 	if (player.r && hasUpgrade('r', 11)) gain = gain.times(upgradeEffect('r', 11))
 	if (player.r && hasMilestone('r', 0)) gain = gain.times(2)
+	// Row 6 - Singularity
+	if (tmp.s2 && tmp.s2.effect && player.s2 && player.s2.unlocked) gain = gain.times(tmp.s2.effect)
+	if (layers.s2 && typeof layers.s2.getGridEffect === 'function' && player.s2 && player.s2.unlocked) gain = gain.times(layers.s2.getGridEffect())
+	if (player.s2 && hasUpgrade('s2', 13)) gain = gain.times(1e50)
+	if (player.s2 && hasUpgrade('s2', 14) && player.s2.field) gain = gain.times(player.s2.field.add(1).pow(0.5))
+	if (player.s2 && hasUpgrade('s2', 33)) gain = gain.pow(1.5)
+	if (player.s2 && buyableEffect('s2', 12)) gain = gain.times(buyableEffect('s2', 12))
 	// Buyable point boosts
 	if (tmp.g.buyables && tmp.g.buyables[12]) gain = gain.times(buyableEffect('g', 12))
 	if (tmp.m.buyables && tmp.m.buyables[12]) gain = gain.times(buyableEffect('m', 12))
@@ -164,12 +183,13 @@ var displayThings = [
 	function() { if (player.e.unlocked) return "E: "+format(tmp.e.effect)+"x | "+format(player.e.points)+" Eternities" },
 	function() { if (player.u && player.u.unlocked) return "U: "+format(tmp.u.effect)+"x ("+player.u.activeUniverse+") | "+formatWhole(player.u.points)+" U" },
 	function() { if (player.r && player.r.unlocked) return "R: "+format(tmp.r.effect)+"x | "+formatWhole(player.r.points)+" shards | "+formatWhole(player.r.stability)+" stability" },
+	function() { if (player.s2 && player.s2.unlocked) return "S: "+format(tmp.s2.effect)+"x | "+formatWhole(player.s2.points)+" singularities | Field: "+format(player.s2.field) },
 	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11) || (player.u && inChallenge('u',11)) || (player.r && (inChallenge('r',11) || inChallenge('r',12)))) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.u.points.gte(new Decimal(25)) || player.r.points.gte(new Decimal(25)) || player.points.gte(new Decimal("1e500"))
+	return (player.s2 && player.s2.points.gte(new Decimal(20))) || player.u.points.gte(new Decimal(25)) || player.r.points.gte(new Decimal(25)) || player.points.gte(new Decimal("1e500"))
 }
 
 
@@ -207,5 +227,11 @@ function fixOldSave(oldVersion){
 		if (!player.r) player.r = getStartLayerData("r");
 		if (player.r && player.r.stability === undefined) player.r.stability = new Decimal(0);
 		if (player.r && player.r.auto === undefined) player.r.auto = false;
+	}
+	if (oldVersion < "0.7") {
+		if (!player.s2) player.s2 = getStartLayerData("s2");
+		if (player.s2 && player.s2.field === undefined) player.s2.field = new Decimal(0);
+		if (player.s2 && player.s2.collapses === undefined) player.s2.collapses = 0;
+		if (player.s2 && !Array.isArray(player.s2.grid)) player.s2.grid = Array(9).fill(0);
 	}
 }
