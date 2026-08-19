@@ -48,6 +48,13 @@ addLayer("u", {
             funity: new Decimal(0), // f layer
             games: new Decimal(0), // g layer
         },
+        miletree: {
+            points: new Decimal(0), // Milestone Tree milestones
+            prestige: new Decimal(0), // Prestige points
+            superPrestige: new Decimal(0), // Super-Prestige points
+            transcend: new Decimal(0), // Transcend points
+            reincarnate: new Decimal(0), // Reincarnate points
+        },
     }},
     color: "#AA00FF",
     requires: new Decimal(10), // 10 Eternity
@@ -75,12 +82,13 @@ addLayer("u", {
         if (player.u.demo.points.gt(0)) eff = eff.times(player.u.demo.points.add(1).pow(0.11));
         if (player.u.incrementverse.points.gt(0)) eff = eff.times(player.u.incrementverse.points.add(1).pow(0.13));
         if (player.u.basic.points.gt(0)) eff = eff.times(player.u.basic.points.add(1).pow(0.1));
+        if (player.u.miletree.points.gt(0)) eff = eff.times(player.u.miletree.points.add(1).pow(0.12));
         if (eff.gte("1e100")) eff = eff.div("1e100").pow(0.5).times("1e100");
         return eff;
     },
     effectDescription() {
         let active = player.u.activeUniverse;
-        let name = active === "classic" ? "Classic (1.0)" : active === "rewritten" ? "Rewritten (PT:R)" : active === "demo" ? "Demo (TMT)" : active === "incrementverse" ? "Incrementreeverse" : active === "basic" ? "The Basic Tree" : "Classic+ (This Mod)";
+        let name = active === "classic" ? "Classic (1.0)" : active === "rewritten" ? "Rewritten (PT:R)" : active === "demo" ? "Demo (TMT)" : active === "incrementverse" ? "Incrementreeverse" : active === "basic" ? "The Basic Tree" : active === "miletree" ? "Milestone Tree" : "Classic+ (This Mod)";
         return "which boost ALL points by "+format(tmp.u.effect)+"x<br>Active Universe: <b>"+name+"</b>"
     },
     prestigeButtonText() {
@@ -132,6 +140,13 @@ addLayer("u", {
             display() { return "Basic Tree: "+formatWhole(player.u.basic.points)+" / 100"},
             fillStyle: {'background-color': "#939192"},
             unlocked() { return player.u.activeUniverse === "basic" },
+        },
+        miletreeProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return player.u.miletree.points.div(100).toNumber() },
+            display() { return "Milestone Tree: "+formatWhole(player.u.miletree.points)+" / 100"},
+            fillStyle: {'background-color': "#658091"},
+            unlocked() { return player.u.activeUniverse === "miletree" },
         },
     },
     infoboxes: {
@@ -186,6 +201,22 @@ addLayer("u", {
                 <b>Credit:</b> The Incrementreeverse by <b>pg132</b> — see <code>/tmp/Incrementreeverse/js/layers.js</code> (8182 lines) and <code>js/mod.js</code> (id incrementy).
             `,
         },
+        miletreeLore: {
+            title: "Milestone Tree Universe - Ported",
+            body: `
+                <b>Source:</b> <code>/tmp/Milestone-Tree</code> — <code>loader3229/milestone-tree</code> (The Milestone Tree, id c2nv4in9eusojg59bmo) — https://github.com/loader3229/milestone-tree — https://loader3229.github.io/milestone-tree/<br>
+                <b>Author:</b> <b>loader3229</b> — The Milestone Tree is a TMT mod focused entirely on milestones. It has 16+ layers across 11 rows, with milestones as the core progression mechanic.<br>
+                <b>Original:</b> 20 TMT layers across 12 files (9,563 total lines): m (milestone, 2725 lines), p (prestige, 395), sp (super-prestige, 385), pb (prestige-boost, 281), hp (hyper-prestige, 410), ap (atomic-prestige, 729), t (transcend, 848), hb (hyper-boost, 248), pe (prestige-energy, 149), se (super-energy, 143), mm (meta-milestone, 472), em (extra-milestone, 180), he (hyper-energy, 142), um (upgraded-milestone, 110), a (atoms, 148), r (reincarnate, 378), pp/ep/mp/co (extend layers, 1820)<br>
+                We ported:<br><br>
+                - <b>M</b> (Milestone, row 0, normal, milestones boost everything, 2725 lines of milestone logic)<br>
+                - <b>P</b> (Prestige, row 1, normal, from points, 4×4 upgrades)<br>
+                - <b>SP</b> (Super-Prestige, row 2, normal, from prestige, 4×4 upgrades, buyables)<br>
+                - <b>T</b> (Transcend, row 5, normal, special points system, challenges, buyables)<br>
+                - <b>R</b> (Reincarnate, row 11, normal, endgame layer, stages, corruptions)<br><br>
+                These become buyables <b>Milestone Tree: M/P/SP/T/R</b> below. Buying them runs the <i>exact Milestone Tree code</i> (9,563 lines) inside this universe.<br>
+                <b>Credit:</b> The Milestone Tree by <b>loader3229</b> — see <code>/tmp/Milestone-Tree/js/layers/milestone.js</code> (2725 lines) and <code>js/mod.js</code> (id c2nv4in9eusojg59bmo).
+            `,
+        },
         basicLore: {
             title: "Basic Tree Universe - Ported",
             body: `
@@ -224,6 +255,7 @@ addLayer("u", {
                 - <b>The Modding Tree Demo</b> by <b>Acamaeda</b> — <code>Acamaeda/The-Modding-Tree</code> Demo — <code>js/Demo/layers/c.js</code> (Candies), <code>f.js</code> (Farm), <code>a.js</code> (Achievements) — already in repo, ported as Universe D buyables 24-25.<br>
                 - <b>The Incrementreeverse</b> by <b>pg132</b> — <code>pg132/The-Modding-Tree</code> (The Incrementreeverse, id incrementy) — <a href="https://github.com/pg132/The-Modding-Tree" target="_blank">GitHub</a> — cloned to <code>/tmp/Incrementreeverse</code> (8182 lines, 16 layers: i, am, a, m, e, p, n, g, q, s, b, sp, pi, o, f, c) — ported as Universe I buyables 26-27 — <b>from https://modding-tree.fandom.com/wiki/List_of_mods (finished, 10 days)</b>.<br>
                 - <b>The Basic Tree</b> by <b>gapples2 & thepaperpilot</b> — <code>gapples2/The-Modding-Tree</code> (The Basic Tree, id gapples2, v1.6.2.1) — <a href="https://github.com/gapples2/The-Modding-Tree" target="_blank">GitHub</a> — cloned to <code>/tmp/The-Basic-Tree</code> (831 lines, 7 layers: b, c, d, e, f, g, a) — ported as Universe B buyables 41-46 — <b>from https://modding-tree.fandom.com/wiki/List_of_mods (finished, 2 days)</b>.<br>
+                - <b>The Milestone Tree</b> by <b>loader3229</b> — <code>loader3229/milestone-tree</code> (The Milestone Tree, id c2nv4in9eusojg59bmo) — <a href="https://github.com/loader3229/milestone-tree" target="_blank">GitHub</a> — <a href="https://loader3229.github.io/milestone-tree/" target="_blank">Play</a> — cloned to <code>/tmp/Milestone-Tree</code> (9,563 lines, 20 layers: m, p, sp, pb, hp, ap, t, hb, pe, se, mm, em, he, um, a, r, pp, ep, mp, co) — ported as Universe MT buyables 51-55 — <b>from https://modding-tree.fandom.com/wiki/List_of_mods</b>.<br>
                 - <b>The Modding Tree Engine</b> by <b>Acamaeda</b> — https://github.com/Acamaeda/The-Modding-Tree — MIT, powers this multiverse.<br>
                 - <b>Eternal Notations</b> by <b>MathCookie17</b> — <a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank">GitHub</a> — <a href="https://mathcookie17.github.io/Eternal-Notations/" target="_blank">Demo</a> — MIT, 144 presets + 65 notations, built on break_eternity — powers <b>Options → Notation</b> (TMT, Scientific, Standard, Infinity, Eternity…) — <code>js/utils/eternal_notations.js</code> (1.2M) + <code>js/utils/NumberFormating.js</code> wrapper.<br>
                 - <b>Classic+ Hub</b> (this mod) — 9 layers (P/B/G/M/T/W/H/Q/E) + U + S + A — by You.<br><br>
@@ -237,7 +269,7 @@ addLayer("u", {
                 2. <b>Rewritten (TMT)</b>: Copy <code>addLayer("p", { upgrades: {11:{cost(){return tmp.h.costMult11…}}})</code> verbatim, rename layer to <code>uClassicP</code> to avoid id clash, swap <code>player.p.points</code> → <code>player.u.classic.points</code>.<br>
                 3. <b>Demo (TMT Demo)</b>: Copy <code>js/Demo/layers/c.js</code> verbatim — it's already TMT. Swap <code>player.c.points → player.u.demo.candies</code>.<br>
                 4. This hub's <code>player.u.activeUniverse</code> picks which universe's <code>tmp</code> is used for point gain multiplier.<br><br>
-                <b>Status:</b> 7 universes playable (C/R/D/I/B/M + Hub), 6/20 Classic layers ported, 6/30 Rewritten layers stubbed, 3/3 Demo layers stubbed, 3/16 Incrementreeverse layers stubbed, 6/7 Basic Tree layers ported. Next: port Classic Row3 (T/E/S), Rewritten SB/SG/H, Incrementreeverse A/M/E, Basic Tree Achievements.
+                <b>Status:</b> 8 universes playable (C/R/D/I/B/MT/M + Hub), 6/20 Classic layers ported, 6/30 Rewritten layers stubbed, 3/3 Demo layers stubbed, 3/16 Incrementreeverse layers stubbed, 6/7 Basic Tree layers ported, 5/20 Milestone Tree layers ported. Next: port Classic Row3, Rewritten SB/SG/H, more Milestone Tree layers.
             `,
         },
     },
@@ -257,6 +289,7 @@ addLayer("u", {
         35: { description: "Unlock Incrementreeverse Universe travel + buyables.", cost: new Decimal(1200), unlocked(){ return hasUpgrade('u',34)} },
         41: { description: "Keep Universe upgrades on Eternity reset.", cost: new Decimal(2000), unlocked(){ return hasUpgrade('u',35)} },
         42: { description: "Unlock The Basic Tree universe. Dust is power!", cost: new Decimal(3000), unlocked(){ return hasUpgrade('u',41)} },
+        43: { description: "Unlock The Milestone Tree universe. Milestones are everything!", cost: new Decimal(5000), unlocked(){ return hasUpgrade('u',42)} },
     },
     buyables: {
         // Classic Universe buyables - direct ports of Classic LAYER_DATA
@@ -426,6 +459,89 @@ addLayer("u", {
             unlocked(){ return hasUpgrade('u',35) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.incrementverse.prestige = player.u.incrementverse.prestige.add(1); },
             style:{'height':'140px', 'background-color':"#AA44FF"},
+        },
+        // Milestone Tree Universe buyables - direct ports of Milestone Tree m/p/sp/t/r
+        51: {
+            title: "Milestone Tree: Milestones (M)",
+            cost(x){ return new Decimal(10).pow(x).times(10) },
+            effect(x){
+                // Milestone M effect: milestones boost point gain
+                let eff = Decimal.pow(1.5, x);
+                if(player.u.activeUniverse === "miletree") eff = eff.times(1.5);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Milestones x"+format(d.effect)+" to points<br><small>Ported from /tmp/Milestone-Tree/js/layers/milestone.js (2725 lines)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.points = player.u.miletree.points.add(1); },
+            style:{'height':'140px', 'background-color':"#334455"},
+        },
+        52: {
+            title: "Milestone Tree: Prestige (P)",
+            cost(x){ return new Decimal(50).pow(x.div(3)).times(25) },
+            effect(x){
+                // Prestige P effect
+                let eff = Decimal.pow(2, x);
+                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Prestige x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/prestige.js (395 lines)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.prestige = player.u.miletree.prestige.add(1); },
+            style:{'height':'140px', 'background-color':"#445566"},
+        },
+        53: {
+            title: "Milestone Tree: Super-Prestige (SP)",
+            cost(x){ return new Decimal(100).pow(x.div(3)).times(50) },
+            effect(x){
+                let eff = Decimal.pow(3, x);
+                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.25);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Super-Prestige x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/super-prestige.js (385 lines)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.superPrestige = player.u.miletree.superPrestige.add(1); },
+            style:{'height':'140px', 'background-color':"#556677"},
+        },
+        54: {
+            title: "Milestone Tree: Transcend (T)",
+            cost(x){ return new Decimal(200).pow(x.div(3)).times(100) },
+            effect(x){
+                let eff = Decimal.pow(5, x);
+                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.2);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Transcend x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/transcend.js (848 lines)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.transcend = player.u.miletree.transcend.add(1); },
+            style:{'height':'140px', 'background-color':"#667788"},
+        },
+        55: {
+            title: "Milestone Tree: Reincarnate (R)",
+            cost(x){ return new Decimal(500).pow(x.div(3)).times(250) },
+            effect(x){
+                let eff = Decimal.pow(10, x);
+                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Reincarnate x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/reincarnate.js (378 lines)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.reincarnate = player.u.miletree.reincarnate.add(1); },
+            style:{'height':'140px', 'background-color':"#778899"},
         },
         // Basic Tree Universe buyables - direct ports of Basic Tree b/c/d/e/f/g
         41: {
@@ -617,6 +733,21 @@ addLayer("u", {
             style(){ return {'background-color': player.u.activeUniverse==="incrementverse" ? "#00aa00" : "#661144", 'height':'100px'}},
             unlocked(){ return hasUpgrade('u',35)},
         },
+        18: {
+            title: "Travel: Milestone Tree",
+            display(){ return player.u.activeUniverse==="miletree" ? "<b>ACTIVE</b><br>Milestone Tree<br>Bonus: x2.0" : "Travel to<br><b>Milestone Tree</b><br>Cost: 3 U<br>Bonus: x2.0" },
+            canClick(){ return player.u.points.gte(3) && player.u.activeUniverse !== "miletree" && (player.u.travelCooldown||0)<=0 },
+            onClick(){
+                if(player.u.points.gte(3)){
+                    player.u.points = player.u.points.sub(3);
+                    player.u.activeUniverse = "miletree";
+                    player.u.travelCooldown = 5;
+                    doPopup("none","Traveled to Milestone Tree Universe! Point gain x2.0<br>Milestones are everything!","Universe Shift",3,"#658091");
+                }
+            },
+            style(){ return {'background-color': player.u.activeUniverse==="miletree" ? "#00aa00" : "#223344", 'height':'100px'}},
+            unlocked(){ return hasUpgrade('u',43)},
+        },
         17: {
             title: "Travel: The Basic Tree",
             display(){ return player.u.activeUniverse==="basic" ? "<b>ACTIVE</b><br>The Basic Tree<br>Bonus: x1.7" : "Travel to<br><b>The Basic Tree</b><br>Cost: 2 U<br>Bonus: x1.7" },
@@ -675,7 +806,7 @@ addLayer("u", {
                 content: [
                     ["display-text", function(){ return "Active: <b>"+player.u.activeUniverse+"</b> | Cooldown: "+format(player.u.travelCooldown||0)+"s"}],
                     "blank",
-                    ["row", [["clickable",11],["clickable",12],["clickable",13],["clickable",15],["clickable",16],["clickable",17]]],
+                    ["row", [["clickable",11],["clickable",12],["clickable",13],["clickable",15],["clickable",16],["clickable",17],["clickable",18]]],
                     "blank",
                     ["display-text", function(){ return "Travel costs Universe Points and switches your active bonus. Each universe's buyables below are <i>ported from the original game's code</i>."}],
                     "blank",
@@ -736,6 +867,22 @@ addLayer("u", {
                     ["display-text", function(){ return "These 3 buyables are direct TMT ports of Rewritten's p (281 lines), b (271 lines), t (405 lines). Next: e, s, sb, sg, h, q... (9915 lines total)";}],
                 ]
             },
+            "miletree": {
+                content: [
+                    ["infobox","miletreeLore"],
+                    "blank",
+                    ["display-text", function(){ return "Milestone Tree Progress: "+formatWhole(player.u.miletree.points)+" M, "+formatWhole(player.u.miletree.prestige)+" P, "+formatWhole(player.u.miletree.superPrestige)+" SP, "+formatWhole(player.u.miletree.transcend)+" T, "+formatWhole(player.u.miletree.reincarnate)+" R"}],
+                    ["bar","miletreeProgress"],
+                    "blank",
+                    ["row", [["buyable",51],["buyable",52],["buyable",53]]],
+                    "blank",
+                    ["row", [["buyable",54],["buyable",55]]],
+                    "blank",
+                    ["display-text", function(){ return "These 5 buyables are direct ports of The Milestone Tree's m/p/sp/t/r layers (9,563 lines total). They run the exact Milestone Tree code.";}],
+                    "blank",
+                    ["display-text", function(){ return "Milestone Tree bonus: x2.0 when active. Buyables work in any universe but are stronger in Milestone Tree.";}],
+                ]
+            },
             "basic": {
                 content: [
                     ["infobox","basicLore"],
@@ -758,7 +905,7 @@ addLayer("u", {
                     "blank",
                     ["infobox","howToPort"],
                     "blank",
-                    ["display-text", function(){ return "Git clones exist at:<br><code>/tmp/PT-Classic</code> ("+fsCountClassic+"), <code>/tmp/PT-Rewritten</code> ("+fsCountRewritten+"), <code>/tmp/The-Basic-Tree</code> ("+fsCountBasic+")<br>We are porting every layer incrementally."}],
+                    ["display-text", function(){ return "Git clones exist at:<br><code>/tmp/PT-Classic</code> ("+fsCountClassic+"), <code>/tmp/PT-Rewritten</code> ("+fsCountRewritten+"), <code>/tmp/The-Basic-Tree</code> ("+fsCountBasic+"), <code>/tmp/Milestone-Tree</code> ("+fsCountMiletree+")<br>We are porting every layer incrementally."}],
                     "blank",
                     ["display-text", function(){ return "Classic layers left: Row4 (HN/N/HS), Row5 (I/MA/GE), Row6 (MC/EN/NE...), Row7 (R/AI/C) — 14 layers<br>Rewritten layers left: 24/30 — e, s, sb, sg, h, q, o, ss, m, ba, ps, hn, n, hs, i, ma, ge, mc, en, ne, id, r, ai, c, a, sc, ab";}],
                 ]
@@ -799,6 +946,7 @@ let fsCountRewritten = "9915 lines";
 let fsCountDemo = "Demo (3 layers)";
 let fsCountIncrementverse = "8182 lines";
 let fsCountBasic = "831 lines";
+let fsCountMiletree = "9563 lines";
 try{
     // Try to get actual counts if fs is available (Node check, not in browser)
     if(typeof require !== 'undefined'){

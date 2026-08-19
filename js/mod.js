@@ -257,5 +257,6 @@ function fixOldSave(oldVersion){
 		if (player.s2 && player.s2.field === undefined) player.s2.field = new Decimal(0);
 		if (player.s2 && player.s2.collapses === undefined) player.s2.collapses = 0;
 		if (player.u && !player.u.basic) player.u.basic = { points: new Decimal(0), cheapeners: new Decimal(0), darkness: new Decimal(0), exponents: new Decimal(0), funity: new Decimal(0), games: new Decimal(0) };
+		if (player.u && !player.u.miletree) player.u.miletree = { points: new Decimal(0), prestige: new Decimal(0), superPrestige: new Decimal(0), transcend: new Decimal(0), reincarnate: new Decimal(0) };
 	}
 }
