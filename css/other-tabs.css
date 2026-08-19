@@ -83,7 +83,7 @@ a {
 	font-size: 20px;
 	color: #41f5f5;
 	cursor: pointer;
-	font-family: "Lucida Console", "Courier New", "Noto Sans Symbols", "Noto Sans Symbols 2", monospace;
+	font-family: "Lucida Console", "Courier New", "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Number Forms", monospace;
 	-webkit-text-stroke-width: 1px;
 	-webkit-text-stroke-color: #02f2f2;
 	text-decoration: none;
