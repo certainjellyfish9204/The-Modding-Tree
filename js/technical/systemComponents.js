@@ -178,7 +178,92 @@ var systemComponents = {
                 </select></td>
                 <td><span style="font-size: 10px">Eternal Notations by<br><a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank" class="link">MathCookie17</a> (146 presets)</span></td>
             </tr>
-        </table>`
+        </table>
+        <br>
+        <h3>💾 Save Slots</h3>
+        <div style="margin: 10px 0;">
+            <table style="width: 100%;">
+                <tr v-for="slot in getSaveSlots()" :key="slot.id">
+                    <td style="padding: 4px; text-align: left;">
+                        <b>{{ slot.name }}</b>
+                        <br><small>{{ slot.points }} pts | {{ formatSaveTime(slot.timePlayed) }} | {{ formatSaveDate(slot.lastSaved) }}</small>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 30px; width: 60px; font-size: 11px; border-radius: 8px;" 
+                            :style="{'background-color': slot.id === currentSaveSlot ? '#4BDC13' : ''}"
+                            onclick="saveToSlot(slot.id); location.reload();">
+                            {{ slot.id === currentSaveSlot ? '✓ Active' : 'Save' }}
+                        </button>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 30px; width: 60px; font-size: 11px; border-radius: 8px;" 
+                            onclick="loadFromSlot(slot.id)">
+                            Load
+                        </button>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 30px; width: 60px; font-size: 11px; border-radius: 8px;" 
+                            onclick="exportSaveSlot(slot.id)">
+                            Export
+                        </button>
+                    </td>
+                    <td style="padding: 4px;" v-if="slot.id !== 0">
+                        <button class="opt" style="height: 30px; width: 30px; font-size: 11px; border-radius: 8px; background-color: #ff4444;" 
+                            onclick="deleteSaveSlot(slot.id)">
+                            ✕
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            <div style="margin-top: 8px;">
+                <button class="opt" style="height: 35px; width: 150px; font-size: 12px; border-radius: 8px; background-color: #4BDC13;" 
+                    onclick="createSaveSlot(prompt('Enter save name:') || 'Save ' + (getSaveSlots().length + 1)); location.reload();">
+                    + New Slot
+                </button>
+                <button class="opt" style="height: 35px; width: 150px; font-size: 12px; border-radius: 8px; margin-left: 10px;" 
+                    onclick="importSaveSlot(prompt('Import to which slot? (0-' + (getSaveSlots().length) + '):') || 0)">
+                    Import to Slot
+                </button>
+            </div>
+        </div>
+        <br>
+        <h3>🏦 Save Bank</h3>
+        <div style="margin: 10px 0;">
+            <button class="opt" style="height: 35px; width: 200px; font-size: 12px; border-radius: 8px; background-color: #FFD700;" 
+                onclick="depositToBank(prompt('Bank save name:') || ''); location.reload();">
+                💰 Deposit Current Game
+            </button>
+            <table style="width: 100%; margin-top: 8px;" v-if="getSaveBank().length > 0">
+                <tr v-for="entry in getSaveBank()" :key="entry.id">
+                    <td style="padding: 4px; text-align: left;">
+                        <b>{{ entry.name }}</b>
+                        <br><small>{{ entry.points }} pts | {{ entry.achievements }} achievements | {{ formatSaveDate(entry.deposited) }}</small>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 30px; width: 70px; font-size: 11px; border-radius: 8px; background-color: #4BDC13;" 
+                            onclick="withdrawFromBank(entry.id)">
+                            Withdraw
+                        </button>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 30px; width: 60px; font-size: 11px; border-radius: 8px;" 
+                            onclick="exportBankSlot(entry.id)">
+                            Export
+                        </button>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 30px; width: 30px; font-size: 11px; border-radius: 8px; background-color: #ff4444;" 
+                            onclick="deleteFromBank(entry.id)">
+                            ✕
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            <div v-else style="margin-top: 8px; color: #888;">
+                <i>No saves in bank. Deposit your game to create a backup!</i>
+            </div>
+        </div>
+        `
     },
 
     'back-button': {
