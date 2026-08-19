@@ -149,7 +149,47 @@ var systemComponents = {
     },
 
     'options-tab': {
+        data() { return {
+            saveSlots: [],
+            saveBank: [],
+            currentSlot: 0,
+        }},
+        mounted() {
+            this.refreshSaves();
+        },
+        methods: {
+            refreshSaves() {
+                try { this.saveSlots = getSaveSlots(); } catch(e) { this.saveSlots = []; }
+                try { this.saveBank = getSaveBank(); } catch(e) { this.saveBank = []; }
+                try { this.currentSlot = currentSaveSlot; } catch(e) { this.currentSlot = 0; }
+            },
+            doSaveSlot(id) { saveToSlot(id); this.refreshSaves(); },
+            doLoadSlot(id) { loadFromSlot(id); },
+            doExportSlot(id) { exportSaveSlot(id); },
+            doDeleteSlot(id) { deleteSaveSlot(id); this.refreshSaves(); },
+            doNewSlot() {
+                let name = prompt('Enter save name:') || ('Save ' + (this.saveSlots.length + 1));
+                createSaveSlot(name);
+                this.refreshSaves();
+            },
+            doImportSlot() {
+                let slot = prompt('Import to which slot? (0-' + (this.saveSlots.length) + '):');
+                if (slot !== null) importSaveSlot(parseInt(slot) || 0);
+                this.refreshSaves();
+            },
+            doDeposit() {
+                let name = prompt('Bank save name:') || '';
+                depositToBank(name);
+                this.refreshSaves();
+            },
+            doWithdraw(id) { withdrawFromBank(id); },
+            doExportBank(id) { exportBankSlot(id); },
+            doDeleteBank(id) { deleteFromBank(id); this.refreshSaves(); },
+            fmtTime(s) { return formatSaveTime(s); },
+            fmtDate(t) { return formatSaveDate(t); },
+        },
         template: `
+        <div>
         <table>
             <tr>
                 <td><button class="opt" onclick="save()">Save</button></td>
@@ -169,9 +209,9 @@ var systemComponents = {
             <tr>
                 <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
                 <td><button class="opt" onclick="toggleOpt('forceOneTab'); needsCanvasUpdate = true">Single-Tab Mode: {{ options.forceOneTab?"ALWAYS":"AUTO" }}</button></td>
-				<td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true">Shift-Click to Toggle Tooltips: {{ options.forceTooltips?"ON":"OFF" }}</button></td>
-				</tr> 
-			<tr>
+                <td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true">Shift-Click to Toggle Tooltips: {{ options.forceTooltips?"ON":"OFF" }}</button></td>
+            </tr>
+            <tr>
                 <td><button class="opt" onclick="toggleOpt('hideMilestonePopups')">Show Milestone Popups: {{ formatOption(!options.hideMilestonePopups) }}</button></td>
                 <td><select class="opt" style="font-size: 11px; min-width: 180px;" onchange="setNotationFromDropdown(this.value)">
                     <option v-for="n in getNotationOptions()" :key="n.id" :value="n.id" :selected="n.id === options.notation">{{ n.name }}</option>
@@ -180,88 +220,89 @@ var systemComponents = {
             </tr>
         </table>
         <br>
-        <h3>💾 Save Slots</h3>
-        <div style="margin: 10px 0;">
-            <table style="width: 100%;">
-                <tr v-for="slot in getSaveSlots()" :key="slot.id">
-                    <td style="padding: 4px; text-align: left;">
-                        <b>{{ slot.name }}</b>
-                        <br><small>{{ slot.points }} pts | {{ formatSaveTime(slot.timePlayed) }} | {{ formatSaveDate(slot.lastSaved) }}</small>
+        <h3 style="color: #FFD700;">💾 Save Slots</h3>
+        <div style="margin: 10px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: rgba(0,0,0,0.2);">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr v-for="slot in saveSlots" :key="slot.id" style="border-bottom: 1px solid #333;">
+                    <td style="padding: 6px; text-align: left;">
+                        <b :style="{'color': slot.id === currentSlot ? '#4BDC13' : '#fff'}">{{ slot.name }}</b>
+                        <br><small style="color: #888;">{{ slot.points }} pts | {{ fmtTime(slot.timePlayed) }} | {{ fmtDate(slot.lastSaved) }}</small>
                     </td>
                     <td style="padding: 4px;">
-                        <button class="opt" style="height: 30px; width: 60px; font-size: 11px; border-radius: 8px;" 
-                            :style="{'background-color': slot.id === currentSaveSlot ? '#4BDC13' : ''}"
-                            onclick="saveToSlot(slot.id); location.reload();">
-                            {{ slot.id === currentSaveSlot ? '✓ Active' : 'Save' }}
+                        <button class="opt" style="height: 28px; width: 55px; font-size: 10px; border-radius: 6px;" 
+                            :style="{'background-color': slot.id === currentSlot ? '#4BDC13' : '#555'}"
+                            @click="doSaveSlot(slot.id)">
+                            {{ slot.id === currentSlot ? '✓ Active' : 'Save' }}
                         </button>
                     </td>
                     <td style="padding: 4px;">
-                        <button class="opt" style="height: 30px; width: 60px; font-size: 11px; border-radius: 8px;" 
-                            onclick="loadFromSlot(slot.id)">
+                        <button class="opt" style="height: 28px; width: 50px; font-size: 10px; border-radius: 6px; background-color: #4488ff;" 
+                            @click="doLoadSlot(slot.id)">
                             Load
                         </button>
                     </td>
                     <td style="padding: 4px;">
-                        <button class="opt" style="height: 30px; width: 60px; font-size: 11px; border-radius: 8px;" 
-                            onclick="exportSaveSlot(slot.id)">
+                        <button class="opt" style="height: 28px; width: 55px; font-size: 10px; border-radius: 6px;" 
+                            @click="doExportSlot(slot.id)">
                             Export
                         </button>
                     </td>
                     <td style="padding: 4px;" v-if="slot.id !== 0">
-                        <button class="opt" style="height: 30px; width: 30px; font-size: 11px; border-radius: 8px; background-color: #ff4444;" 
-                            onclick="deleteSaveSlot(slot.id)">
+                        <button class="opt" style="height: 28px; width: 28px; font-size: 10px; border-radius: 6px; background-color: #cc3333;" 
+                            @click="doDeleteSlot(slot.id)">
                             ✕
                         </button>
                     </td>
                 </tr>
             </table>
-            <div style="margin-top: 8px;">
-                <button class="opt" style="height: 35px; width: 150px; font-size: 12px; border-radius: 8px; background-color: #4BDC13;" 
-                    onclick="createSaveSlot(prompt('Enter save name:') || 'Save ' + (getSaveSlots().length + 1)); location.reload();">
+            <div style="margin-top: 10px;">
+                <button class="opt" style="height: 32px; width: 120px; font-size: 11px; border-radius: 6px; background-color: #4BDC13;" 
+                    @click="doNewSlot()">
                     + New Slot
                 </button>
-                <button class="opt" style="height: 35px; width: 150px; font-size: 12px; border-radius: 8px; margin-left: 10px;" 
-                    onclick="importSaveSlot(prompt('Import to which slot? (0-' + (getSaveSlots().length) + '):') || 0)">
+                <button class="opt" style="height: 32px; width: 120px; font-size: 11px; border-radius: 6px; margin-left: 8px; background-color: #ff8800;" 
+                    @click="doImportSlot()">
                     Import to Slot
                 </button>
             </div>
         </div>
         <br>
-        <h3>🏦 Save Bank</h3>
-        <div style="margin: 10px 0;">
-            <button class="opt" style="height: 35px; width: 200px; font-size: 12px; border-radius: 8px; background-color: #FFD700;" 
-                onclick="depositToBank(prompt('Bank save name:') || ''); location.reload();">
+        <h3 style="color: #FFD700;">🏦 Save Bank</h3>
+        <div style="margin: 10px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: rgba(0,0,0,0.2);">
+            <button class="opt" style="height: 35px; width: 200px; font-size: 12px; border-radius: 6px; background-color: #FFD700; color: #000; font-weight: bold;" 
+                @click="doDeposit()">
                 💰 Deposit Current Game
             </button>
-            <table style="width: 100%; margin-top: 8px;" v-if="getSaveBank().length > 0">
-                <tr v-for="entry in getSaveBank()" :key="entry.id">
-                    <td style="padding: 4px; text-align: left;">
-                        <b>{{ entry.name }}</b>
-                        <br><small>{{ entry.points }} pts | {{ entry.achievements }} achievements | {{ formatSaveDate(entry.deposited) }}</small>
+            <table style="width: 100%; margin-top: 10px; border-collapse: collapse;" v-if="saveBank.length > 0">
+                <tr v-for="entry in saveBank" :key="entry.id" style="border-bottom: 1px solid #333;">
+                    <td style="padding: 6px; text-align: left;">
+                        <b style="color: #FFD700;">{{ entry.name }}</b>
+                        <br><small style="color: #888;">{{ entry.points }} pts | {{ entry.achievements }} achievements | {{ fmtDate(entry.deposited) }}</small>
                     </td>
                     <td style="padding: 4px;">
-                        <button class="opt" style="height: 30px; width: 70px; font-size: 11px; border-radius: 8px; background-color: #4BDC13;" 
-                            onclick="withdrawFromBank(entry.id)">
+                        <button class="opt" style="height: 28px; width: 65px; font-size: 10px; border-radius: 6px; background-color: #4BDC13;" 
+                            @click="doWithdraw(entry.id)">
                             Withdraw
                         </button>
                     </td>
                     <td style="padding: 4px;">
-                        <button class="opt" style="height: 30px; width: 60px; font-size: 11px; border-radius: 8px;" 
-                            onclick="exportBankSlot(entry.id)">
+                        <button class="opt" style="height: 28px; width: 55px; font-size: 10px; border-radius: 6px;" 
+                            @click="doExportBank(entry.id)">
                             Export
                         </button>
                     </td>
                     <td style="padding: 4px;">
-                        <button class="opt" style="height: 30px; width: 30px; font-size: 11px; border-radius: 8px; background-color: #ff4444;" 
-                            onclick="deleteFromBank(entry.id)">
+                        <button class="opt" style="height: 28px; width: 28px; font-size: 10px; border-radius: 6px; background-color: #cc3333;" 
+                            @click="doDeleteBank(entry.id)">
                             ✕
                         </button>
                     </td>
                 </tr>
             </table>
-            <div v-else style="margin-top: 8px; color: #888;">
-                <i>No saves in bank. Deposit your game to create a backup!</i>
+            <div v-else style="margin-top: 10px; color: #666; font-style: italic;">
+                No saves in bank yet. Click "Deposit Current Game" to create a backup!
             </div>
+        </div>
         </div>
         `
     },
