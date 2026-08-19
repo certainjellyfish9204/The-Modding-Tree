@@ -2,7 +2,7 @@
 
 [![Deploy to GitHub Pages](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml/badge.svg)](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml)
 
-An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Multiverse** — a full TMT showcase with **10 layers** (P/B/G/M/T/W/H/Q/E/U) + 2 side layers, Universe-hopping, and safe-storage fallback.
+An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Multiverse** — a full TMT showcase with **11 layers** (P/B/G/M/T/W/H/Q/E/U) + 2 side layers + **5 universes** (Classic 1.0, Rewritten, Demo, Incrementreeverse, Hub), Universe-hopping, and safe-storage fallback.
 
 **Play Now:**
 - **GitHub Pages (once enabled):** `https://certainjellyfish9204.github.io/The-Modding-Tree/` 
@@ -10,7 +10,7 @@ An incremental game engine based on The Prestige Tree. This fork is **The Classi
 - **Arena Preview:** Live preview on port 8000 in this workspace
 - **Local:** Open `index.html` directly
 
-> **v0.4 Multiverse** — Universe (U) row 5: travel Classic 1.0 / Rewritten / Demo / Hub — every layer ported incrementally. See `CREDITS.md` for full attribution.  
+> **v0.4 Multiverse** — Universe (U) row 5: travel Classic 1.0 / Rewritten / Demo / **Incrementreeverse (from List of Mods)** / Hub — every layer ported incrementally. See `CREDITS.md` for full attribution.  
 > **v0.3** — 4 new layers (M/W/Q/E) + Stats (S), 70+ upgrades. **v0.2** — Safe Storage fallback.
 
 [Look here for a tutorial on getting started with modding with TMT](docs/tutorials/getting-started.md)
@@ -28,6 +28,7 @@ This multiverse **ports every layer** from other prestige trees — with full cr
 | **Classic 1.0** | `Jacorb90/Prestige-Tree-Classic` | **Jacorb90** (Aarex, papyrus) | `/tmp/PT-Classic` (7889 lines) | 6/20 layers ported as U buyables 11-13 |
 | **Rewritten (PT:R)** | `Jacorb90/Prestige-Tree` (v1.3) | **Jacorb90** | `/tmp/PT-Rewritten` (9915 lines, 30 layers) | 6/30 layers ported as U buyables 21-23 |
 | **Demo (TMT)** | `Acamaeda/The-Modding-Tree` Demo | **Acamaeda** | `js/Demo/` (no clone) | 3/3 layers ported as U buyables 24-25 |
+| **Incrementreeverse** | `pg132/The-Modding-Tree` (The Incrementreeverse) | **pg132** | `/tmp/Incrementreeverse` (8182 lines, 16 layers) | 3/16 layers ported as U buyables 26-27 — from [List of Mods](https://modding-tree.fandom.com/wiki/List_of_mods) (finished, 10 days) |
 | **Hub (Classic+)** | This repo `js/layers.js` | You + Acamaeda engine | `js/layers.js` (this mod) | 9 layers native |
 
 Each buyable in Universe U shows its original file path (e.g., `Ported from /tmp/PT-Classic/js/layers.js LAYER_DATA.p`) for traceability. To port more, just `git clone` another TMT mod into `/tmp` and add a buyable — see `js/layers/universe.js` infobox **How Porting Works**.

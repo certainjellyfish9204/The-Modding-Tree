@@ -18,14 +18,14 @@ let VERSION = {
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.4 - Multiverse (Universe Layer)</h3><br>
+	<h3>v0.4 - Multiverse (Universe Layer) — Now with List of Mods!</h3><br>
 		- <b>NEW ROW 5: Universe (U)</b> — Travel the Multiverse!<br>
-		- Git cloned <code>/tmp/PT-Classic</code> (7889 lines, 7 rows) and <code>/tmp/PT-Rewritten</code> (9915 lines, 30 layers) — porting every layer incrementally<br>
-		- 3 playable universes: <b>Classic 1.0</b> (P/B/G from row_1.js/row_2.js), <b>Rewritten</b> (P/B/G/T from TMT layers.js), <b>Classic+ Hub</b> (this mod)<br>
-		- 11 new Universe upgrades, 7 Universe buyables (Classic P/B/G + Rewritten P/B/T + Multiverse Core), 3 Universe challenges, 3 travel clickables<br>
-		- Universe effect boosts ALL points (x5^U, x1.5/x2/x2.5 by active universe + classic/rewritten progress)<br>
-		- Travel cooldown, bars, infoboxes documenting porting process<br>
-		- New win: still 10 Eternity, but Universe gives x1e100+ boost to push 1e500<br><br>
+		- Git cloned <code>/tmp/PT-Classic</code> (7889 lines, 7 rows), <code>/tmp/PT-Rewritten</code> (9915 lines, 30 layers), <code>/tmp/Incrementreeverse</code> (pg132, 8182 lines, 16 layers from <a href="https://modding-tree.fandom.com/wiki/List_of_mods" target="_blank">List of Mods</a>), and <code>js/Demo</code> (Acamaeda Demo) — porting every layer incrementally<br>
+		- 5 playable universes: <b>Classic 1.0</b> (P/B/G), <b>Rewritten</b> (P/B/T), <b>Demo</b> (C/F), <b>Incrementreeverse</b> (I/P from Incrementreeverse, finished 10 days), <b>Classic+ Hub</b> (this mod)<br>
+		- 13 new Universe upgrades, 9 Universe buyables (Classic P/B/G + Rewritten P/B/T + Demo C/F + Incrementreeverse I/P + Multiverse Core), 3 Universe challenges, 5 travel clickables<br>
+		- Universe effect boosts ALL points (x5^U, x1.5/x1.8/x2/x2.2/x2.5 by active universe + progress)<br>
+		- Travel cooldown, bars, infoboxes documenting porting + <b>CREDITS.md</b> with full attribution for every cloned game<br>
+		- New win: still 10 Eternity, but Universe gives x1e100+ boost to push 1e500 and 25 U also wins<br><br>
 	<h3>v0.3 - Way More Content (Massive Expansion)</h3><br>
 		- <b>4 NEW LAYERS</b>: Mana (M, row 1), Warp (W, row 2), Quantum (Q, row 3), Eternity (E, row 4 - ENDGAME)<br>
 		- <b>Stats side layer</b> (S) with lore, bars, and breakdowns<br>
@@ -50,7 +50,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		- Added things.<br>
 		- Added stuff.`
 
-let winText = `Congratulations! You have reached Eternity and beaten the Classic+ Tree v0.4! <br><br> You hit 10 Eternity Points or went multiversal — that's deep endgame. Now explore the other universes: Classic 1.0's raw 2019 balance and Rewritten's 30-layer monster are waiting in U. Every layer from both games is being ported!`
+let winText = `Congratulations! You have reached Eternity and beaten the Classic+ Tree v0.4! <br><br> You hit 10 Eternity Points, 25 Universe Points, or 1e500 points — that's deep endgame. Now explore all 5 universes: Classic 1.0, Rewritten's 30-layer monster, Demo's Candies/Farm, and Incrementreeverse (from List of Mods) are all waiting in U. Every layer from every game is being ported with credit!`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
@@ -181,5 +181,7 @@ function fixOldSave(oldVersion){
 		if (!player.u) player.u = getStartLayerData("u");
 		if (player.u && !player.u.classic) player.u.classic = {points: new Decimal(0), boosters: new Decimal(0), generators: new Decimal(0)};
 		if (player.u && !player.u.rewritten) player.u.rewritten = {points: new Decimal(0), boosters: new Decimal(0), time: new Decimal(0)};
+		if (player.u && !player.u.demo) player.u.demo = {points: new Decimal(0), candies: new Decimal(0), farm: new Decimal(0)};
+		if (player.u && !player.u.incrementverse) player.u.incrementverse = {points: new Decimal(0), incrementy: new Decimal(0), prestige: new Decimal(0)};
 	}
 }

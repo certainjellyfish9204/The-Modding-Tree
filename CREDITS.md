@@ -37,6 +37,13 @@ We `git cloned` the originals into `/tmp` and are porting every layer incrementa
 - **What we cloned:** No clone needed — already in repo. We treat Demo's C (Candies → lollipops, row 0), F (Farm Points, static row 1, clickables), and A (Achievements, side) as the Demo Universe.
 - **Ported so far:** Demo C/G/A mechanics as buyables `Demo Candies / Farm / Achievements` in Universe D. Next: Demo's bars, challenges, infoboxes, grids.
 
+### Universe I — **The Incrementreeverse** (from List of Mods)
+- **Original:** `pg132/The-Modding-Tree` (The Incrementreeverse) — https://github.com/pg132/The-Modding-Tree — https://raw.githack.com/pg132/The-Modding-Tree/master/index.html — **Finished, 10 days** — listed on https://modding-tree.fandom.com/wiki/List_of_mods as finished
+- **Author:** **pg132** — The Incrementreeverse (id `incrementy`, v1.0 The Abelian Tributary)
+- **What we cloned:** `js/layers.js` (8182 lines, 16 TMT layers: i, am, a, m, e, p, n, g, q, s, b, sp, pi, o, f, c), `js/mod.js` (incrementy) into `/tmp/Incrementreeverse`
+- **Ported so far:** I (Incrementy), P (Prestige), G (Generators) — as buyables `Incrementreeverse I / P` in Universe I (buyables 26-27, x1.9/x2.1, +30%/+25% in Incrementreeverse). Next: AM, A, M, E, N, Q, S, B, SP, PI, O, F, C (full 16).
+- **In-game credit:** Universe I infobox shows clone path, original layer count (16), and pg132 link. Same treatment as Classic/Rewritten/Demo — pick any mod from List of Mods, `git clone` to `/tmp`, add buyables.
+
 ### Universe M — Classic+ (This Mod — Hub Universe)
 - **Original:** This repo — `js/layers.js` (Classic+ 9 layers: P/B/G/M/T/W/H/Q/E) + `js/layers/universe.js` (U hub) + `js/utils/save.js` safeStorage etc.
 - **Author:** You (with TMT engine by Acamaeda, safeStorage fallback and Universe hub added in this fork)
@@ -62,7 +69,10 @@ We document the exact conversion in `js/layers/universe.js` infobox **How Portin
 3. **Demo (TMT Demo) → TMT:**  
    Copy `js/Demo/layers/c.js` (`addLayer("c", { upgrades:{11:{title:"Generator of Genericness"}}})`) → `player.u.demo.candies` etc.
 
-**Status:** 3/5 universes playable, 6/20 Classic layers ported, 6/30 Rewritten layers stubbed, 3/3 Demo layers stubbed. Every buyable shows its original file path in its tooltip for traceability.
+4. **Incrementreeverse (TMT) → TMT:**  
+   Copy `addLayer("i", { ... incrementy ... })` from `/tmp/Incrementreeverse/js/layers.js` verbatim, rename to `player.u.incrementverse.incrementy`, keep its 16-layer tree (i/am/a/m/e/p/n/g/q/s/b/sp/pi/o/f/c).
+
+**Status:** 5/6 universes playable (C/R/D/I/M), 6/20 Classic layers ported, 6/30 Rewritten layers stubbed, 3/3 Demo layers stubbed, 3/16 Incrementreeverse layers stubbed. Every buyable shows its original file path in its tooltip for traceability. *Pick any mod from https://modding-tree.fandom.com/wiki/List_of_mods, `git clone` it, and add it as Universe 6 the same way.*
 
 ---
 
@@ -74,9 +84,10 @@ We also treat these as "other trees" for the multiverse:
 |------|--------|------------|--------|
 | **The Prestige Tree (Classic)** | Jacorb90 | `/tmp/PT-Classic` | Done — Universe C |
 | **The Prestige Tree: Rewritten** | Jacorb90 | `/tmp/PT-Rewritten` | Done — Universe R |
-| **The Modding Tree Demo** | Acamaeda | `js/Demo/` (no clone) | Done — Universe D (new) |
+| **The Modding Tree Demo** | Acamaeda | `js/Demo/` (no clone) | Done — Universe D |
+| **The Incrementreeverse** | pg132 | `/tmp/Incrementreeverse` | Done — Universe I (from List of Mods) |
 | **The Prestige Tree: Classic+** | You | `js/layers.js` | Hub universe M |
-| *Future: Community Trees* | Various TMT creators | To be cloned into `/tmp/Community-*` | Planned — each new TMT mod you clone becomes a new Universe tab (just add a microtab + buyables) |
+| *Future: Any Mod on List of Mods* | Various (gapples2, cyxw, ducdat0507...) | To be cloned into `/tmp/<mod>` | Planned — pick any mod from https://modding-tree.fandom.com/wiki/List_of_mods, `git clone` + add Universe tab the same way (see above) |
 
 To add a new community tree yourself:
 ```bash

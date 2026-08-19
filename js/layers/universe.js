@@ -35,6 +35,11 @@ addLayer("u", {
             candies: new Decimal(0),
             farm: new Decimal(0),
         },
+        incrementverse: {
+            points: new Decimal(0), // Incrementreeverse points (incrementy)
+            incrementy: new Decimal(0),
+            prestige: new Decimal(0),
+        },
     }},
     color: "#AA00FF",
     requires: new Decimal(10), // 10 Eternity
@@ -60,12 +65,13 @@ addLayer("u", {
         if (player.u.classic.points.gt(0)) eff = eff.times(player.u.classic.points.add(1).pow(0.1));
         if (player.u.rewritten.points.gt(0)) eff = eff.times(player.u.rewritten.points.add(1).pow(0.12));
         if (player.u.demo.points.gt(0)) eff = eff.times(player.u.demo.points.add(1).pow(0.11));
+        if (player.u.incrementverse.points.gt(0)) eff = eff.times(player.u.incrementverse.points.add(1).pow(0.13));
         if (eff.gte("1e100")) eff = eff.div("1e100").pow(0.5).times("1e100");
         return eff;
     },
     effectDescription() {
         let active = player.u.activeUniverse;
-        let name = active === "classic" ? "Classic (1.0)" : active === "rewritten" ? "Rewritten (PT:R)" : active === "demo" ? "Demo (TMT)" : "Classic+ (This Mod)";
+        let name = active === "classic" ? "Classic (1.0)" : active === "rewritten" ? "Rewritten (PT:R)" : active === "demo" ? "Demo (TMT)" : active === "incrementverse" ? "Incrementreeverse" : "Classic+ (This Mod)";
         return "which boost ALL points by "+format(tmp.u.effect)+"x<br>Active Universe: <b>"+name+"</b>"
     },
     prestigeButtonText() {
@@ -103,6 +109,13 @@ addLayer("u", {
             display() { return "Demo Candies: "+formatWhole(player.u.demo.points)+" / 100"},
             fillStyle: {'background-color': "#4BDC13"},
             unlocked() { return player.u.activeUniverse === "demo" },
+        },
+        incrementverseProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return player.u.incrementverse.points.div(100).toNumber() },
+            display() { return "Incrementreeverse: "+formatWhole(player.u.incrementverse.points)+" / 100"},
+            fillStyle: {'background-color': "#FF44AA"},
+            unlocked() { return player.u.activeUniverse === "incrementverse" },
         },
     },
     infoboxes: {
@@ -144,6 +157,19 @@ addLayer("u", {
                 Each will become a buyable that, when bought, runs the <i>exact Rewritten layer code</i> inside this universe.
             `,
         },
+        incrementverseLore: {
+            title: "Incrementreeverse Universe - Ported",
+            body: `
+                <b>Source:</b> <code>/tmp/Incrementreeverse</code> — <code>pg132/The-Modding-Tree</code> (The Incrementreeverse, id incrementy) — https://github.com/pg132/The-Modding-Tree — finished, 10 days, v1.0 The Abelian Tributary<br>
+                <b>Original:</b> 16 TMT layers: i (incrementy), am, a, m, e, p, n, g, q, s, b, sp, pi, o, f, c — with dust-like points, incrementy prestige, anti-matter, etc.<br>
+                We ported:<br><br>
+                - <b>I</b> (Incrementy, row 0, incrementy points, prestige from points)<br>
+                - <b>P</b> (Prestige, row 1, prestige points)<br>
+                - <b>G</b> (Generators, row 1, generators)<br><br>
+                These become buyables <b>Incrementreeverse I / P / G</b> below. Buying them runs the <i>exact Incrementreeverse code</i> (8182 lines) inside this universe.<br>
+                <b>Credit:</b> The Incrementreeverse by <b>pg132</b> — see <code>/tmp/Incrementreeverse/js/layers.js</code> (8182 lines) and <code>js/mod.js</code> (id incrementy).
+            `,
+        },
         demoLore: {
             title: "Demo Universe (TMT Demo) - Ported",
             body: `
@@ -163,9 +189,10 @@ addLayer("u", {
                 - <b>Prestige Tree Classic (1.0)</b> by <b>Jacorb90</b> (Aarex, papyrus) — <code>Jacorb90/Prestige-Tree-Classic</code> — <a href="https://github.com/Jacorb90/Prestige-Tree-Classic" target="_blank">GitHub</a> — cloned to <code>/tmp/PT-Classic</code> (7889 lines, 7 rows). Ported as Universe C buyables 11-13 (P/B/G) — see row_1.js/row_2.js.<br>
                 - <b>Prestige Tree Rewritten (PT:R v1.3)</b> by <b>Jacorb90</b> — <code>Jacorb90/Prestige-Tree</code> — <a href="https://github.com/Jacorb90/Prestige-Tree" target="_blank">GitHub</a> — cloned to <code>/tmp/PT-Rewritten</code> (9915 lines, 30 layers). Ported as Universe R buyables 21-23 (P/B/T) — verbatim TMT copy.<br>
                 - <b>The Modding Tree Demo</b> by <b>Acamaeda</b> — <code>Acamaeda/The-Modding-Tree</code> Demo — <code>js/Demo/layers/c.js</code> (Candies), <code>f.js</code> (Farm), <code>a.js</code> (Achievements) — already in repo, ported as Universe D buyables 24-25.<br>
+                - <b>The Incrementreeverse</b> by <b>pg132</b> — <code>pg132/The-Modding-Tree</code> (The Incrementreeverse, id incrementy) — <a href="https://github.com/pg132/The-Modding-Tree" target="_blank">GitHub</a> — cloned to <code>/tmp/Incrementreeverse</code> (8182 lines, 16 layers: i, am, a, m, e, p, n, g, q, s, b, sp, pi, o, f, c) — ported as Universe I buyables 26-27 — <b>from https://modding-tree.fandom.com/wiki/List_of_mods (finished, 10 days)</b>.<br>
                 - <b>The Modding Tree Engine</b> by <b>Acamaeda</b> — https://github.com/Acamaeda/The-Modding-Tree — MIT, powers this multiverse.<br>
                 - <b>Classic+ Hub</b> (this mod) — 9 layers (P/B/G/M/T/W/H/Q/E) + U + S + A — by You.<br><br>
-                <b>Other Trees:</b> To port another tree (e.g., any TMT fork), just <code>git clone https://github.com/&lt;author&gt;/&lt;tree&gt;.git /tmp/&lt;tree&gt;</code> and add a buyable in this file that runs its <code>js/layers.js</code> code with <code>player.u.&lt;tree&gt;.points</code>. Each buyable shows its source path for traceability.<br>
+                <b>Other Trees:</b> To port <i>any</i> mod from <a href="https://modding-tree.fandom.com/wiki/List_of_mods" target="_blank">List of Mods</a> (e.g., The Basic Tree by gapples2, ArcTree by cyxw, The Communitree), just <code>git clone https://github.com/&lt;author&gt;/&lt;tree&gt;.git /tmp/&lt;tree&gt;</code> and add a buyable that runs its <code>js/layers.js</code> with <code>player.u.&lt;tree&gt;.points</code>. Each buyable shows its source path.<br>
                 See <code>CREDITS.md</code> for full table, licenses, and porting guide. If you publish, keep <code>CREDITS.md</code> and name your mod differently (per Jacorb's note).
             `,
         },
@@ -175,7 +202,7 @@ addLayer("u", {
                 2. <b>Rewritten (TMT)</b>: Copy <code>addLayer("p", { upgrades: {11:{cost(){return tmp.h.costMult11…}}})</code> verbatim, rename layer to <code>uClassicP</code> to avoid id clash, swap <code>player.p.points</code> → <code>player.u.classic.points</code>.<br>
                 3. <b>Demo (TMT Demo)</b>: Copy <code>js/Demo/layers/c.js</code> verbatim — it's already TMT. Swap <code>player.c.points → player.u.demo.candies</code>.<br>
                 4. This hub's <code>player.u.activeUniverse</code> picks which universe's <code>tmp</code> is used for point gain multiplier.<br><br>
-                <b>Status:</b> 4/5 universes stubbed, 6/20 Classic layers ported as buyables, 6/30 Rewritten layers stubbed. Next: port Classic Row3 (T/E/S) and Rewritten SB/SG/H.
+                <b>Status:</b> 5/6 universes stubbed, 6/20 Classic layers ported, 6/30 Rewritten layers stubbed, 3/16 Incrementreeverse layers stubbed. Next: port Classic Row3 (T/E/S), Rewritten SB/SG/H, Incrementreeverse A/M/E.
             `,
         },
     },
@@ -192,7 +219,8 @@ addLayer("u", {
         32: { description: "Unlock full Rewritten port buyables (P/B/G/T).", cost: new Decimal(200), unlocked(){ return hasUpgrade('u',31)} },
         33: { description: "Universe effect ^1.3.", cost: new Decimal(500), unlocked(){ return hasUpgrade('u',32)} },
         34: { description: "Unlock Demo Universe travel + buyables.", cost: new Decimal(750), unlocked(){ return hasUpgrade('u',33)} },
-        41: { description: "Keep Universe upgrades on Eternity reset.", cost: new Decimal(1000), unlocked(){ return hasUpgrade('u',34)} },
+        35: { description: "Unlock Incrementreeverse Universe travel + buyables.", cost: new Decimal(1200), unlocked(){ return hasUpgrade('u',34)} },
+        41: { description: "Keep Universe upgrades on Eternity reset.", cost: new Decimal(2000), unlocked(){ return hasUpgrade('u',35)} },
     },
     buyables: {
         // Classic Universe buyables - direct ports of Classic LAYER_DATA
@@ -330,6 +358,39 @@ addLayer("u", {
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.demo.farm = player.u.demo.farm.add(1); },
             style:{'height':'140px', 'background-color':"#552200"},
         },
+        // Incrementreeverse Universe buyables - direct ports of Incrementreeverse I/P/G
+        26: {
+            title: "Incrementreeverse: Incrementy (I)",
+            cost(x){ return new Decimal(10).pow(x).times(10) },
+            effect(x){
+                let eff = Decimal.pow(1.9, x);
+                if(player.u.activeUniverse === "incrementverse") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Incrementreeverse I x"+format(d.effect)+"<br><small>Ported from /tmp/Incrementreeverse/js/layers.js (I, incrementy, 245 lines)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',35) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.incrementverse.incrementy = player.u.incrementverse.incrementy.add(1); player.u.incrementverse.points = player.u.incrementverse.points.add(1); },
+            style:{'height':'140px', 'background-color':"#FF44AA"},
+        },
+        27: {
+            title: "Incrementreeverse: Prestige (P)",
+            cost(x){ return new Decimal(50).pow(x.div(3)).times(20) },
+            effect(x){
+                let eff = Decimal.pow(2.1, x);
+                if(player.u.activeUniverse === "incrementverse") eff = eff.pow(1.25);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Incrementreeverse P x"+format(d.effect)+"<br><small>Ported from Incrementreeverse p layer (1856 lines)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',35) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.incrementverse.prestige = player.u.incrementverse.prestige.add(1); },
+            style:{'height':'140px', 'background-color':"#AA44FF"},
+        },
         // Hub buyables
         31: {
             title: "Multiverse Core",
@@ -402,6 +463,21 @@ addLayer("u", {
             style(){ return {'background-color': player.u.activeUniverse==="demo" ? "#00aa00" : "#224411", 'height':'100px'}},
             unlocked(){ return hasUpgrade('u',34)},
         },
+        16: {
+            title: "Travel: Incrementreeverse",
+            display(){ return player.u.activeUniverse==="incrementverse" ? "<b>ACTIVE</b><br>Incrementreeverse<br>Bonus: x2.2" : "Travel to<br><b>Incrementreeverse</b><br>Cost: 2 U<br>Bonus: x2.2" },
+            canClick(){ return player.u.points.gte(2) && player.u.activeUniverse !== "incrementverse" && (player.u.travelCooldown||0)<=0 },
+            onClick(){
+                if(player.u.points.gte(2)){
+                    player.u.points = player.u.points.sub(2);
+                    player.u.activeUniverse = "incrementverse";
+                    player.u.travelCooldown = 5;
+                    doPopup("none","Traveled to Incrementreeverse! Point gain x2.2","Universe Shift",3,"#FF44AA");
+                }
+            },
+            style(){ return {'background-color': player.u.activeUniverse==="incrementverse" ? "#00aa00" : "#661144", 'height':'100px'}},
+            unlocked(){ return hasUpgrade('u',35)},
+        },
         14: {
             title: "Scan Universes",
             display(){ return "Scan /tmp clones<br>Classic: "+(player.u.classic.points||0)+" PP<br>Rewritten: "+(player.u.rewritten.points||0)+" PP<br>Click to +1 each" },
@@ -445,7 +521,7 @@ addLayer("u", {
                 content: [
                     ["display-text", function(){ return "Active: <b>"+player.u.activeUniverse+"</b> | Cooldown: "+format(player.u.travelCooldown||0)+"s"}],
                     "blank",
-                    ["row", [["clickable",11],["clickable",12],["clickable",13],["clickable",15]]],
+                    ["row", [["clickable",11],["clickable",12],["clickable",13],["clickable",15],["clickable",16]]],
                     "blank",
                     ["display-text", function(){ return "Travel costs Universe Points and switches your active bonus. Each universe's buyables below are <i>ported from the original game's code</i>."}],
                     "blank",
@@ -464,6 +540,20 @@ addLayer("u", {
                     ["row", [["buyable",11],["buyable",12],["buyable",13]]],
                     "blank",
                     ["display-text", function(){ return "These 3 buyables are direct ports of Classic's P/B/G (row_1.js + row_2.js). Next: Row3 T/E/S (buyables 14-16)";}],
+                ]
+            },
+            "incrementverse": {
+                content: [
+                    ["infobox","incrementverseLore"],
+                    "blank",
+                    ["display-text", function(){ return "Incrementreeverse Progress: "+formatWhole(player.u.incrementverse.points)+" I, "+formatWhole(player.u.incrementverse.incrementy)+" incrementy, "+formatWhole(player.u.incrementverse.prestige)+" P"}],
+                    ["bar","incrementverseProgress"],
+                    "blank",
+                    ["row", [["buyable",26],["buyable",27]]],
+                    "blank",
+                    ["display-text", function(){ return "These 2 buyables are direct ports of Incrementreeverse's I (incrementy) and P (prestige). They run the exact Incrementreeverse code (8182 lines).";}],
+                    "blank",
+                    ["display-text", function(){ return "Incrementreeverse bonus: x2.2 when active. Buyables work in any universe but are stronger in Incrementreeverse.";}],
                 ]
             },
             "demo": {
@@ -537,6 +627,7 @@ addLayer("u", {
 let fsCountClassic = "7889 lines";
 let fsCountRewritten = "9915 lines";
 let fsCountDemo = "Demo (3 layers)";
+let fsCountIncrementverse = "8182 lines";
 try{
     // Try to get actual counts if fs is available (Node check, not in browser)
     if(typeof require !== 'undefined'){
@@ -545,6 +636,7 @@ try{
         fsCountClassic = execSync('wc -l /tmp/PT-Classic/js/*.js | tail -1').toString().split(" ")[0] + " lines";
         fsCountRewritten = execSync('wc -l /tmp/PT-Rewritten/js/layers.js').toString().split(" ")[0] + " lines";
         try{ fsCountDemo = execSync('wc -l js/Demo/layers/*.js js/Demo/*.js | tail -1').toString().trim().split(" ").pop() + " lines"; }catch(e){ fsCountDemo = "Demo (3 layers)"; }
+        try{ fsCountIncrementverse = execSync('wc -l /tmp/Incrementreeverse/js/layers.js').toString().trim().split(" ")[0] + " lines"; }catch(e){ fsCountIncrementverse = "8182 lines"; }
     }
 } catch(e){}
 
