@@ -2,7 +2,7 @@
 
 [![Deploy to GitHub Pages](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml/badge.svg)](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml)
 
-An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Multiverse** — a full TMT showcase with **11 layers** (P/B/G/M/T/W/H/Q/E/U) + 2 side layers + **5 universes** (Classic 1.0, Rewritten, Demo, Incrementreeverse, Hub), Universe-hopping, **Eternal Notations** (by MathCookie17, 144 presets), and safe-storage fallback.
+An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Multiverse** — a full TMT showcase with **11 layers** (P/B/G/M/T/W/H/Q/E/U) + 2 side layers + **5 universes** (Classic 1.0, Rewritten, Demo, Incrementreeverse, Hub), Universe-hopping, **Eternal Notations** (by MathCookie17, **every preset (144+144 HTML, 146 total) incl. Colored Dominoes with CSS+PNG**), and safe-storage fallback.
 
 **Play Now:**
 - **GitHub Pages (once enabled):** `https://certainjellyfish9204.github.io/The-Modding-Tree/` 

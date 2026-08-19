@@ -18,12 +18,13 @@ let VERSION = {
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.5 - Eternal Notations (by MathCookie17)</h3><br>
-		- <b>Eternal Notations</b> by <b>MathCookie17</b> — <a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank">GitHub</a> (MIT, 144 presets + 65 notations, built on break_eternity, up to 10^^(10^308)) — <code>js/utils/eternal_notations.js</code> (1.2M) + updated <code>break_eternity.js</code> (now supports <code>mod</code>/<code>slog</code> for Eternal)<br>
-		- <b>Options → Notation</b> switcher: TMT (default), Eternal Default, Scientific, Standard, Engineering, Infinity, Eternity, Hyperscientific, Tetration, Boundless — cycle via button, saved in <code>options.notation</code><br>
-		- Updated <code>break_eternity.js</code> to Eternal Notations\' break_eternity (56K, supports <code>mod</code>, fixes Infinity/Eternity formatting) — from <code>/tmp/Eternal-Notations/break_eternity stuff/break_eternity.min.js</code><br>
-		- Rewrote <code>js/utils/NumberFormating.js</code> to wrap Eternal Notations: keeps TMT <code>formatTMT()</code> as fallback, <code>format()</code> now calls <code>currentEternalNotation.format(decimal)</code> when enabled — credit in code and <code>CREDITS.md</code><br>
-		- New win: still 10 E/25 U/1e500, but now displayable as <code>1.00∞</code> / <code>֎0.001</code> with Infinity/Eternity notations<br><br>
+	<h3>v0.5 - Eternal Notations (by MathCookie17) — Every Preset!</h3><br>
+		- <b>Eternal Notations</b> by <b>MathCookie17</b> — <a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank">GitHub</a> (MIT, <b>144 presets + 65 notations + 144 HTML presets = 288 total</b>, built on break_eternity, up to 10^^(10^308)) — <code>js/utils/eternal_notations.js</code> (1.2M, 17122 lines) + <code>.min.js</code> + updated <code>break_eternity.js</code> (now supports <code>mod</code>/<code>slog</code>)<br>
+		- <b>Every preset added</b> (146 options: TMT + 145 Eternal) — including <b>HTML presets like Colored Dominoes</b> (requires <code>eternal_notations_images/dominoes.css</code> + <code>dominoes.png</code> — <b>both included</b> at <code>eternal_notations_images/</code> and loaded via <code>index.html</code> + <code>v-html</code> for points)<br>
+		- <b>Options → Notation</b> switcher: TMT (default), Default, Scientific, Standard, Infinity, Eternity, Dominoes, <b>Colored Dominoes</b>, Hyperscientific, Tetration, Boundless, + 135 more — cycle via button, saved in <code>options.notation</code><br>
+		- Updated <code>break_eternity.js</code> to Eternal Notations\' break_eternity (56K) — from <code>/tmp/Eternal-Notations/break_eternity stuff/break_eternity.min.js</code><br>
+		- Rewrote <code>js/utils/NumberFormating.js</code> (146 NOTATIONS, 521 lines) to wrap Eternal: keeps TMT <code>formatTMT()</code> as fallback, <code>format()</code> now calls <code>currentEternalNotation.format(decimal)</code> — credit in code and <code>CREDITS.md</code><br>
+		- New win: still 10 E/25 U/1e500, but now displayable as <code>1.00∞</code> / <code>֎0.001</code> / <span class="domino_box"> domino </span> with Infinity/Eternity/Colored Dominoes<br><br>
 	<h3>v0.4 - Multiverse (Universe Layer) — Now with List of Mods!</h3><br>
 		- <b>NEW ROW 5: Universe (U)</b> — Travel the Multiverse!<br>
 		- Git cloned <code>/tmp/PT-Classic</code> (7889 lines, 7 rows), <code>/tmp/PT-Rewritten</code> (9915 lines, 30 layers), <code>/tmp/Incrementreeverse</code> (pg132, 8182 lines, 16 layers from <a href="https://modding-tree.fandom.com/wiki/List_of_mods" target="_blank">List of Mods</a>), and <code>js/Demo</code> (Acamaeda Demo) — porting every layer incrementally<br>
