@@ -902,7 +902,7 @@ addLayer("h", {
             layerDataReset(this.layer, keep);
         }
     },
-    tabFormat: ["main-display",["display-text", function() {return tmp.h.prestigeButtonText}],"blank","resource-display","blank",["bar","hyperBar"],"blank","milestones","blank","upgrades","blank","buyables","blank","challenges"],
+    tabFormat: ["main-display","prestige-button","blank","resource-display","blank",["bar","hyperBar"],"blank","milestones","blank","upgrades","blank","buyables","blank","challenges"],
 })
 
 // ---------------- ROW 3: QUANTUM (Q) - NEW ----------------
@@ -994,7 +994,7 @@ addLayer("q", {
             layerDataReset(this.layer, keep);
         }
     },
-    tabFormat: ["main-display",["display-text", function(){ return tmp.q.prestigeButtonText}],"blank","resource-display","blank",["infobox","lore"],"blank",["bar","quantumBar"],"blank","milestones","blank","upgrades","blank","buyables","blank","challenges"],
+    tabFormat: ["main-display","prestige-button","blank","resource-display","blank",["infobox","lore"],"blank",["bar","quantumBar"],"blank","milestones","blank","upgrades","blank","buyables","blank","challenges"],
 })
 
 // ---------------- ROW 4: ETERNITY (E) - NEW ENDGAME ----------------
@@ -1076,7 +1076,7 @@ addLayer("e", {
     },
     passiveGeneration(){ return hasMilestone('e',5) ? 1.0 : 0 },
     hotkeys: [{key: "e", description: "E: Reset for eternity", onPress(){if(canReset(this.layer)) doReset(this.layer)}}],
-    tabFormat: ["main-display",["display-text", function(){ return tmp.e.prestigeButtonText}],"blank","resource-display","blank",["bar","eternityBar"],"blank","milestones","blank","upgrades","blank","buyables","blank","challenges"],
+    tabFormat: ["main-display","prestige-button","blank","resource-display","blank",["bar","eternityBar"],"blank","milestones","blank","upgrades","blank","buyables","blank","challenges"],
 })
 
 // ---------------- SIDE: ACHIEVEMENTS (A) - Expanded to 24 ----------------
