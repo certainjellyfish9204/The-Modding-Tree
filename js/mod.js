@@ -18,7 +18,23 @@ let VERSION = {
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.7 - Singularity (Developer Preview)</h3><br>
+	<h3>v0.7 - Singularity & Mastery</h3><br>
+		- <b>MASSIVE CONTENT UPDATE</b> — Every layer expanded with new upgrades, milestones, and challenges!<br>
+		- <b>P Layer:</b> 8 new upgrades (rows 5-6), 3 new milestones (6-8), 2 new challenges (Prestige Purge, Ultimate Prestige), 1 new buyable (Prestige Singularity), P effect softcap removable<br>
+		- <b>B Layer:</b> 7 new upgrades (rows 4-5), 2 new milestones (7-8), 1 new challenge (Booster Overdrive), B effect softcap removable, B effect ^2 at milestone 8<br>
+		- <b>G Layer:</b> 7 new upgrades (rows 4-5), 3 new milestones (6-8), 1 new challenge (Generator Overload), G effect ^2 at milestone 7<br>
+		- <b>M Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (4-5), 1 new challenge (Mana Storm), M effect ^1.5/^2 at milestones 4/5<br>
+		- <b>T Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (6-7), T effect ^2 at milestone 7<br>
+		- <b>W Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (4-5), W effect ^2 at milestone 5<br>
+		- <b>H Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (5-6), H effect softcap removable, H effect ^2 at milestone 6<br>
+		- <b>Q Layer:</b> 4 new upgrades (rows 4-5), 2 new milestones (4-5), Q effect ^2 at milestone 5<br>
+		- <b>E Layer:</b> 4 new upgrades (rows 4-5), 2 new milestones (4-5), E effect softcap removable, E effect ^2 at milestone 5<br>
+		- <b>25+ new achievements</b> (rows 7-10): Booster God, Generator God, Mana God, Challenge Master, Billionaire→Googol, Multiverse Master, Full Completionist, Infinite Power<br>
+		- <b>NEW: Mastery side layer (MA)</b> — tracks overall completion %, layer breakdown, achievements, lore<br>
+		- All passive generation increased at high milestones (up to 100%)<br>
+		- <b>NEW UNIVERSE: The Basic Tree</b> — gapples2/The-Modding-Tree, 6 buyables + travel<br>
+		- <b>NEW ROW 6: Singularity (S)</b> — Collapse Grid, Singularity Field, Rift Challenges<br>
+		- 7 total universes in the Multiverse!<br><br>
 		- <b>NEW ROW 6: Singularity (S)</b> — the ultimate endgame layer, merging Universe (U) and Reality (R) branches<br>
 		- Singularities collapse all multiverse timelines into a single point of infinite power<br>
 		- <b>Collapse Grid</b> (3x3) — compress tiles (⬛→🔮→✦) for exponential bonuses. Grid Mastery auto-compresses.<br>
@@ -141,6 +157,11 @@ function getPointGen() {
 	if (hasAchievement('a', 16)) gain = gain.times(1.3)
 	if (hasAchievement('a', 31)) gain = gain.times(1.5)
 	if (hasAchievement('a', 32)) gain = gain.times(2)
+	// Row 7-10 achievements
+	if (hasAchievement('a', 91)) gain = gain.times(achievementEffect('a', 91))
+	if (hasAchievement('a', 92)) gain = gain.times(achievementEffect('a', 92))
+	if (hasAchievement('a', 93)) gain = gain.times(achievementEffect('a', 93))
+	if (hasAchievement('a', 96)) gain = gain.times(achievementEffect('a', 96))
 	// Milestone / challenge boosts
 	if (hasMilestone('p', 4)) gain = gain.times(2)
 	if (hasMilestone('b', 5)) gain = gain.times(3)

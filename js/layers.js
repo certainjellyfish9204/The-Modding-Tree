@@ -49,8 +49,11 @@ addLayer("p", {
         if (hasUpgrade('g', 12)) eff = eff.times(upgradeEffect('g', 12))
         if (hasUpgrade('m', 13)) eff = eff.times(upgradeEffect('m', 13))
         if (hasAchievement('a', 24)) eff = eff.times(1.5)
-        if (eff.gte(1000)) eff = eff.div(1000).pow(0.5).times(1000)
+        if (!hasMilestone('p',8) && !hasUpgrade('p',64)) { if (eff.gte(1000)) eff = eff.div(1000).pow(0.5).times(1000) }
         if (hasUpgrade('e', 12)) eff = eff.pow(1.1)
+        if (hasUpgrade('p', 62)) eff = eff.pow(upgradeEffect('p', 62))
+        if (hasChallenge('p', 11)) eff = eff.pow(1.4)
+        if (hasChallenge('p', 21)) eff = eff.pow(2)
         return eff
     },
     effectDescription() { return "which are boosting points by "+format(tmp.p.effect)+"x" },
@@ -90,6 +93,16 @@ addLayer("p", {
         // Row 2 unlocks
         41: { description: "Time Shards boost point gain x2.", cost: new Decimal(25000), effect(){ return new Decimal(2)}, unlocked(){ return hasUpgrade('p',34) && player.t.unlocked} },
         42: { description: "Warp Shards boost prestige gain.", cost: new Decimal(1e6), effect(){ return player.w.points.add(1).pow(0.4)}, effectDisplay(){return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('p',41) && player.w.unlocked} },
+        // Row 5 — Hyper/Quantum era
+        51: { title: "Hyper Prestige", description: "Hyper points massively boost prestige gain.", cost: new Decimal(1e8), effect(){ return player.h.points.add(1).pow(0.8)}, effectDisplay(){return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('p',42) && player.h.unlocked} },
+        52: { title: "Quantum Prestige", description: "Quantum shards boost prestige gain.", cost: new Decimal(1e10), effect(){ return player.q.points.add(1).pow(0.6)}, effectDisplay(){return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('p',51) && player.q.unlocked} },
+        53: { description: "P effect ^1.2 and P buyables are 50% cheaper.", cost: new Decimal(1e12), unlocked(){ return hasUpgrade('p',52)} },
+        54: { description: "Gain 500% prestige passively. Keep all P upgrades on E reset.", cost: new Decimal(1e15), unlocked(){ return hasUpgrade('p',53)} },
+        // Row 6 — Eternity era
+        61: { title: "Eternal Prestige", description: "Eternity points boost prestige gain.", cost: new Decimal(1e20), effect(){ return player.e.points.add(1).pow(1.2)}, effectDisplay(){return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('p',54) && player.e.unlocked} },
+        62: { description: "P effect is raised to the number of P milestones you have.", cost: new Decimal(1e25), effect(){ let count=0; for(let i=0;i<=8;i++) if(hasMilestone('p',i)) count++; return new Decimal(1).add(count*0.05)}, effectDisplay(){return "^"+format(this.effect())}, unlocked(){ return hasUpgrade('p',61)} },
+        63: { description: "Points ^1.05. Unlock a third P buyable.", cost: new Decimal(1e30), unlocked(){ return hasUpgrade('p',62)} },
+        64: { title: "Infinite Prestige", description: "P effect softcap is removed entirely.", cost: new Decimal(1e40), unlocked(){ return hasUpgrade('p',63) && player.e.best.gte(6)} },
     },
     buyables: {
         11: {
@@ -118,6 +131,19 @@ addLayer("p", {
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.points=player.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
             style:{'height':'110px'},
         },
+        13: {
+            title: "Prestige Singularity",
+            cost(x){ return hasUpgrade('p',53) ? new Decimal(1e6).pow(x).times(1e10) : new Decimal(1e8).pow(x).times(1e10) },
+            effect(x){ return Decimal.pow(1e3, x) },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" prestige<br>Amount: "+formatWhole(player.p.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to ALL gains"
+            },
+            unlocked(){ return hasUpgrade('p',63) },
+            canAfford(){ return player.p.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.p.points=player.p.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'110px', 'background-color':'#226622'},
+        },
     },
     challenges: {
         11: {
@@ -128,7 +154,24 @@ addLayer("p", {
             rewardDescription: "P gain x2, B effect +25%",
             rewardEffect(){ return new Decimal(2) }, rewardDisplay(){ return format(this.rewardEffect())+"x"},
             unlocked(){ return hasUpgrade('p',31) },
-        }
+        },
+        12: {
+            name: "Prestige Purge",
+            challengeDescription: "All layer effects disabled. Only base generation + P upgrades work. Point gain ^0.2.",
+            goalDescription: "Reach 1e15 points",
+            canComplete(){ return player.points.gte(1e15) },
+            rewardDescription: "P effect ^1.4 and all layer effects +20%",
+            rewardEffect(){ return new Decimal(1.4) }, rewardDisplay(){ return "^"+format(this.rewardEffect())},
+            unlocked(){ return hasMilestone('p',6) },
+        },
+        21: {
+            name: "Ultimate Prestige",
+            challengeDescription: "You start with 0 points and only P upgrades. Everything else resets. Point gain ^0.1.",
+            goalDescription: "Reach 1e25 points",
+            canComplete(){ return player.points.gte(1e25) },
+            rewardDescription: "P effect is squared. P gain x100.",
+            unlocked(){ return hasUpgrade('p',64) },
+        },
     },
     milestones: {
         0: { requirementDescription: "5 prestige", effectDescription: "Keep P upgrades on row-1 resets. Autobuy P.", done() { return player.p.best.gte(5) }, toggles: [["p", "auto"]] },
@@ -137,6 +180,9 @@ addLayer("p", {
         3: { requirementDescription: "500 prestige", effectDescription: "Prestige gain x2.5, keep P buyables", done() { return player.p.best.gte(500) }, unlocked() { return hasMilestone('p', 2)} },
         4: { requirementDescription: "5,000 prestige", effectDescription: "Points x2, unlock P buyables & challenge", done() { return player.p.best.gte(5000) }, unlocked() { return hasMilestone('p',3)} },
         5: { requirementDescription: "1e6 prestige", effectDescription: "Gain 50% prestige passively, keep milestones on E", done() { return player.p.best.gte(1e6) }, unlocked() { return hasMilestone('p',4)} },
+        6: { requirementDescription: "1e9 prestige", effectDescription: "P effect ^1.3, unlock P challenge 2", done() { return player.p.best.gte(1e9) }, unlocked() { return hasMilestone('p',5)} },
+        7: { requirementDescription: "1e15 prestige", effectDescription: "P buyables scale 3x slower, keep P buyables on all resets", done() { return player.p.best.gte(1e15) }, unlocked() { return hasMilestone('p',6)} },
+        8: { requirementDescription: "1e25 prestige", effectDescription: "P gain x10, P effect softcap removed", done() { return player.p.best.gte(1e25) }, unlocked() { return hasMilestone('p',7)} },
     },
     doReset(resettingLayer) {
         if (layers[resettingLayer].row > this.row) {
@@ -148,7 +194,7 @@ addLayer("p", {
             layerDataReset(this.layer, keep)
         }
     },
-    passiveGeneration() { if (hasUpgrade('p', 24)) return 1; if (hasMilestone('t', 0)) return 0.1; if (hasMilestone('p',5)) return 0.5; return 0 },
+    passiveGeneration() { if (hasUpgrade('p', 24) || hasUpgrade('p', 54)) return 5; if (hasMilestone('t', 0)) return 0.1; if (hasMilestone('p',5)) return 0.5; return 0 },
     autoUpgrade() { return hasMilestone('p', 0) && player.p.auto },
     tabFormat: {
         "Main": { content: ["main-display","prestige-button","resource-display","blank",["bar","prestigeBar"],"blank",["display-text", function() {return hasMilestone('p',0)?"Milestone 0 gives autobuyer!":"Get 5 prestige for autobuyer!"} ],"blank","milestones","blank","upgrades"]},
@@ -169,8 +215,10 @@ addLayer("b", {
         let eff = Decimal.pow(2.5, player.b.points)
         if (hasUpgrade('b', 12)) eff = eff.times(upgradeEffect('b', 12))
         if (hasUpgrade('b', 23)) eff = eff.pow(1.2)
-        if (eff.gte(1e6)) eff = eff.div(1e6).pow(0.3).times(1e6)
+        if (!hasMilestone('b',7)) { if (eff.gte(1e6)) eff = eff.div(1e6).pow(0.3).times(1e6) }
         if (hasUpgrade('e', 11)) eff = eff.pow(1.1)
+        if (hasMilestone('b',8)) eff = eff.pow(2)
+        if (hasAchievement('a',71)) eff = eff.pow(1.5)
         return eff
     },
     effectDescription() { return "which are boosting point gain by "+format(tmp.b.effect)+"x" },
@@ -198,6 +246,13 @@ addLayer("b", {
         31: { description: "Unlock B challenge: Overclocked.", cost: new Decimal(50), unlocked(){ return hasUpgrade('b',23)} },
         32: { description: "Gain 1 free Booster Engine level.", cost: new Decimal(100), unlocked(){ return hasUpgrade('b',31)}, onPurchase(){ setBuyableAmount('b',11, getBuyableAmount('b',11).add(1)) }},
         33: { description: "B milestones also give +1 free Generator.", cost: new Decimal(250), unlocked(){ return hasUpgrade('b',32)} },
+        // Row 4 — Row 3/4 era
+        41: { title: "Hyper Boosters", description: "Hyper points boost B effect.", cost: new Decimal(500), effect(){ return player.h.points.add(1).pow(0.3)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('b',33) && player.h.unlocked} },
+        42: { description: "B effect softcap is 10x weaker. B cost scaling -20%.", cost: new Decimal(1000), unlocked(){ return hasUpgrade('b',41)} },
+        43: { description: "Unlock B challenge 2: Booster Overdrive.", cost: new Decimal(2000), unlocked(){ return hasUpgrade('b',42)} },
+        51: { title: "Eternal Boosters", description: "Eternity points boost B effect.", cost: new Decimal(5000), effect(){ return player.e.points.add(1).pow(0.5)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('b',43) && player.e.unlocked} },
+        52: { description: "B effect ^1.3. All B buyables are 50% cheaper.", cost: new Decimal(10000), unlocked(){ return hasUpgrade('b',51)} },
+        53: { description: "Gain 25% boosters passively. B milestones also boost points.", cost: new Decimal(25000), unlocked(){ return hasUpgrade('b',52)} },
     },
     buyables: {
         11: {
@@ -229,7 +284,14 @@ addLayer("b", {
             rewardDescription: "B effect x1.5 and keep B upgrades on reset",
             rewardEffect(){ return new Decimal(1.5)}, rewardDisplay(){ return format(this.rewardEffect())+"x"},
             unlocked(){ return hasUpgrade('b',31)},
-        }
+        },
+        12: {
+            name: "Booster Overdrive",
+            challengeDescription: "B effect is inverted (divides instead of multiplies). Point gain ^0.3.",
+            goalDescription: "Reach 1e15 points", canComplete(){ return player.points.gte(1e15) },
+            rewardDescription: "B effect ^1.5 and B buyables are 2x cheaper",
+            unlocked(){ return hasUpgrade('b',43)},
+        },
     },
     milestones: {
         0: { requirementDescription: "1 booster", effectDescription: "Keep P upgrades, gain 2x points", done() {return player.b.best.gte(1)} },
@@ -239,8 +301,10 @@ addLayer("b", {
         4: { requirementDescription: "20 boosters", effectDescription: "Unlock Booster Farm buyable", done(){ return player.b.best.gte(20)}, unlocked(){return hasMilestone('b',3)} },
         5: { requirementDescription: "35 boosters", effectDescription: "B cost /2, points x3", done(){ return player.b.best.gte(35)}, unlocked(){return hasMilestone('b',4)} },
         6: { requirementDescription: "50 boosters", effectDescription: "Gain 10% boosters passively", done(){ return player.b.best.gte(50)}, unlocked(){return hasMilestone('b',5)} },
+        7: { requirementDescription: "100 boosters", effectDescription: "B effect softcap removed, B cost /3", done(){ return player.b.best.gte(100)}, unlocked(){return hasMilestone('b',6)} },
+        8: { requirementDescription: "200 boosters", effectDescription: "B effect ^2, gain 50% boosters passively", done(){ return player.b.best.gte(200)}, unlocked(){return hasMilestone('b',7)} },
     },
-    passiveGeneration(){ return hasMilestone('b',6) ? 0.1 : 0 },
+    passiveGeneration(){ return hasMilestone('b',8) ? 0.5 : hasMilestone('b',6) ? 0.1 : 0 },
     doReset(resettingLayer) {
         if (layers[resettingLayer].row > this.row) {
             let keep = []
@@ -274,6 +338,10 @@ addLayer("g", {
         if (hasUpgrade('g', 14)) eff = eff.pow(1.1)
         if (hasUpgrade('g', 23)) eff = eff.times(upgradeEffect('g', 23))
         if (hasUpgrade('w', 12)) eff = eff.times(1.5)
+        if (hasUpgrade('g', 41)) eff = eff.times(upgradeEffect('g', 41))
+        if (hasUpgrade('g', 51)) eff = eff.times(upgradeEffect('g', 51))
+        if (hasMilestone('g',7)) eff = eff.pow(2)
+        if (hasAchievement('a',72)) eff = eff.pow(1.5)
         return eff
     },
     effectDescription() { return "which are boosting points by "+format(tmp.g.effect)+"x" },
@@ -312,13 +380,26 @@ addLayer("g", {
         31: { description: "Unlock G challenge: Blackout.", cost: new Decimal(250), unlocked(){ return hasUpgrade('g',23)} },
         32: { description: "Keep G grid on reset.", cost: new Decimal(500), unlocked(){ return hasUpgrade('g',31)} },
         33: { description: "G milestones give +1 Mana.", cost: new Decimal(1000), effect(){ return new Decimal(1)}, unlocked(){ return hasUpgrade('g',32) && player.m.unlocked }},
+        // Row 4 — Hyper/Quantum era
+        41: { title: "Hyper Generators", description: "Hyper points boost G effect.", cost: new Decimal(5000), effect(){ return player.h.points.add(1).pow(0.3)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('g',33) && player.h.unlocked} },
+        42: { description: "Generator effect ^1.2. Grid tiles give double bonus.", cost: new Decimal(10000), unlocked(){ return hasUpgrade('g',41)} },
+        43: { description: "Unlock G challenge 2: Generator Overload.", cost: new Decimal(25000), unlocked(){ return hasUpgrade('g',42)} },
+        51: { title: "Eternal Generators", description: "Eternity points boost G effect.", cost: new Decimal(50000), effect(){ return player.e.points.add(1).pow(0.5)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('g',43) && player.e.unlocked} },
+        52: { description: "G effect ^1.3. All G buyables are 50% cheaper.", cost: new Decimal(100000), unlocked(){ return hasUpgrade('g',51)} },
+        53: { description: "Gain 25% generators passively. Grid auto-clicks.", cost: new Decimal(250000), unlocked(){ return hasUpgrade('g',52)} },
     },
     challenges: {
         11: {
             name: "Blackout", challengeDescription: "Point gain ^0.4, G effect disabled.",
             goalDescription: "Reach 1e9 points", canComplete(){ return player.points.gte(1e9)},
             rewardDescription: "G effect x2", rewardEffect(){ return new Decimal(2)}, unlocked(){ return hasUpgrade('g',31)},
-        }
+        },
+        12: {
+            name: "Generator Overload", challengeDescription: "Grid tiles cost 50 G each. All G buyables are disabled. Point gain ^0.3.",
+            goalDescription: "Reach 1e18 points", canComplete(){ return player.points.gte(1e18)},
+            rewardDescription: "G effect ^1.5 and Grid bonus doubled",
+            unlocked(){ return hasUpgrade('g',43)},
+        },
     },
     buyables: {
         11: {
@@ -363,9 +444,12 @@ addLayer("g", {
         3: { requirementDescription: "20 generators", effectDescription: "Gain 50% of G gain per second passively", done() {return player.g.best.gte(20)}, unlocked() {return hasMilestone('g',2)} },
         4: { requirementDescription: "35 generators", effectDescription: "Unlock Grid", done(){ return player.g.best.gte(35)}, unlocked(){return hasMilestone('g',3)} },
         5: { requirementDescription: "60 generators", effectDescription: "Unlock Core buyable, keep grid", done(){ return player.g.best.gte(60)}, unlocked(){return hasMilestone('g',4)} },
+        6: { requirementDescription: "100 generators", effectDescription: "G effect softcap removed, G cost /3", done(){ return player.g.best.gte(100)}, unlocked(){return hasMilestone('g',5)} },
+        7: { requirementDescription: "200 generators", effectDescription: "G effect ^2, gain 50% generators passively", done(){ return player.g.best.gte(200)}, unlocked(){return hasMilestone('g',6)} },
+        8: { requirementDescription: "500 generators", effectDescription: "Grid tiles auto-charge, G buyables scale 3x slower", done(){ return player.g.best.gte(500)}, unlocked(){return hasMilestone('g',7)} },
     },
     update(diff) { if (player.g.clickables[11] > 0) player.g.clickables[11] = Math.max(0, player.g.clickables[11] - diff) },
-    passiveGeneration() { return hasMilestone('g', 3) ? 0.5 : 0 },
+    passiveGeneration() { return hasMilestone('g', 7) ? 0.5 : hasMilestone('g', 3) ? 0.5 : 0 },
     doReset(resettingLayer) {
         if (layers[resettingLayer].row > this.row) {
             let keep = []
@@ -404,6 +488,11 @@ addLayer("m", {
         let eff=player.m.points.add(1).pow(0.6);
         if(hasUpgrade('m',13)) eff=eff.pow(1.3);
         if(hasUpgrade('p',32)) eff=eff.times(1.2);
+        if(hasUpgrade('m',41)) eff=eff.times(upgradeEffect('m',41));
+        if(hasUpgrade('m',51)) eff=eff.times(upgradeEffect('m',51));
+        if(hasMilestone('m',4)) eff=eff.pow(1.5);
+        if(hasMilestone('m',5)) eff=eff.pow(2);
+        if(hasAchievement('a',73)) eff=eff.pow(1.5);
         return eff;
     },
     effectDescription(){ return "which boost point & prestige gain by "+format(tmp.m.effect)+"x" },
@@ -420,6 +509,12 @@ addLayer("m", {
         23: { description: "Gain 25% mana per second passively.", cost: new Decimal(100), unlocked(){return hasUpgrade('m',22)} },
         31: { description: "Unlock M challenge: Drought.", cost: new Decimal(250), unlocked(){return hasUpgrade('m',23)} },
         32: { description: "Keep M upgrades on W reset.", cost: new Decimal(500), unlocked(){return hasUpgrade('m',31)} },
+        // Row 4 — Hyper/Quantum era
+        41: { title: "Hyper Mana", description: "Hyper points boost Mana effect.", cost: new Decimal(2000), effect(){ return player.h.points.add(1).pow(0.3)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('m',32) && player.h.unlocked} },
+        42: { description: "Mana effect ^1.3. Mana Spells are 50% cheaper.", cost: new Decimal(5000), unlocked(){ return hasUpgrade('m',41)} },
+        43: { description: "Unlock M challenge 2: Mana Storm.", cost: new Decimal(10000), unlocked(){ return hasUpgrade('m',42)} },
+        51: { title: "Eternal Mana", description: "Eternity points boost Mana effect.", cost: new Decimal(25000), effect(){ return player.e.points.add(1).pow(0.5)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('m',43) && player.e.unlocked} },
+        52: { description: "Gain 50% mana passively. Mana Spells give double bonus.", cost: new Decimal(50000), unlocked(){ return hasUpgrade('m',51)} },
     },
     buyables: {
         11: {
@@ -444,7 +539,13 @@ addLayer("m", {
             name: "Drought", challengeDescription: "Mana gain is ^0.1, point gain ^0.7",
             goalDescription: "Reach 1e9 points", canComplete(){ return player.points.gte(1e9)},
             rewardDescription: "Mana effect x2", rewardEffect(){return new Decimal(2)}, unlocked(){ return hasUpgrade('m',31)},
-        }
+        },
+        12: {
+            name: "Mana Storm", challengeDescription: "All Mana Spells are disabled. Point gain ^0.3.",
+            goalDescription: "Reach 1e15 points", canComplete(){ return player.points.gte(1e15)},
+            rewardDescription: "M effect ^1.5 and M buyables are 2x cheaper",
+            unlocked(){ return hasUpgrade('m',43)},
+        },
     },
     clickables: {
         11: {
@@ -458,9 +559,11 @@ addLayer("m", {
         1: { requirementDescription: "10 mana", effectDescription: "Unlock Channel, keep M buyables", done(){ return player.m.best.gte(10)}, unlocked(){return hasMilestone('m',0)} },
         2: { requirementDescription: "25 mana", effectDescription: "Mana gain x2, unlock Enchanted buyable", done(){ return player.m.best.gte(25)}, unlocked(){return hasMilestone('m',1)} },
         3: { requirementDescription: "60 mana", effectDescription: "Gain 25% mana passively, keep milestones", done(){ return player.m.best.gte(60)}, unlocked(){return hasMilestone('m',2)} },
+        4: { requirementDescription: "150 mana", effectDescription: "M effect ^1.5, M buyables scale 2x slower", done(){ return player.m.best.gte(150)}, unlocked(){return hasMilestone('m',3)} },
+        5: { requirementDescription: "500 mana", effectDescription: "M effect ^2, gain 100% mana passively", done(){ return player.m.best.gte(500)}, unlocked(){return hasMilestone('m',4)} },
     },
     update(diff){ if(player.m.clickables[11]>0) player.m.clickables[11]=Math.max(0, player.m.clickables[11]-diff); },
-    passiveGeneration(){ return hasUpgrade('m',23) ? 0.25 : hasMilestone('m',3) ? 0.25 : 0 },
+    passiveGeneration(){ return hasMilestone('m',5) ? 1.0 : hasUpgrade('m',23) ? 0.25 : hasMilestone('m',3) ? 0.25 : 0 },
     doReset(resettingLayer){
         if(layers[resettingLayer].row > this.row){
             let keep=[];
@@ -521,6 +624,12 @@ addLayer("t", {
         23: { description: "Time Shards boost Mana gain x2.", cost: new Decimal(100), effect(){ return new Decimal(2)}, unlocked(){ return hasUpgrade('t',22)} },
         31: { description: "Unlock T buyables.", cost: new Decimal(500), unlocked(){ return hasUpgrade('t',23) && hasMilestone('t',3)} },
         32: { description: "Auto-prestige T.", cost: new Decimal(2000), unlocked(){ return hasUpgrade('t',31)} },
+        // Row 4 — Hyper/Quantum era
+        41: { title: "Hyper Time", description: "Hyper points boost T effect.", cost: new Decimal(5000), effect(){ return player.h.points.add(1).pow(0.3)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('t',32) && player.h.unlocked} },
+        42: { description: "T effect ^1.3. T buyables are 50% cheaper.", cost: new Decimal(10000), unlocked(){ return hasUpgrade('t',41)} },
+        43: { description: "T milestones also boost Eternity gain.", cost: new Decimal(25000), effect(){ let count=0; for(let i=0;i<=7;i++) if(hasMilestone('t',i)) count++; return new Decimal(1).add(count*0.1)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('t',42)} },
+        51: { title: "Eternal Time", description: "Eternity points boost T effect.", cost: new Decimal(50000), effect(){ return player.e.points.add(1).pow(0.5)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('t',43) && player.e.unlocked} },
+        52: { description: "T effect ^1.5. Gain 50% T passively.", cost: new Decimal(100000), unlocked(){ return hasUpgrade('t',51)} },
     },
     buyables: {
         11: {
@@ -574,9 +683,11 @@ addLayer("t", {
         3: { requirementDescription: "25 time shards", effectDescription: "Unlock T buyables & Warp", done(){ return player.t.best.gte(25)}, unlocked(){ return hasMilestone('t',2)} },
         4: { requirementDescription: "100 time shards", effectDescription: "T buyables x2, Warp gain x2", done(){ return player.t.best.gte(100)}, unlocked(){ return hasMilestone('t',3)} },
         5: { requirementDescription: "500 time shards", effectDescription: "Gain 20% T passively", done(){ return player.t.best.gte(500)}, unlocked(){ return hasMilestone('t',4)} },
+        6: { requirementDescription: "2000 time shards", effectDescription: "T effect softcap removed, T buyables scale 3x slower", done(){ return player.t.best.gte(2000)}, unlocked(){ return hasMilestone('t',5)} },
+        7: { requirementDescription: "10000 time shards", effectDescription: "T effect ^2, gain 100% T passively", done(){ return player.t.best.gte(10000)}, unlocked(){ return hasMilestone('t',6)} },
     },
     update(diff){ if(player.t.clickables[11]>0) player.t.clickables[11]=Math.max(0, player.t.clickables[11]-diff); },
-    passiveGeneration(){ return hasMilestone('t',5) ? 0.2 : hasUpgrade('t',32) ? 0.1 : 0 },
+    passiveGeneration(){ return hasMilestone('t',7) ? 1.0 : hasMilestone('t',5) ? 0.2 : hasUpgrade('t',32) ? 0.1 : 0 },
     autoUpgrade(){ return hasMilestone('t',2) },
     doReset(resettingLayer) {
         if (layers[resettingLayer].row > this.row) {
@@ -632,6 +743,12 @@ addLayer("w", {
         23: { description: "Keep G/M upgrades on W reset.", cost: new Decimal(150), unlocked(){return hasUpgrade('w',22)} },
         31: { description: "Unlock W challenges.", cost: new Decimal(500), unlocked(){return hasUpgrade('w',23)} },
         32: { description: "Auto-warp prestige.", cost: new Decimal(2000), unlocked(){return hasUpgrade('w',31)} },
+        // Row 4 — Hyper/Quantum era
+        41: { title: "Hyper Warp", description: "Hyper points boost Warp effect.", cost: new Decimal(5000), effect(){ return player.h.points.add(1).pow(0.3)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('w',32) && player.h.unlocked} },
+        42: { description: "Warp effect ^1.3. Warp buyables are 50% cheaper.", cost: new Decimal(10000), unlocked(){ return hasUpgrade('w',41)} },
+        43: { description: "Warp milestones also boost Eternity gain.", cost: new Decimal(25000), effect(){ let count=0; for(let i=0;i<=5;i++) if(hasMilestone('w',i)) count++; return new Decimal(1).add(count*0.1)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('w',42)} },
+        51: { title: "Eternal Warp", description: "Eternity points boost Warp effect.", cost: new Decimal(50000), effect(){ return player.e.points.add(1).pow(0.5)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('w',43) && player.e.unlocked} },
+        52: { description: "Warp effect ^1.5. Gain 50% Warp passively.", cost: new Decimal(100000), unlocked(){ return hasUpgrade('w',51)} },
     },
     buyables: {
         11: {
@@ -673,8 +790,10 @@ addLayer("w", {
         1: { requirementDescription: "6 warp", effectDescription: "Keep Warp upgrades, unlock Q", done(){ return player.w.best.gte(6)}, unlocked(){return hasMilestone('w',0)} },
         2: { requirementDescription: "15 warp", effectDescription: "Unlock Mana Warp buyable, Warp gain x2", done(){ return player.w.best.gte(15)}, unlocked(){return hasMilestone('w',1)} },
         3: { requirementDescription: "40 warp", effectDescription: "Gain 15% Warp passively", done(){ return player.w.best.gte(40)}, unlocked(){return hasMilestone('w',2)} },
+        4: { requirementDescription: "100 warp", effectDescription: "W effect ^1.5, W buyables scale 2x slower", done(){ return player.w.best.gte(100)}, unlocked(){return hasMilestone('w',3)} },
+        5: { requirementDescription: "300 warp", effectDescription: "W effect ^2, gain 50% Warp passively", done(){ return player.w.best.gte(300)}, unlocked(){return hasMilestone('w',4)} },
     },
-    passiveGeneration(){ return hasMilestone('w',3) ? 0.15 : 0 },
+    passiveGeneration(){ return hasMilestone('w',5) ? 0.5 : hasMilestone('w',3) ? 0.15 : 0 },
     autoPrestige(){ return hasUpgrade('w',32) && hasMilestone('w',1) },
     doReset(resettingLayer){
         if(layers[resettingLayer].row > this.row){
@@ -702,7 +821,10 @@ addLayer("h", {
         if (hasUpgrade('h', 22)) eff = eff.pow(1.3)
         if (hasUpgrade('h', 31)) eff = eff.times(buyableEffect('h',11))
         if (eff.gte("1e40")) eff = eff.div("1e40").pow(0.5).times("1e40")
-        if (eff.gte("1e100")) eff = eff.div("1e100").pow(0.3).times("1e100")
+        if (!hasMilestone('h',5)) { if (eff.gte("1e100")) eff = eff.div("1e100").pow(0.3).times("1e100") }
+        if (hasUpgrade('h', 41)) eff = eff.times(upgradeEffect('h', 41))
+        if (hasUpgrade('h', 51)) eff = eff.times(upgradeEffect('h', 51))
+        if (hasMilestone('h',6)) eff = eff.pow(2)
         return eff
     },
     effectDescription() { return "which are boosting ALL previous gains by "+format(tmp.h.effect)+"x" },
@@ -725,6 +847,12 @@ addLayer("h", {
         31: { description: "H buyable boosts point gain.", cost: new Decimal(50), effect(){ return buyableEffect('h',11)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('h',23)} },
         32: { description: "Unlock H challenges.", cost: new Decimal(100), unlocked(){ return hasUpgrade('h',31)} },
         33: { description: "Keep H upgrades on Q reset.", cost: new Decimal(250), unlocked(){ return hasUpgrade('h',32)} },
+        // Row 4 — Quantum/Eternity era
+        41: { title: "Quantum Hyper", description: "Quantum shards boost H effect.", cost: new Decimal(500), effect(){ return player.q.points.add(1).pow(0.3)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('h',33) && player.q.unlocked} },
+        42: { description: "H effect ^1.3. H buyables are 50% cheaper.", cost: new Decimal(1000), unlocked(){ return hasUpgrade('h',41)} },
+        43: { description: "H milestones also boost Eternity gain.", cost: new Decimal(2000), effect(){ let count=0; for(let i=0;i<=6;i++) if(hasMilestone('h',i)) count++; return new Decimal(1).add(count*0.1)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('h',42)} },
+        51: { title: "Eternal Hyper", description: "Eternity points boost H effect.", cost: new Decimal(5000), effect(){ return player.e.points.add(1).pow(0.5)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('h',43) && player.e.unlocked} },
+        52: { description: "H effect ^1.5. Gain 50% Hyper passively.", cost: new Decimal(10000), unlocked(){ return hasUpgrade('h',51)} },
     },
     buyables: {
         11: {
@@ -760,8 +888,10 @@ addLayer("h", {
         2: { requirementDescription: "8 hyper", effectDescription: "Unlock Hyper Prestige buyable", done(){ return player.h.best.gte(8)}, unlocked(){return hasMilestone('h',1)} },
         3: { requirementDescription: "20 hyper", effectDescription: "Gain 10% hyper passively", done(){ return player.h.best.gte(20)}, unlocked(){return hasMilestone('h',2)} },
         4: { requirementDescription: "50 hyper", effectDescription: "H effect softcaps later (1e100 → 1e120)", done(){ return player.h.best.gte(50)}, unlocked(){return hasMilestone('h',3)} },
+        5: { requirementDescription: "100 hyper", effectDescription: "H effect softcap removed, H cost /3", done(){ return player.h.best.gte(100)}, unlocked(){return hasMilestone('h',4)} },
+        6: { requirementDescription: "200 hyper", effectDescription: "H effect ^2, gain 50% hyper passively", done(){ return player.h.best.gte(200)}, unlocked(){return hasMilestone('h',5)} },
     },
-    passiveGeneration(){ return hasMilestone('h',3) ? 0.1 : 0 },
+    passiveGeneration(){ return hasMilestone('h',6) ? 0.5 : hasMilestone('h',3) ? 0.1 : 0 },
     hotkeys: [{key: "h", description: "H: Reset for hyper points", onPress(){if (canReset(this.layer)) doReset(this.layer)}}],
     doReset(resettingLayer) {
         if(layers[resettingLayer].row > this.row){
@@ -812,6 +942,11 @@ addLayer("q", {
         23: { description: "Quantum Core buyable boosts point gain.", cost: new Decimal(80), unlocked(){return hasUpgrade('q',22)} },
         31: { description: "Unlock Q challenges.", cost: new Decimal(150), unlocked(){return hasUpgrade('q',23)} },
         32: { description: "Keep Q upgrades on E reset.", cost: new Decimal(300), unlocked(){return hasUpgrade('q',31)} },
+        // Row 4 — Eternity era
+        41: { title: "Eternal Quantum", description: "Eternity points boost Q effect.", cost: new Decimal(600), effect(){ return player.e.points.add(1).pow(0.5)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('q',32) && player.e.unlocked} },
+        42: { description: "Q effect ^1.3. Q buyables are 50% cheaper.", cost: new Decimal(1200), unlocked(){ return hasUpgrade('q',41)} },
+        43: { description: "Q milestones also boost Eternity gain.", cost: new Decimal(2500), effect(){ let count=0; for(let i=0;i<=5;i++) if(hasMilestone('q',i)) count++; return new Decimal(1).add(count*0.1)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('q',42)} },
+        51: { description: "Q effect ^1.5. Gain 50% Quantum passively.", cost: new Decimal(5000), unlocked(){ return hasUpgrade('q',43)} },
     },
     buyables: {
         11: {
@@ -846,8 +981,10 @@ addLayer("q", {
         1: { requirementDescription: "5 quantum", effectDescription: "Keep Quantum upgrades, time x2", done(){ return player.q.best.gte(5)}, unlocked(){return hasMilestone('q',0)} },
         2: { requirementDescription: "12 quantum", effectDescription: "Unlock Quantum Flux buyable", done(){ return player.q.best.gte(12)}, unlocked(){return hasMilestone('q',1)} },
         3: { requirementDescription: "25 quantum", effectDescription: "Gain 10% quantum passively", done(){ return player.q.best.gte(25)}, unlocked(){return hasMilestone('q',2)} },
+        4: { requirementDescription: "50 quantum", effectDescription: "Q effect ^1.5, Q buyables scale 2x slower", done(){ return player.q.best.gte(50)}, unlocked(){return hasMilestone('q',3)} },
+        5: { requirementDescription: "100 quantum", effectDescription: "Q effect ^2, gain 50% quantum passively", done(){ return player.q.best.gte(100)}, unlocked(){return hasMilestone('q',4)} },
     },
-    passiveGeneration(){ return hasMilestone('q',3) ? 0.1 : 0 },
+    passiveGeneration(){ return hasMilestone('q',5) ? 0.5 : hasMilestone('q',3) ? 0.1 : 0 },
     doReset(resettingLayer){
         if(layers[resettingLayer].row > this.row){
             let keep=[];
@@ -900,6 +1037,11 @@ addLayer("e", {
         23: { description: "Gain 5x more prestige, keep all row 1 upgrades.", cost: new Decimal(15), unlocked(){return hasUpgrade('e',22)} },
         31: { description: "Unlock Eternity challenge: True Eternity.", cost: new Decimal(25), unlocked(){return hasUpgrade('e',23)} },
         32: { description: "Eternity points boost Quantum gain.", cost: new Decimal(50), effect(){ return player.e.points.add(1).pow(0.6)}, effectDisplay(){return format(this.effect())+"x"}, unlocked(){return hasUpgrade('e',31)} },
+        // Row 5 — Universe/Singularity era
+        41: { title: "Eternal Mastery", description: "Eternity effect ^1.3. All layer effects +25%.", cost: new Decimal(75), unlocked(){return hasUpgrade('e',32)} },
+        42: { description: "E buyables are 50% cheaper. E buyables give double effect.", cost: new Decimal(100), unlocked(){return hasUpgrade('e',41)} },
+        43: { description: "Gain 100% Eternity passively. E milestones also boost Universe gain.", cost: new Decimal(150), effect(){ let count=0; for(let i=0;i<=5;i++) if(hasMilestone('e',i)) count++; return new Decimal(1).add(count*0.15)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){return hasUpgrade('e',42)} },
+        51: { title: "Infinite Eternity", description: "E effect softcap removed. E effect ^2.", cost: new Decimal(200), unlocked(){return hasUpgrade('e',43)} },
     },
     buyables: {
         11: {
@@ -929,7 +1071,10 @@ addLayer("e", {
         1: { requirementDescription: "3 eternity", effectDescription: "Keep all row 2 upgrades, point gain x5", done(){ return player.e.best.gte(3)}, unlocked(){return hasMilestone('e',0)} },
         2: { requirementDescription: "6 eternity", effectDescription: "Unlock Eternal Prestige buyable", done(){ return player.e.best.gte(6)}, unlocked(){return hasMilestone('e',1)} },
         3: { requirementDescription: "10 eternity", effectDescription: "WIN! + Keep everything on E reset", done(){ return player.e.best.gte(10)}, unlocked(){return hasMilestone('e',2)} },
+        4: { requirementDescription: "25 eternity", effectDescription: "E effect ^1.5, unlock Universe layer", done(){ return player.e.best.gte(25)}, unlocked(){return hasMilestone('e',3)} },
+        5: { requirementDescription: "50 eternity", effectDescription: "E effect ^2, gain 100% E passively", done(){ return player.e.best.gte(50)}, unlocked(){return hasMilestone('e',4)} },
     },
+    passiveGeneration(){ return hasMilestone('e',5) ? 1.0 : 0 },
     hotkeys: [{key: "e", description: "E: Reset for eternity", onPress(){if(canReset(this.layer)) doReset(this.layer)}}],
     tabFormat: ["main-display",["display-text", function(){ return tmp.e.prestigeButtonText}],"blank","resource-display","blank",["bar","eternityBar"],"blank","milestones","blank","upgrades","blank","buyables","blank","challenges"],
 })
@@ -968,6 +1113,33 @@ addLayer("a", {
         63: { name: "Rift Master", done(){ return hasChallenge('s2',11) && hasChallenge('s2',12)}, tooltip: "Complete both Singularity Rift Alpha and Omega.", unlocked(){ return player.s2 && hasUpgrade('s2',23)} },
         64: { name: "Multiverse Collapse", done(){ return player.s2 && player.s2.best.gte(10)}, tooltip: "Get 10 singularities.", unlocked(){ return player.s2 && player.s2.best.gte(5)} },
         65: { name: "Absolute Singularity", done(){ return player.s2 && player.s2.best.gte(20)}, tooltip: "Reach 20 singularities. ULTIMATE VICTORY!", unlocked(){ return player.s2 && player.s2.best.gte(15)} },
+        // Row 7 — Deep progression
+        71: { name: "Booster God", done(){ return player.b.best.gte(100)}, tooltip: "Get 100 boosters. Reward: B effect ^1.5", effect(){ return new Decimal(1.5)}, unlocked(){ return player.b.best.gte(50)} },
+        72: { name: "Generator God", done(){ return player.g.best.gte(100)}, tooltip: "Get 100 generators. Reward: G effect ^1.5", effect(){ return new Decimal(1.5)}, unlocked(){ return player.g.best.gte(50)} },
+        73: { name: "Mana God", done(){ return player.m.best.gte(100)}, tooltip: "Get 100 mana. Reward: M effect ^1.5", effect(){ return new Decimal(1.5)}, unlocked(){ return player.m.best.gte(50)} },
+        74: { name: "Time Lord Supreme", done(){ return player.t.best.gte(1000)}, tooltip: "Get 1000 time shards.", unlocked(){ return player.t.best.gte(100)} },
+        75: { name: "Warp Lord Supreme", done(){ return player.w.best.gte(200)}, tooltip: "Get 200 warp shards.", unlocked(){ return player.w.best.gte(100)} },
+        76: { name: "Hyper Lord Supreme", done(){ return player.h.best.gte(100)}, tooltip: "Get 100 hyper points.", unlocked(){ return player.h.best.gte(50)} },
+        // Row 8 — Challenge mastery
+        81: { name: "Challenge Master", done(){ return hasChallenge('t',11) && hasChallenge('t',12) && hasChallenge('t',21) && hasChallenge('t',22) && hasChallenge('t',31)}, tooltip: "Complete all Time challenges.", unlocked(){ return hasChallenge('t',21)} },
+        82: { name: "Warp Breaker", done(){ return hasChallenge('w',11) && hasChallenge('w',12)}, tooltip: "Complete all Warp challenges.", unlocked(){ return hasChallenge('w',11)} },
+        83: { name: "Hyper Breaker", done(){ return hasChallenge('h',11) && hasChallenge('h',12)}, tooltip: "Complete all Hyper challenges.", unlocked(){ return hasChallenge('h',11)} },
+        84: { name: "Quantum Breaker", done(){ return hasChallenge('q',11) && hasChallenge('q',12)}, tooltip: "Complete all Quantum challenges.", unlocked(){ return hasChallenge('q',11)} },
+        85: { name: "Eternity Breaker", done(){ return hasChallenge('e',11)}, tooltip: "Complete True Eternity.", unlocked(){ return hasChallenge('e',11)} },
+        86: { name: "Prestige Breaker", done(){ return hasChallenge('p',11) && hasChallenge('p',12)}, tooltip: "Complete all Prestige challenges.", unlocked(){ return hasChallenge('p',12)} },
+        // Row 9 — Point milestones
+        91: { name: "Billionaire", done(){ return player.points.gte("1e9")}, tooltip: "Reach 1e9 points. Reward: Points x1.5", effect(){ return new Decimal(1.5)}, unlocked(){ return player.points.gte("1e6")} },
+        92: { name: "Trillionaire", done(){ return player.points.gte("1e12")}, tooltip: "Reach 1e12 points. Reward: Points x2", effect(){ return new Decimal(2)}, unlocked(){ return player.points.gte("1e9")} },
+        93: { name: "Quadrillionaire", done(){ return player.points.gte("1e15")}, tooltip: "Reach 1e15 points. Reward: Points x3", effect(){ return new Decimal(3)}, unlocked(){ return player.points.gte("1e12")} },
+        94: { name: "Quintillionaire", done(){ return player.points.gte("1e18")}, tooltip: "Reach 1e18 points.", unlocked(){ return player.points.gte("1e15")} },
+        95: { name: "Sextillionaire", done(){ return player.points.gte("1e21")}, tooltip: "Reach 1e21 points.", unlocked(){ return player.points.gte("1e18")} },
+        96: { name: "Googol", done(){ return player.points.gte("1e100")}, tooltip: "Reach 1e100 points. Reward: Points x5", effect(){ return new Decimal(5)}, unlocked(){ return player.points.gte("1e50")} },
+        // Row 10 — Ultimate achievements
+        101: { name: "Multiverse Master", done(){ return player.u && player.u.best.gte(10)}, tooltip: "Get 10 Universe points.", unlocked(){ return player.u && player.u.unlocked} },
+        102: { name: "Reality Bender", done(){ return player.r && player.r.best.gte(10)}, tooltip: "Get 10 Reality shards.", unlocked(){ return player.r && player.r.unlocked} },
+        103: { name: "Full Completionist", done(){ return Object.keys(player.a.achievements).length>=40}, tooltip: "Get 40 achievements.", unlocked(){ return Object.keys(player.a.achievements).length>=30} },
+        104: { name: "The Ultimate", done(){ return player.points.gte("1e250")}, tooltip: "Reach 1e250 points.", unlocked(){ return player.points.gte("1e100")} },
+        105: { name: "Infinite Power", done(){ return player.points.gte("1e500")}, tooltip: "Reach 1e500 points. THE ULTIMATE GOAL!", unlocked(){ return player.points.gte("1e250")} },
     },
     tabFormat: ["main-display", "achievements"],
     achievementPopups: true,
@@ -1013,5 +1185,98 @@ addLayer("s", {
     infoboxes: {
         lore: { title: "Progress", body: "This side layer shows your stats across all rows. Row 0 → Row 4 is the main path. Row 1 has 3 branches (B/G/M) that converge into Row 2 (T/W), then Row 3 (H/Q), then Eternity. Each row keeps previous milestones if you earn them!", },
         story: { title: "The Tree's Story", body: "In the beginning there were Points. Then Prestige. Then Boosters and Generators learned to cooperate, and Mana flowed. Time and Warp bent reality, Hyper and Quantum broke it, and Eternity... Eternity remembers. <br><br> Your goal: 10 Eternity Points. Or 1e500 points if you prefer brute force. Good luck.", },
+    },
+})
+
+// ---------------- SIDE: MASTERY (MA) - NEW v0.7 ----------------
+addLayer("ma", {
+    startData(){ return { unlocked: true }},
+    color: "#FFD700",
+    row: "side",
+    layerShown(){ return player.e && player.e.unlocked },
+    tooltip(){ return "Mastery" },
+    tabFormat: {
+        "Mastery": {
+            content: [
+                "main-display",
+                ["display-text", function(){
+                    let total = 0
+                    let max = 0
+                    // Count milestones
+                    for (let l of ["p","b","g","m","t","w","h","q","e"]){
+                        if (layers[l] && layers[l].milestones){
+                            for (let id in layers[l].milestones){
+                                max++
+                                if (hasMilestone(l, id)) total++
+                            }
+                        }
+                    }
+                    // Count upgrades
+                    for (let l of ["p","b","g","m","t","w","h","q","e"]){
+                        if (layers[l] && layers[l].upgrades){
+                            for (let id in layers[l].upgrades){
+                                max++
+                                if (hasUpgrade(l, id)) total++
+                            }
+                        }
+                    }
+                    // Count achievements
+                    if (layers.a && layers.a.achievements){
+                        for (let id in layers.a.achievements){
+                            max++
+                            if (hasAchievement('a', id)) total++
+                        }
+                    }
+                    let pct = max > 0 ? (total / max * 100) : 0
+                    return "<h3>Mastery: "+format(pct,1)+"% ("+total+"/"+max+")</h3>"
+                }],
+                "blank",
+                ["display-text", function(){
+                    let txt = "<b>Layer Progress:</b><br>"
+                    let layerIds = ["p","b","g","m","t","w","h","q","e"]
+                    let names = ["Prestige","Boosters","Generators","Mana","Time","Warp","Hyper","Quantum","Eternity"]
+                    for (let i = 0; i < layerIds.length; i++){
+                        let l = layerIds[i]
+                        let ups = 0, upsMax = 0, ms = 0, msMax = 0
+                        if (player[l]){
+                            if (tmp[l] && tmp[l].upgrades){
+                                for (let id in tmp[l].upgrades){ upsMax++; if (hasUpgrade(l, id)) ups++ }
+                            }
+                            if (tmp[l] && tmp[l].milestones){
+                                for (let id in tmp[l].milestones){ msMax++; if (hasMilestone(l, id)) ms++ }
+                            }
+                            txt += "<b>"+names[i]+"</b>: "+formatWhole(player[l].points)+" pts | Upgrades: "+ups+"/"+upsMax+" | Milestones: "+ms+"/"+msMax+"<br>"
+                        }
+                    }
+                    return txt
+                }],
+                "blank",
+                ["display-text", function(){
+                    let ach = 0, achMax = 0
+                    if (layers.a && layers.a.achievements){
+                        for (let id in layers.a.achievements){ achMax++; if (hasAchievement('a', id)) ach++ }
+                    }
+                    return "<b>Achievements:</b> "+ach+"/"+achMax+" ("+format(ach/achMax*100,1)+"%)"
+                }],
+                "blank",
+                ["display-text", function(){
+                    return "<b>Total Points:</b> "+format(player.points)+"<br><b>Best Points:</b> "+format(player.best || player.points)+"<br><b>Time Played:</b> "+formatTime(player.timePlayed)
+                }],
+            ]
+        },
+        "Lore": {
+            content: [
+                ["display-text", function(){
+                    return "<h3>The Mastery System</h3><br>Mastery tracks your overall progress through the Classic+ Tree. Complete upgrades, milestones, and achievements to reach 100% mastery.<br><br>"+
+                    "<b>Current Goal:</b> "+(player.e && player.e.best.gte(10) ? "You have reached Eternity! Now explore the multiverse through Universe (U) and Reality (R)." : "Reach 10 Eternity Points to achieve the first victory.")+"<br><br>"+
+                    "<b>Secret Goals:</b><br>"+
+                    "• Reach 1e500 points<br>"+
+                    "• Complete all challenges<br>"+
+                    "• Get 50+ achievements<br>"+
+                    "• Unlock all layers<br>"+
+                    "• Reach 20 Singularities (v0.7)"
+                }]
+            ]
+        }
     },
 })
