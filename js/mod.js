@@ -29,6 +29,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		- <b>5 milestones</b>: from 1 to 20 Singularities, culminating in ULTIMATE VICTORY<br>
 		- <b>2 clickables</b>: Compress Tile (spend S to compress grid), Grid Overload (mass compress)<br>
 		- New endgame: 20 Singularities, 25 U + 25 R, or 1e500 points<br>
+		- <b>NEW UNIVERSE: The Basic Tree</b> — <code>gapples2/The-Modding-Tree</code> by gapples2 & thepaperpilot — 831 lines, 7 layers (b/c/d/e/f/g/a), "dust" currency — git cloned to <code>/tmp/The-Basic-Tree</code> — ported as6 buyables (B/C/D/E/F/G) + travel clickable + lore infobox — from <a href="https://modding-tree.fandom.com/wiki/List_of_mods" target="_blank">List of Mods</a> (finished, 2 days)<br>
 		- <i>Developer Preview — balance may change!</i><br><br>
 	<h3>v0.6 - Fractured Reality</h3><br>
 		- <b>NEW ROW 5 BRANCH: Reality (R)</b> — a full second path branching directly from Eternity alongside Universe<br>
@@ -234,5 +235,6 @@ function fixOldSave(oldVersion){
 		if (!player.s2) player.s2 = getStartLayerData("s2");
 		if (player.s2 && player.s2.field === undefined) player.s2.field = new Decimal(0);
 		if (player.s2 && player.s2.collapses === undefined) player.s2.collapses = 0;
+		if (player.u && !player.u.basic) player.u.basic = { points: new Decimal(0), cheapeners: new Decimal(0), darkness: new Decimal(0), exponents: new Decimal(0), funity: new Decimal(0), games: new Decimal(0) };
 	}
 }

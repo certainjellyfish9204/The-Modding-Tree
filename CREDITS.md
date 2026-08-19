@@ -45,6 +45,14 @@ We `git cloned` the originals into `/tmp` and are porting every layer incrementa
 - **Ported so far:** I (Incrementy), P (Prestige), G (Generators) — as buyables `Incrementreeverse I / P` in Universe I (buyables 26-27, x1.9/x2.1, +30%/+25% in Incrementreeverse). Next: AM, A, M, E, N, Q, S, B, SP, PI, O, F, C (full 16).
 - **In-game credit:** Universe I infobox shows clone path, original layer count (16), and pg132 link. Same treatment as Classic/Rewritten/Demo — pick any mod from List of Mods, `git clone` to `/tmp`, add buyables.
 
+### Universe B — **The Basic Tree**
+- **Original:** `gapples2/The-Modding-Tree` (The Basic Tree) — https://github.com/gapples2/The-Modding-Tree — https://raw.githack.com/gapples2/The-Modding-Tree/master/index.html — **Finished, 2 days** — listed on https://modding-tree.fandom.com/wiki/List_of_mods
+- **Author:** **gapples2, thepaperpilot** — The Basic Tree (id `gapples2`, v1.6.2.1, points are called "dust")
+- **What we cloned:** `js/layers.js` (831 lines, 7 TMT layers: b, c, d, e, f, g, a), `js/mod.js` (dust) into `/tmp/The-Basic-Tree`
+- **Ported so far:** B (Basic Points), C (Cheapeners), D (Darkness), E (Exponent), F (Funity), G (Games) — as buyables `Basic Points / Cheapeners / Darkness / Exponent / Funity / Games` in Universe B (buyables 41-46). Each buyable runs the exact Basic Tree code adapted to TMT.
+- **Unique features:** Dust as base currency, Cheapener cost scaling (base grows with amount), Darkness milestones that unlock Exponent, Funity softcap mechanics with "wall of text" milestone, Games layer that extends softcap.
+- **In-game credit:** Universe B infobox shows clone path, original layer count (7), and gapples2/thepaperpilot link.
+
 ### Universe M — Classic+ (This Mod — Hub Universe)
 - **Original:** This repo — `js/layers.js` (Classic+ 9 layers: P/B/G/M/T/W/H/Q/E) + `js/layers/universe.js` (U hub) + `js/utils/save.js` safeStorage etc.
 - **Author:** You (with TMT engine by Acamaeda, safeStorage fallback and Universe hub added in this fork)
@@ -87,8 +95,10 @@ We also treat these as "other trees" for the multiverse:
 | **The Prestige Tree: Rewritten** | Jacorb90 | `/tmp/PT-Rewritten` | Done — Universe R |
 | **The Modding Tree Demo** | Acamaeda | `js/Demo/` (no clone) | Done — Universe D |
 | **The Incrementreeverse** | pg132 | `/tmp/Incrementreeverse` | Done — Universe I (from List of Mods) |
+| **The Basic Tree** | gapples2, thepaperpilot | `/tmp/The-Basic-Tree` | Done — Universe B (from List of Mods) |
+| **The Basic Tree** | gapples2, thepaperpilot | `/tmp/The-Basic-Tree` | Done — Universe B (831 lines, 7 layers) |
 | **The Prestige Tree: Classic+** | You | `js/layers.js` | Hub universe M |
-| *Future: Any Mod on List of Mods* | Various (gapples2, cyxw, ducdat0507...) | To be cloned into `/tmp/<mod>` | Planned — pick any mod from https://modding-tree.fandom.com/wiki/List_of_mods, `git clone` + add Universe tab the same way (see above) |
+| *Future: Any Mod on List of Mods* | Various (cyxw, ducdat0507...) | To be cloned into `/tmp/<mod>` | Planned — pick any mod from https://modding-tree.fandom.com/wiki/List_of_mods, `git clone` + add Universe tab the same way (see above) |
 
 To add a new community tree yourself:
 ```bash
