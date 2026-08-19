@@ -2,7 +2,7 @@
 
 [![Deploy to GitHub Pages](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml/badge.svg)](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml)
 
-An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Multiverse** — a full TMT showcase with **11 layers** (P/B/G/M/T/W/H/Q/E/U) + 2 side layers + **5 universes** (Classic 1.0, Rewritten, Demo, Incrementreeverse, Hub), Universe-hopping, **Eternal Notations** (by MathCookie17, **every preset (144+144 HTML, 146 total) incl. Colored Dominoes with CSS+PNG**), and safe-storage fallback.
+An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Multiverse** — a full TMT showcase with **11 main layers** (P/B/G/M/T/W/H/Q/E/U/R) + 2 side layers + **5 universes** (Classic 1.0, Rewritten, Demo, Incrementreeverse, Hub), two endgame branches from Eternity (**Universe** and **Reality**), Universe-hopping, **Eternal Notations** (by MathCookie17, **every preset (144+144 HTML, 146 total) incl. Colored Dominoes with CSS+PNG**), and safe-storage fallback.
 
 **Play Now:**
 - **GitHub Pages (once enabled):** `https://certainjellyfish9204.github.io/The-Modding-Tree/` 
@@ -10,6 +10,8 @@ An incremental game engine based on The Prestige Tree. This fork is **The Classi
 - **Arena Preview:** Live preview on port 8000 in this workspace
 - **Local:** Open `index.html` directly
 
+> **v0.6 Fractured Reality** — **Reality (R)** is a second row-5 branch from Eternity, with Stability, Dimensions, challenges, upgrades, milestones, and an alternate victory at 25 Reality Shards.
+>
 > **v0.5 Eternal Notations** — **Eternal Notations** by MathCookie17 (144 presets, Infinity/Eternity) — **Options → Notation** switcher (TMT, Scientific, Standard, Infinity, Eternity…) + updated `break_eternity` — see `CREDITS.md`.  
 > **v0.4 Multiverse** — Universe (U) row 5: 5 universes incl. Incrementreeverse (from List of Mods) — every layer ported incrementally.  
 > **v0.3** — 4 new layers (M/W/Q/E) + Stats (S), 70+ upgrades. **v0.2** — Safe Storage fallback.
