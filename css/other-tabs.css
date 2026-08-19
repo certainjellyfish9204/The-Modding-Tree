@@ -109,3 +109,17 @@ a {
 .opt:hover {
 	background-color: #439ea3;
 }
+
+select.opt {
+	height: 40px;
+	width: auto;
+	min-width: 180px;
+	border-radius: 8px;
+	border: 2px solid;
+	background-color: var(--color);
+	border-color: rgba(0, 0, 0, 0.25);
+	color: rgba(0, 0, 0, 0.8);
+	cursor: pointer;
+	padding: 4px 8px;
+	font-size: 12px;
+}

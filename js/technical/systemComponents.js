@@ -173,8 +173,10 @@ var systemComponents = {
 				</tr> 
 			<tr>
                 <td><button class="opt" onclick="toggleOpt('hideMilestonePopups')">Show Milestone Popups: {{ formatOption(!options.hideMilestonePopups) }}</button></td>
-                <td><button class="opt" onclick="cycleNotation()" style="font-size: 11px">Notation: {{ getCurrentNotationName() }}</button></td>
-                <td><span style="font-size: 10px">Eternal Notations by<br><a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank" class="link">MathCookie17</a> (144 presets)</span></td>
+                <td><select class="opt" style="font-size: 11px; min-width: 180px;" onchange="setNotationFromDropdown(this.value)">
+                    <option v-for="n in getNotationOptions()" :key="n.id" :value="n.id" :selected="n.id === options.notation">{{ n.name }}</option>
+                </select></td>
+                <td><span style="font-size: 10px">Eternal Notations by<br><a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank" class="link">MathCookie17</a> (146 presets)</span></td>
             </tr>
         </table>`
     },
