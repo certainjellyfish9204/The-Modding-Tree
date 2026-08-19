@@ -543,6 +543,317 @@ addLayer("u", {
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.reincarnate = player.u.miletree.reincarnate.add(1); },
             style:{'height':'140px', 'background-color':"#778899"},
         },
+        // Classic Universe buyables - ALL 22 layers from Prestige Tree Classic
+        // Row 1 (already have 11-13: P/B/G)
+        14: {
+            title: "Classic Universe: Enhance (E)",
+            cost(x){ return new Decimal(500).pow(x.div(3)).times(300) },
+            effect(x){
+                let eff = Decimal.pow(2.8, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.2);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Enhance x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.e (enhance points)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#550055"},
+        },
+        15: {
+            title: "Classic Universe: Time (T)",
+            cost(x){ return new Decimal(600).pow(x.div(3)).times(400) },
+            effect(x){
+                let eff = Decimal.pow(2.5, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.2);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Time x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.t (time capsules)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#550055"},
+        },
+        16: {
+            title: "Classic Universe: Space (S)",
+            cost(x){ return new Decimal(700).pow(x.div(3)).times(500) },
+            effect(x){
+                let eff = Decimal.pow(2.3, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.2);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Space x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.s (space energy)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#005500"},
+        },
+        // Row 3 extra: Super-Boosters, Super-Generators
+        17: {
+            title: "Classic Universe: Super-Boosters (SB)",
+            cost(x){ return new Decimal(800).pow(x.div(3)).times(600) },
+            effect(x){
+                let eff = Decimal.pow(3, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.25);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic SB x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.sb</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#005555"},
+        },
+        18: {
+            title: "Classic Universe: Super-Generators (SG)",
+            cost(x){ return new Decimal(900).pow(x.div(3)).times(700) },
+            effect(x){
+                let eff = Decimal.pow(3.5, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.25);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic SG x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.sg</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#005555"},
+        },
+        // Row 4: Hindrance Spirit, Quirks, Hyper-Boosters, Subspace
+        19: {
+            title: "Classic Universe: Hindrance (H)",
+            cost(x){ return new Decimal(1000).pow(x.div(3)).times(800) },
+            effect(x){
+                let eff = Decimal.pow(4, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Hindrance x"+format(d.effect)+"<br><small>Ported from Classic row_4.js LAYER_DATA.h (hindrance spirit)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#550000"},
+        },
+        110: {
+            title: "Classic Universe: Quirks (Q)",
+            cost(x){ return new Decimal(1100).pow(x.div(3)).times(900) },
+            effect(x){
+                let eff = Decimal.pow(3.5, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Quirks x"+format(d.effect)+"<br><small>Ported from Classic row_4.js LAYER_DATA.q (quirks)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#550055"},
+        },
+        111: {
+            title: "Classic Universe: Hyper-Boosters (HB)",
+            cost(x){ return new Decimal(1200).pow(x.div(3)).times(1000) },
+            effect(x){
+                let eff = Decimal.pow(4.5, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic HB x"+format(d.effect)+"<br><small>Ported from Classic row_4.js LAYER_DATA.hb (hyper-boosters)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#555500"},
+        },
+        112: {
+            title: "Classic Universe: Subspace (SS)",
+            cost(x){ return new Decimal(1300).pow(x.div(3)).times(1100) },
+            effect(x){
+                let eff = Decimal.pow(5, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Subspace x"+format(d.effect)+"<br><small>Ported from Classic row_4.js LAYER_DATA.ss (subspace energy)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#005555"},
+        },
+        // Row 5: Magic, Balance, Phantom Souls, Super-Prestige
+        113: {
+            title: "Classic Universe: Magic (M)",
+            cost(x){ return new Decimal(1500).pow(x.div(3)).times(1200) },
+            effect(x){
+                let eff = Decimal.pow(5.5, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Magic x"+format(d.effect)+"<br><small>Ported from Classic row_5.js LAYER_DATA.m (magic)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#880088"},
+        },
+        114: {
+            title: "Classic Universe: Balance (BA)",
+            cost(x){ return new Decimal(1600).pow(x.div(3)).times(1300) },
+            effect(x){
+                let eff = Decimal.pow(6, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Balance x"+format(d.effect)+"<br><small>Ported from Classic row_5.js LAYER_DATA.ba (balance energy)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#888800"},
+        },
+        115: {
+            title: "Classic Universe: Phantom Souls (PS)",
+            cost(x){ return new Decimal(1700).pow(x.div(3)).times(1400) },
+            effect(x){
+                let eff = Decimal.pow(6.5, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic PS x"+format(d.effect)+"<br><small>Ported from Classic row_5.js LAYER_DATA.ps (phantom souls)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#008888"},
+        },
+        116: {
+            title: "Classic Universe: Super-Prestige (SP)",
+            cost(x){ return new Decimal(1800).pow(x.div(3)).times(1500) },
+            effect(x){
+                let eff = Decimal.pow(7, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic SP x"+format(d.effect)+"<br><small>Ported from Classic row_5.js LAYER_DATA.sp (super-prestige points)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#880088"},
+        },
+        // Row 6: Life, Hyperspace, Imperium, Mastery
+        117: {
+            title: "Classic Universe: Life (L)",
+            cost(x){ return new Decimal(2000).pow(x.div(3)).times(1600) },
+            effect(x){
+                let eff = Decimal.pow(8, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Life x"+format(d.effect)+"<br><small>Ported from Classic row_6.js LAYER_DATA.l (life essence)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#008800"},
+        },
+        118: {
+            title: "Classic Universe: Hyperspace (HN)",
+            cost(x){ return new Decimal(2200).pow(x.div(3)).times(1800) },
+            effect(x){
+                let eff = Decimal.pow(9, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Hyperspace x"+format(d.effect)+"<br><small>Ported from Classic row_6.js LAYER_DATA.hn (hyperspace energy)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#000088"},
+        },
+        119: {
+            title: "Classic Universe: Imperium (I)",
+            cost(x){ return new Decimal(2400).pow(x.div(3)).times(2000) },
+            effect(x){
+                let eff = Decimal.pow(10, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Imperium x"+format(d.effect)+"<br><small>Ported from Classic row_6.js LAYER_DATA.i (imperium bricks)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#888800"},
+        },
+        120: {
+            title: "Classic Universe: Mastery (MA)",
+            cost(x){ return new Decimal(2600).pow(x.div(3)).times(2200) },
+            effect(x){
+                let eff = Decimal.pow(11, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Mastery x"+format(d.effect)+"<br><small>Ported from Classic row_6.js LAYER_DATA.ma (mastery bricks)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#888888"},
+        },
+        // Row 7: Gears, Machine Power, Nebula, Infinity
+        121: {
+            title: "Classic Universe: Gears (GE)",
+            cost(x){ return new Decimal(3000).pow(x.div(3)).times(2500) },
+            effect(x){
+                let eff = Decimal.pow(12, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Gears x"+format(d.effect)+"<br><small>Ported from Classic row_7.js LAYER_DATA.ge (gears)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#555555"},
+        },
+        122: {
+            title: "Classic Universe: Machine (MC)",
+            cost(x){ return new Decimal(3200).pow(x.div(3)).times(2800) },
+            effect(x){
+                let eff = Decimal.pow(13, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Machine x"+format(d.effect)+"<br><small>Ported from Classic row_7.js LAYER_DATA.mc (machine power)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#550000"},
+        },
         // Milestone Tree extra buyables
         56: {
             title: "Milestone Tree: Hyper-Prestige (HP)",
