@@ -37,18 +37,21 @@ addLayer("s2", {
                (player.s2 && player.s2.unlocked)
     },
     gainMult() {
+        if (!player.s2) return new Decimal(1)
         let mult = new Decimal(1)
         if (hasUpgrade('s2', 11)) mult = mult.times(upgradeEffect('s2', 11))
         if (hasUpgrade('s2', 13)) mult = mult.times(2)
-        if (player.s2 && player.s2.collapses >= 3) mult = mult.times(1.5)
+        if (player.s2.collapses >= 3) mult = mult.times(1.5)
         return mult
     },
     gainExp() {
+        if (!player.s2) return new Decimal(1)
         let exp = new Decimal(1)
         if (hasUpgrade('s2', 21)) exp = exp.times(1.1)
         return exp
     },
     effect() {
+        if (!player.s2 || !player.s2.unlocked) return new Decimal(1)
         let eff = Decimal.pow(1e10, player.s2.points)
         if (hasUpgrade('s2', 12)) eff = eff.pow(1.5)
         if (hasUpgrade('s2', 22)) eff = eff.times(buyableEffect('s2', 11))
@@ -57,9 +60,11 @@ addLayer("s2", {
         return eff
     },
     effectDescription() {
+        if (!player.s2 || !player.s2.unlocked) return ""
         return "which collapse all timelines — boosting EVERYTHING by " + format(tmp.s2.effect) + "x"
     },
     prestigeButtonText() {
+        if (!player.s2) return ""
         let gain = (tmp.s2 && tmp.s2.resetGain instanceof Decimal) ? tmp.s2.resetGain : getResetGain(this.layer)
         let at = (tmp.s2 && tmp.s2.nextAt instanceof Decimal) ? tmp.s2.nextAt : getNextAt(this.layer)
         if (gain.gte(1))
@@ -96,11 +101,11 @@ addLayer("s2", {
         gridBar: {
             direction: RIGHT, width: 250, height: 18,
             progress() {
-                let count = player.s2.grid.filter(v => v === 2).length
+                let count = 0; if (player.s2.grid) for (let k in player.s2.grid) if (player.s2.grid[k] === 2) count++
                 return count / 9
             },
             display() {
-                let count = player.s2.grid.filter(v => v === 2).length
+                let count = 0; if (player.s2.grid) for (let k in player.s2.grid) if (player.s2.grid[k] === 2) count++
                 return "Singulons: " + count + "/9"
             },
             fillStyle: { 'background-color': "#00ffcc" },
