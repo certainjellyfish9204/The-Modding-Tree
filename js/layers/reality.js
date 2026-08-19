@@ -141,6 +141,31 @@ addLayer("r", {
             cost: new Decimal(30),
             unlocked() { return hasUpgrade("r", 31) && hasMilestone("r", 4) },
         },
+        // Row 4 — Deep Reality
+        41: {
+            title: "Reality Convergence",
+            description: "Reality effect ^1.5. All layer effects +25%.",
+            cost: new Decimal(50),
+            unlocked() { return hasUpgrade("r", 32) },
+        },
+        42: {
+            title: "Stability Cascade",
+            description: "Stability gain is 3x faster. Stability caps at 200.",
+            cost: new Decimal(75),
+            unlocked() { return hasUpgrade("r", 41) },
+        },
+        43: {
+            title: "Dimensional Mastery",
+            description: "Reality Dimensions give 3x effect. R buyables are 50% cheaper.",
+            cost: new Decimal(100),
+            unlocked() { return hasUpgrade("r", 42) },
+        },
+        44: {
+            title: "Infinite Reality",
+            description: "Reality effect softcap removed. Reality effect ^2.",
+            cost: new Decimal(150),
+            unlocked() { return hasUpgrade("r", 43) },
+        },
     },
 
     buyables: {
@@ -242,6 +267,18 @@ addLayer("r", {
             done() { return player.r.best.gte(25) },
             toggles: [["r", "auto"]],
             unlocked() { return hasMilestone("r", 3) },
+        },
+        5: {
+            requirementDescription: "50 reality shards",
+            effectDescription: "Reality effect ^2. Stability caps at 200.",
+            done() { return player.r.best.gte(50) },
+            unlocked() { return hasMilestone("r", 4) },
+        },
+        6: {
+            requirementDescription: "100 reality shards",
+            effectDescription: "Reality effect ^3. Gain 100% Reality passively.",
+            done() { return player.r.best.gte(100) },
+            unlocked() { return hasMilestone("r", 5) },
         },
     },
 

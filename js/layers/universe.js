@@ -543,6 +543,74 @@ addLayer("u", {
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.reincarnate = player.u.miletree.reincarnate.add(1); },
             style:{'height':'140px', 'background-color':"#778899"},
         },
+        // Milestone Tree extra buyables
+        56: {
+            title: "Milestone Tree: Hyper-Prestige (HP)",
+            cost(x){ return new Decimal(800).pow(x.div(3)).times(500) },
+            effect(x){
+                let eff = Decimal.pow(15, x);
+                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.2);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Hyper-Prestige x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/hyper-prestige.js (410 lines)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#889999"},
+        },
+        // Classic extra buyables
+        14: {
+            title: "Classic Universe: Time (T)",
+            cost(x){ return new Decimal(300).pow(x.div(3)).times(200) },
+            effect(x){
+                let eff = Decimal.pow(2.5, x);
+                if(player.u.activeUniverse === "classic") eff = eff.pow(1.2);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Time x"+format(d.effect)+"<br><small>Ported from Classic row_3.js getTimeEffect()</small>"
+            },
+            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#550055"},
+        },
+        // Rewritten extra buyables
+        24: {
+            title: "Rewritten Universe: Energy (E)",
+            cost(x){ return new Decimal(150).pow(x.div(3)).times(100) },
+            effect(x){
+                let eff = Decimal.pow(2.5, x);
+                if(player.u.activeUniverse === "rewritten") eff = eff.pow(1.2);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Rewritten Energy x"+format(d.effect)+"<br><small>Ported from Rewritten e layer</small>"
+            },
+            unlocked(){ return hasUpgrade('u',32) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#444400"},
+        },
+        // Incrementreeverse extra buyables
+        28: {
+            title: "Incrementreeverse: Anti-Matter (AM)",
+            cost(x){ return new Decimal(200).pow(x.div(3)).times(150) },
+            effect(x){
+                let eff = Decimal.pow(2.2, x);
+                if(player.u.activeUniverse === "incrementverse") eff = eff.pow(1.25);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Anti-Matter x"+format(d.effect)+"<br><small>Ported from Incrementreeverse am layer</small>"
+            },
+            unlocked(){ return hasUpgrade('u',35) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            style:{'height':'140px', 'background-color':"#222244"},
+        },
         // Basic Tree Universe buyables - direct ports of Basic Tree b/c/d/e/f/g
         41: {
             title: "Basic Tree: Basic Points (B)",

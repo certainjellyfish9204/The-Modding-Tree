@@ -183,6 +183,31 @@ addLayer("s2", {
             cost: new Decimal(50),
             unlocked() { return hasUpgrade('s2', 32) },
         },
+        // Row 4 — Post-game Singularity
+        41: {
+            title: "Singularity Expansion",
+            description: "Expand the Collapse Grid to 4x4. Singulons give double bonus.",
+            cost: new Decimal(75),
+            unlocked() { return hasUpgrade('s2', 33) },
+        },
+        42: {
+            title: "Field Amplifier",
+            description: "Singularity Field grows 5x faster. Field effect is squared.",
+            cost: new Decimal(100),
+            unlocked() { return hasUpgrade('s2', 41) },
+        },
+        43: {
+            title: "Rift Mastery",
+            description: "All Rift challenge rewards are tripled. Unlock Rift Omega+.",
+            cost: new Decimal(150),
+            unlocked() { return hasUpgrade('s2', 42) },
+        },
+        44: {
+            title: "Infinite Singularity",
+            description: "Singularity effect softcap removed. S effect ^3.",
+            cost: new Decimal(200),
+            unlocked() { return hasUpgrade('s2', 43) },
+        },
     },
     buyables: {
         11: {
@@ -286,6 +311,18 @@ addLayer("s2", {
             effectDescription: "ULTIMATE VICTORY! All costs halved. Infinite power.",
             done() { return player.s2.best.gte(20) },
             unlocked() { return hasMilestone('s2', 3) },
+        },
+        5: {
+            requirementDescription: "50 singularities",
+            effectDescription: "S effect ^2. Grid auto-fills. Field grows 10x faster.",
+            done() { return player.s2.best.gte(50) },
+            unlocked() { return hasMilestone('s2', 4) },
+        },
+        6: {
+            requirementDescription: "100 singularities",
+            effectDescription: "S effect ^5. ALL layer costs /100. True mastery.",
+            done() { return player.s2.best.gte(100) },
+            unlocked() { return hasMilestone('s2', 5) },
         },
     },
     clickables: {
