@@ -3,7 +3,7 @@ let modInfo = {
 	id: "classicPlusFull", // <- keep this unique! Change if you fork
 	author: "You",
 	pointsName: "points",
-	modFiles: ["layers.js", "tree.js"],
+	modFiles: ["layers.js", "layers/universe.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -13,11 +13,19 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.3",
-	name: "Way More Content",
+	num: "0.4",
+	name: "Multiverse",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.4 - Multiverse (Universe Layer)</h3><br>
+		- <b>NEW ROW 5: Universe (U)</b> — Travel the Multiverse!<br>
+		- Git cloned <code>/tmp/PT-Classic</code> (7889 lines, 7 rows) and <code>/tmp/PT-Rewritten</code> (9915 lines, 30 layers) — porting every layer incrementally<br>
+		- 3 playable universes: <b>Classic 1.0</b> (P/B/G from row_1.js/row_2.js), <b>Rewritten</b> (P/B/G/T from TMT layers.js), <b>Classic+ Hub</b> (this mod)<br>
+		- 11 new Universe upgrades, 7 Universe buyables (Classic P/B/G + Rewritten P/B/T + Multiverse Core), 3 Universe challenges, 3 travel clickables<br>
+		- Universe effect boosts ALL points (x5^U, x1.5/x2/x2.5 by active universe + classic/rewritten progress)<br>
+		- Travel cooldown, bars, infoboxes documenting porting process<br>
+		- New win: still 10 Eternity, but Universe gives x1e100+ boost to push 1e500<br><br>
 	<h3>v0.3 - Way More Content (Massive Expansion)</h3><br>
 		- <b>4 NEW LAYERS</b>: Mana (M, row 1), Warp (W, row 2), Quantum (Q, row 3), Eternity (E, row 4 - ENDGAME)<br>
 		- <b>Stats side layer</b> (S) with lore, bars, and breakdowns<br>
@@ -42,7 +50,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		- Added things.<br>
 		- Added stuff.`
 
-let winText = `Congratulations! You have reached Eternity and beaten the Classic+ Tree v0.3! <br><br> You hit 10 Eternity Points (or 1e500 points) — that's deep endgame. Now make it YOURS: reskin to Space/Magic, add a prestige layer beyond Eternity, or add a 6th row. The tree is yours.`
+let winText = `Congratulations! You have reached Eternity and beaten the Classic+ Tree v0.4! <br><br> You hit 10 Eternity Points or went multiversal — that's deep endgame. Now explore the other universes: Classic 1.0's raw 2019 balance and Rewritten's 30-layer monster are waiting in U. Every layer from both games is being ported!`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
@@ -80,9 +88,12 @@ function getPointGen() {
 	if (tmp.q.effect) gain = gain.times(tmp.q.effect)
 	// Row 4
 	if (tmp.e.effect) gain = gain.times(tmp.e.effect)
+	// Row 5 - Universe
+	if (tmp.u && tmp.u.effect) gain = gain.times(tmp.u.effect)
 	// Buyable point boosts
 	if (tmp.g.buyables && tmp.g.buyables[12]) gain = gain.times(buyableEffect('g', 12))
 	if (tmp.m.buyables && tmp.m.buyables[12]) gain = gain.times(buyableEffect('m', 12))
+	if (tmp.u && tmp.u.buyables && tmp.u.buyables[11]) gain = gain.times(buyableEffect('u', 11).pow(0.1))
 	// Achievements
 	if (hasAchievement('a', 11)) gain = gain.times(1.5)
 	if (hasAchievement('a', 12)) gain = gain.times(1.5)
@@ -91,6 +102,7 @@ function getPointGen() {
 	if (hasAchievement('a', 15)) gain = gain.times(1.3)
 	if (hasAchievement('a', 16)) gain = gain.times(1.3)
 	if (hasAchievement('a', 31)) gain = gain.times(1.5)
+	if (hasAchievement('a', 32)) gain = gain.times(2)
 	// Milestone / challenge boosts
 	if (hasMilestone('p', 4)) gain = gain.times(2)
 	if (hasMilestone('b', 5)) gain = gain.times(3)
@@ -104,6 +116,8 @@ function getPointGen() {
 	if (inChallenge('q', 11)) gain = gain.pow(0.5)
 	if (inChallenge('q', 12)) gain = gain.pow(0.4)
 	if (inChallenge('e', 11)) gain = gain.pow(0.3)
+	if (inChallenge('u', 11)) gain = gain.pow(0.6)
+	if (inChallenge('u', 12)) gain = gain.pow(0.5)
 	return gain
 }
 
@@ -130,12 +144,13 @@ var displayThings = [
 	function() { if (player.h.unlocked) return "H: "+format(tmp.h.effect)+"x" },
 	function() { if (player.q.unlocked) return "Q: "+format(tmp.q.effect)+"x" },
 	function() { if (player.e.unlocked) return "E: "+format(tmp.e.effect)+"x | "+format(player.e.points)+" Eternities" },
-	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11)) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
+	function() { if (player.u && player.u.unlocked) return "U: "+format(tmp.u.effect)+"x ("+player.u.activeUniverse+") | "+formatWhole(player.u.points)+" U" },
+	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11) || (player.u && inChallenge('u',11))) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.e.points.gte(new Decimal(10)) || player.points.gte(new Decimal("1e500"))
+	return player.e.points.gte(new Decimal(10)) || player.u.points.gte(new Decimal(25)) || player.points.gte(new Decimal("1e500"))
 }
 
 
@@ -156,11 +171,15 @@ function maxTickLength() {
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
 	if (oldVersion < "0.3") {
-		// New layers should start locked if old save had no data for them
 		if (!player.m) player.m = getStartLayerData("m");
 		if (!player.w) player.w = getStartLayerData("w");
 		if (!player.q) player.q = getStartLayerData("q");
 		if (!player.e) player.e = getStartLayerData("e");
 		if (!player.s) player.s = {unlocked: true};
+	}
+	if (oldVersion < "0.4") {
+		if (!player.u) player.u = getStartLayerData("u");
+		if (player.u && !player.u.classic) player.u.classic = {points: new Decimal(0), boosters: new Decimal(0), generators: new Decimal(0)};
+		if (player.u && !player.u.rewritten) player.u.rewritten = {points: new Decimal(0), boosters: new Decimal(0), time: new Decimal(0)};
 	}
 }
