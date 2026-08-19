@@ -15,6 +15,7 @@ function getStartOptions() {
 		oldStyle: false,
 		forceTooltips: true,
 		hideMilestonePopups: false,
+		notation: "tmt", // Eternal Notations: tmt, eternalDefault, eternalScientific, etc. (credit: MathCookie17)
 	}
 }
 

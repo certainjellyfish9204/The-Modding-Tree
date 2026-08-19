@@ -40,18 +40,113 @@ function sumValues(x) {
     return x.reduce((a, b) => Decimal.add(a, b))
 }
 
-function format(decimal, precision = 2, small) {
-    small = small || modInfo.allowSmall
+// ============================================================================
+// Eternal Notations support — credit: MathCookie17
+// Library: https://github.com/MathCookie17/Eternal-Notations (MIT)
+// Built on break_eternity.js, 144 presets + 65 notations, up to 10^^(10^308)
+// We keep TMT's original format as fallback ("tmt" notation) and add Eternal.
+// ============================================================================
+let eternalNotationsEnabled = false
+let currentEternalNotation = null
+let currentNotationId = "tmt" // tmt = original, others are Eternal preset names
+
+// Map our option ids to EternalNotations presets
+function getEternalPreset(id) {
+    if (typeof EternalNotations === "undefined") return null
+    // Handle plain text presets vs HTML presets — we use plain for format()
+    const presets = EternalNotations.Presets
+    switch(id) {
+        case "eternalDefault": return presets.Default
+        case "eternalScientific": return presets.Scientific
+        case "eternalEngineering": return presets.Engineering
+        case "eternalStandard": return presets.Standard
+        case "eternalInfinity": return presets.Infinity
+        case "eternalEternity": return presets.Eternity
+        case "eternalHyperscientific": return presets.Hyperscientific
+        case "eternalEternityScientific": return presets.EternityScientific
+        case "eternalTetration": return presets.Tetration
+        case "eternalBoundless": return presets.Boundless
+        default: return null
+    }
+}
+
+function setNotation(id) {
+    currentNotationId = id
+    if (id === "tmt") {
+        eternalNotationsEnabled = false
+        currentEternalNotation = null
+    } else {
+        let preset = getEternalPreset(id)
+        if (preset) {
+            eternalNotationsEnabled = true
+            currentEternalNotation = preset
+        } else {
+            // Fallback if EternalNotations not loaded or preset not found
+            eternalNotationsEnabled = false
+            currentEternalNotation = null
+            console.warn("[Eternal Notations] Preset not found or library not loaded:", id)
+        }
+    }
+    // Save to options if available
+    if (typeof options !== "undefined") options.notation = id
+    if (typeof player !== "undefined" && player !== null) save()
+}
+
+function getCurrentNotationName() {
+    const names = {
+        "tmt": "TMT (default)",
+        "eternalDefault": "Eternal Default",
+        "eternalScientific": "Scientific (Eternal)",
+        "eternalEngineering": "Engineering (Eternal)",
+        "eternalStandard": "Standard (Eternal)",
+        "eternalInfinity": "Infinity",
+        "eternalEternity": "Eternity",
+        "eternalHyperscientific": "Hyperscientific",
+        "eternalTetration": "Tetration",
+        "eternalBoundless": "Boundless"
+    }
+    return names[currentNotationId] || currentNotationId
+}
+
+// Cycle through notations for options button
+const NOTATIONS = ["tmt", "eternalDefault", "eternalScientific", "eternalEngineering", "eternalStandard", "eternalInfinity", "eternalEternity", "eternalHyperscientific", "eternalTetration", "eternalBoundless"]
+function cycleNotation() {
+    let idx = NOTATIONS.indexOf(currentNotationId)
+    let next = NOTATIONS[(idx + 1) % NOTATIONS.length]
+    setNotation(next)
+    // Also update options.notation for save
+    if (typeof options !== "undefined") options.notation = next
+}
+
+// Try to restore notation from options after load
+function initNotationFromOptions() {
+    if (typeof options !== "undefined" && options.notation) {
+        setNotation(options.notation)
+    } else if (typeof player !== "undefined" && player.notation) {
+        setNotation(player.notation)
+    } else {
+        setNotation("tmt")
+    }
+}
+
+// Auto-init when EternalNotations loads (defer a bit to ensure options exists)
+setTimeout(() => {
+    try { initNotationFromOptions() } catch(e) {}
+}, 500)
+
+// Original TMT format as fallback
+function formatTMT(decimal, precision = 2, small) {
+    small = small || (typeof modInfo !== "undefined" && modInfo.allowSmall)
     decimal = new Decimal(decimal)
     if (isNaN(decimal.sign) || isNaN(decimal.layer) || isNaN(decimal.mag)) {
-        player.hasNaN = true;
+        if (typeof player !== "undefined" && player) player.hasNaN = true;
         return "NaN"
     }
-    if (decimal.sign < 0) return "-" + format(decimal.neg(), precision, small)
+    if (decimal.sign < 0) return "-" + formatTMT(decimal.neg(), precision, small)
     if (decimal.mag == Number.POSITIVE_INFINITY) return "Infinity"
     if (decimal.gte("eeee1000")) {
         var slog = decimal.slog()
-        if (slog.gte(1e6)) return "F" + format(slog.floor())
+        if (slog.gte(1e6)) return "F" + formatTMT(slog.floor())
         else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0)
     }
     else if (decimal.gte("1e1000000")) return exponentialFormat(decimal, 0, false)
@@ -68,12 +163,39 @@ function format(decimal, precision = 2, small) {
         return val.replace(/([^(?:e|F)]*)$/, '-$1')
     }
     else   
-        return format(decimal, precision) + "⁻¹"
+        return formatTMT(decimal, precision) + "⁻¹"
 
+}
+
+function format(decimal, precision = 2, small) {
+    // If Eternal Notations is enabled and available, use it
+    if (eternalNotationsEnabled && currentEternalNotation && typeof EternalNotations !== "undefined") {
+        try {
+            decimal = new Decimal(decimal)
+            if (isNaN(decimal.sign) || isNaN(decimal.layer) || isNaN(decimal.mag)) {
+                if (typeof player !== "undefined" && player) player.hasNaN = true;
+                return "NaN"
+            }
+            // Eternal Notations handles all numbers, including small and negative, so we can just call it
+            // It expects a Decimal, and returns a string
+            return currentEternalNotation.format(decimal)
+        } catch (e) {
+            console.warn("[Eternal Notations] format failed, falling back to TMT:", e)
+            return formatTMT(decimal, precision, small)
+        }
+    }
+    return formatTMT(decimal, precision, small)
 }
 
 function formatWhole(decimal) {
     decimal = new Decimal(decimal)
+    if (eternalNotationsEnabled && currentEternalNotation) {
+        // For whole numbers, Eternal Notations will handle it, but we want no decimals for small numbers
+        // We can just call format with precision 0 for <1e9
+        if (decimal.gte(1e9)) return format(decimal, 2)
+        if (decimal.lte(0.99) && !decimal.eq(0)) return format(decimal, 2)
+        return format(decimal, 0)
+    }
     if (decimal.gte(1e9)) return format(decimal, 2)
     if (decimal.lte(0.99) && !decimal.eq(0)) return format(decimal, 2)
     return format(decimal, 0)

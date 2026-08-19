@@ -9,7 +9,8 @@ This project is a **fan-made Modding Tree mod** that ports and reimagines other 
 | Project | Author | Link | License | What we use |
 |---------|--------|------|---------|-------------|
 | **The Modding Tree (TMT)** | **Acamaeda** | https://github.com/Acamaeda/The-Modding-Tree | MIT (see `LICENSE`) | Engine, `break_eternity.js`, `layerSupport.js`, Vue components, docs in `/docs` |
-| **break_eternity.js** | Patashu | https://github.com/Patashu/break_eternity.js | MIT | Big numbers (`Decimal`) |
+| **break_eternity.js** | Patashu | https://github.com/Patashu/break_eternity.js | MIT | Big numbers (`Decimal`) — **updated to Eternal Notations' `break_eternity` (supports `mod`, `slog`, etc.)** |
+| **Eternal Notations** | **MathCookie17** | https://github.com/MathCookie17/Eternal-Notations — https://mathcookie17.github.io/Eternal-Notations/ | MIT (see `/tmp/Eternal-Notations/LICENSE`) | 144 presets + 65 notations, built on `break_eternity` — powers **Options → Notation** switcher (TMT, Scientific, Standard, Infinity, Eternity, etc.). Credit in `js/utils/eternal_notations.js` (1.2M) + `js/utils/NumberFormating.js` wrapper + `js/utils/options.js` + `js/technical/systemComponents.js` options tab. |
 
 ---
 
