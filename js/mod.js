@@ -13,11 +13,22 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2",
-	name: "Safe Storage",
+	num: "0.3",
+	name: "Way More Content",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.3 - Way More Content (Massive Expansion)</h3><br>
+		- <b>4 NEW LAYERS</b>: Mana (M, row 1), Warp (W, row 2), Quantum (Q, row 3), Eternity (E, row 4 - ENDGAME)<br>
+		- <b>Stats side layer</b> (S) with lore, bars, and breakdowns<br>
+		- <b>~70 new upgrades</b> across all layers, 15 new buyables, 9 new challenges, 6 new milestones per layer<br>
+		- P: +7 upgrades, 2 buyables, new challenge, bar, QOL milestones<br>
+		- B: +6 upgrades, 2 buyables, challenge, bar<br>
+		- G: +7 upgrades, 2 buyables, grid, challenges<br>
+		- T: +5 upgrades, 2 buyables, 3 new challenges, clickables<br>
+		- H: +7 upgrades, 2 buyables, challenges, bar<br>
+		- Achievements: 8 → 24 (including secret & grindy)<br>
+		- New win: 10 Eternity Points or 1e500 points!<br><br>
 	<h3>v0.2 - Safe Storage Fallback</h3><br>
 		- Added localStorage fallback: if storage is blocked/full/private-mode, game now uses sessionStorage → memory fallback instead of crashing<br>
 		- Shows red banner + popup when in memory-only mode (Export reminder)<br>
@@ -31,7 +42,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		- Added things.<br>
 		- Added stuff.`
 
-let winText = `Congratulations! You have reached the end of this starter and beaten the Classic+ Tree! <br><br> Now make it YOURS - change numbers, add a 6th layer, reskin it to Space/Magic/Factory, and go wild.`
+let winText = `Congratulations! You have reached Eternity and beaten the Classic+ Tree v0.3! <br><br> You hit 10 Eternity Points (or 1e500 points) — that's deep endgame. Now make it YOURS: reskin to Space/Magic, add a prestige layer beyond Eternity, or add a 6th row. The tree is yours.`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
@@ -56,22 +67,43 @@ function getPointGen() {
 	if (hasUpgrade('p', 11)) gain = gain.times(2)
 	if (hasUpgrade('p', 12)) gain = gain.times(upgradeEffect('p', 12))
 	if (hasUpgrade('p', 13)) gain = gain.times(upgradeEffect('p', 13))
-	// G effect
+	if (hasUpgrade('p', 32)) gain = gain.times(upgradeEffect('p', 32))
+	// Row 1 effects
 	if (tmp.g.effect) gain = gain.times(tmp.g.effect)
-	// B effect
 	if (tmp.b.effect) gain = gain.times(tmp.b.effect)
-	// T effect
+	if (tmp.m.effect) gain = gain.times(tmp.m.effect)
+	// Row 2
 	if (tmp.t.effect) gain = gain.times(tmp.t.effect)
-	// H effect - huge
+	if (tmp.w.effect) gain = gain.times(tmp.w.effect)
+	// Row 3
 	if (tmp.h.effect) gain = gain.times(tmp.h.effect)
+	if (tmp.q.effect) gain = gain.times(tmp.q.effect)
+	// Row 4
+	if (tmp.e.effect) gain = gain.times(tmp.e.effect)
+	// Buyable point boosts
+	if (tmp.g.buyables && tmp.g.buyables[12]) gain = gain.times(buyableEffect('g', 12))
+	if (tmp.m.buyables && tmp.m.buyables[12]) gain = gain.times(buyableEffect('m', 12))
 	// Achievements
 	if (hasAchievement('a', 11)) gain = gain.times(1.5)
 	if (hasAchievement('a', 12)) gain = gain.times(1.5)
 	if (hasAchievement('a', 13)) gain = gain.times(1.2)
 	if (hasAchievement('a', 14)) gain = gain.times(achievementEffect('a', 14))
-	// Inside challenges
+	if (hasAchievement('a', 15)) gain = gain.times(1.3)
+	if (hasAchievement('a', 16)) gain = gain.times(1.3)
+	if (hasAchievement('a', 31)) gain = gain.times(1.5)
+	// Milestone / challenge boosts
+	if (hasMilestone('p', 4)) gain = gain.times(2)
+	if (hasMilestone('b', 5)) gain = gain.times(3)
+	if (hasAchievement('a', 33)) gain = gain.pow(1.05)
+	// Inside challenges (debuffs)
 	if (inChallenge('t', 11)) gain = gain.pow(0.5)
 	if (inChallenge('t', 12)) gain = gain.pow(0.7)
+	if (inChallenge('t', 21)) gain = gain.pow(0.6)
+	if (inChallenge('w', 11)) gain = gain.pow(0.65)
+	if (inChallenge('w', 12)) gain = gain.pow(0.55)
+	if (inChallenge('q', 11)) gain = gain.pow(0.5)
+	if (inChallenge('q', 12)) gain = gain.pow(0.4)
+	if (inChallenge('e', 11)) gain = gain.pow(0.3)
 	return gain
 }
 
@@ -89,15 +121,21 @@ var displayThings = [
 			return "<b style='color:orange'>⚠️ Save fallback active ("+type+")</b>"
 		}
 	},
-	function() { if (tmp.p.effect) return "P effect: "+format(tmp.p.effect)+"x to points" },
-	function() { if (player.b.unlocked) return "Boosters boost points by "+format(tmp.b.effect)+"x" },
-	function() { if (player.g.unlocked) return "Generators: "+formatWhole(player.g.points)+" (x"+format(tmp.g.effect)+")" },
-	function() { if (inChallenge('t', 11) || inChallenge('t', 12)) return "<b style='color:red'>You are in a Time Challenge!</b>" },
+	function() { if (tmp.p && tmp.p.effect) return "P: "+format(tmp.p.effect)+"x" },
+	function() { if (player.b.unlocked) return "B: "+format(tmp.b.effect)+"x" },
+	function() { if (player.g.unlocked) return "G: "+formatWhole(player.g.points)+" (×"+format(tmp.g.effect)+")" },
+	function() { if (player.m.unlocked) return "M: "+format(tmp.m.effect)+"x" },
+	function() { if (player.t.unlocked) return "T: "+format(tmp.t.effect)+"x" },
+	function() { if (player.w.unlocked) return "W: "+format(tmp.w.effect)+"x" },
+	function() { if (player.h.unlocked) return "H: "+format(tmp.h.effect)+"x" },
+	function() { if (player.q.unlocked) return "Q: "+format(tmp.q.effect)+"x" },
+	function() { if (player.e.unlocked) return "E: "+format(tmp.e.effect)+"x | "+format(player.e.points)+" Eternities" },
+	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11)) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.h.points.gte(new Decimal(5))
+	return player.e.points.gte(new Decimal(10)) || player.points.gte(new Decimal("1e500"))
 }
 
 
@@ -117,4 +155,12 @@ function maxTickLength() {
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
+	if (oldVersion < "0.3") {
+		// New layers should start locked if old save had no data for them
+		if (!player.m) player.m = getStartLayerData("m");
+		if (!player.w) player.w = getStartLayerData("w");
+		if (!player.q) player.q = getStartLayerData("q");
+		if (!player.e) player.e = getStartLayerData("e");
+		if (!player.s) player.s = {unlocked: true};
+	}
 }
