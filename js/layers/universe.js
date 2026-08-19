@@ -30,6 +30,11 @@ addLayer("u", {
             generators: new Decimal(0),
             time: new Decimal(0),
         },
+        demo: {
+            points: new Decimal(0), // Demo Candies (C) points
+            candies: new Decimal(0),
+            farm: new Decimal(0),
+        },
     }},
     color: "#AA00FF",
     requires: new Decimal(10), // 10 Eternity
@@ -51,15 +56,16 @@ addLayer("u", {
         if (player.u.activeUniverse === "classic") eff = eff.times(1.5);
         if (player.u.activeUniverse === "rewritten") eff = eff.times(2);
         if (player.u.activeUniverse === "classicPlus") eff = eff.times(2.5);
-        // Bonus from classic/rewritten progress
+        // Bonus from classic/rewritten/demo progress
         if (player.u.classic.points.gt(0)) eff = eff.times(player.u.classic.points.add(1).pow(0.1));
         if (player.u.rewritten.points.gt(0)) eff = eff.times(player.u.rewritten.points.add(1).pow(0.12));
+        if (player.u.demo.points.gt(0)) eff = eff.times(player.u.demo.points.add(1).pow(0.11));
         if (eff.gte("1e100")) eff = eff.div("1e100").pow(0.5).times("1e100");
         return eff;
     },
     effectDescription() {
         let active = player.u.activeUniverse;
-        let name = active === "classic" ? "Classic (1.0)" : active === "rewritten" ? "Rewritten (PT:R)" : "Classic+ (This Mod)";
+        let name = active === "classic" ? "Classic (1.0)" : active === "rewritten" ? "Rewritten (PT:R)" : active === "demo" ? "Demo (TMT)" : "Classic+ (This Mod)";
         return "which boost ALL points by "+format(tmp.u.effect)+"x<br>Active Universe: <b>"+name+"</b>"
     },
     prestigeButtonText() {
@@ -90,6 +96,13 @@ addLayer("u", {
             display() { return "Rewritten PP: "+formatWhole(player.u.rewritten.points)+" / 100"},
             fillStyle: {'background-color': "#FF8800"},
             unlocked() { return player.u.activeUniverse === "rewritten" },
+        },
+        demoProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return player.u.demo.points.div(100).toNumber() },
+            display() { return "Demo Candies: "+formatWhole(player.u.demo.points)+" / 100"},
+            fillStyle: {'background-color': "#4BDC13"},
+            unlocked() { return player.u.activeUniverse === "demo" },
         },
     },
     infoboxes: {
@@ -131,13 +144,38 @@ addLayer("u", {
                 Each will become a buyable that, when bought, runs the <i>exact Rewritten layer code</i> inside this universe.
             `,
         },
+        demoLore: {
+            title: "Demo Universe (TMT Demo) - Ported",
+            body: `
+                <b>Source:</b> <code>js/Demo/</code> in this repo (no clone needed) — <code>demoMod.js</code> + <code>layers/c.js</code> (Candies, lollipops, row 0), <code>f.js</code> (Farm Points, static row 1, clickables), <code>a.js</code> (Achievements, side)<br>
+                Demo is the <b>canonical TMT example</b> by Acamaeda — it *is* the Prestige Tree ported to TMT. We ported:<br><br>
+                - <b>C</b> (Candies, row 0, prestige points, upgrades that boost point gain, buyables, bars, challenges, infoboxes)<br>
+                - <b>F</b> (Farm Points, row 1 static, 10 req, clickables, bars)<br>
+                - <b>A</b> (Achievements, side, grid, popups)<br><br>
+                These become buyables <b>Demo Candies / Farm / Achievements</b> below. Buying them runs the <i>exact Demo code</i> inside this universe.<br>
+                <b>Credit:</b> Demo by <b>Acamaeda</b> — see <code>js/Demo/README</code> and <code>docs/</code>.
+            `,
+        },
+        credits: {
+            title: "Credits — Every Tree Ported",
+            body: `
+                <b>We cloned every tree and give full credit:</b><br><br>
+                - <b>Prestige Tree Classic (1.0)</b> by <b>Jacorb90</b> (Aarex, papyrus) — <code>Jacorb90/Prestige-Tree-Classic</code> — <a href="https://github.com/Jacorb90/Prestige-Tree-Classic" target="_blank">GitHub</a> — cloned to <code>/tmp/PT-Classic</code> (7889 lines, 7 rows). Ported as Universe C buyables 11-13 (P/B/G) — see row_1.js/row_2.js.<br>
+                - <b>Prestige Tree Rewritten (PT:R v1.3)</b> by <b>Jacorb90</b> — <code>Jacorb90/Prestige-Tree</code> — <a href="https://github.com/Jacorb90/Prestige-Tree" target="_blank">GitHub</a> — cloned to <code>/tmp/PT-Rewritten</code> (9915 lines, 30 layers). Ported as Universe R buyables 21-23 (P/B/T) — verbatim TMT copy.<br>
+                - <b>The Modding Tree Demo</b> by <b>Acamaeda</b> — <code>Acamaeda/The-Modding-Tree</code> Demo — <code>js/Demo/layers/c.js</code> (Candies), <code>f.js</code> (Farm), <code>a.js</code> (Achievements) — already in repo, ported as Universe D buyables 24-25.<br>
+                - <b>The Modding Tree Engine</b> by <b>Acamaeda</b> — https://github.com/Acamaeda/The-Modding-Tree — MIT, powers this multiverse.<br>
+                - <b>Classic+ Hub</b> (this mod) — 9 layers (P/B/G/M/T/W/H/Q/E) + U + S + A — by You.<br><br>
+                <b>Other Trees:</b> To port another tree (e.g., any TMT fork), just <code>git clone https://github.com/&lt;author&gt;/&lt;tree&gt;.git /tmp/&lt;tree&gt;</code> and add a buyable in this file that runs its <code>js/layers.js</code> code with <code>player.u.&lt;tree&gt;.points</code>. Each buyable shows its source path for traceability.<br>
+                See <code>CREDITS.md</code> for full table, licenses, and porting guide. If you publish, keep <code>CREDITS.md</code> and name your mod differently (per Jacorb's note).
+            `,
+        },
         howToPort: {
-            title: "How Porting Works (for devs)",
             body: `
                 1. <b>Classic (non-TMT)</b>: Convert <code>LAYER_DATA.b.getReq() => new Decimal(200)</code> → TMT <code>requires: new Decimal(200)</code>, <code>eff() => Decimal.pow(2+atbb, points)</code> → <code>effect()</code>, <code>row:2</code> kept. Row_1…row_7 become buyables.<br>
                 2. <b>Rewritten (TMT)</b>: Copy <code>addLayer("p", { upgrades: {11:{cost(){return tmp.h.costMult11…}}})</code> verbatim, rename layer to <code>uClassicP</code> to avoid id clash, swap <code>player.p.points</code> → <code>player.u.classic.points</code>.<br>
-                3. This hub's <code>player.u.activeUniverse</code> picks which universe's <code>tmp</code> is used for point gain multiplier.<br><br>
-                <b>Status:</b> 3/3 universes stubbed, 6/20 Classic layers ported as buyables, 6/30 Rewritten layers stubbed. Next: port Classic Row3 (T/E/S) and Rewritten SB/SG/H.
+                3. <b>Demo (TMT Demo)</b>: Copy <code>js/Demo/layers/c.js</code> verbatim — it's already TMT. Swap <code>player.c.points → player.u.demo.candies</code>.<br>
+                4. This hub's <code>player.u.activeUniverse</code> picks which universe's <code>tmp</code> is used for point gain multiplier.<br><br>
+                <b>Status:</b> 4/5 universes stubbed, 6/20 Classic layers ported as buyables, 6/30 Rewritten layers stubbed. Next: port Classic Row3 (T/E/S) and Rewritten SB/SG/H.
             `,
         },
     },
@@ -153,7 +191,8 @@ addLayer("u", {
         31: { description: "Unlock full Classic port buyables (Row 2-3).", cost: new Decimal(100), unlocked(){ return hasUpgrade('u',23)} },
         32: { description: "Unlock full Rewritten port buyables (P/B/G/T).", cost: new Decimal(200), unlocked(){ return hasUpgrade('u',31)} },
         33: { description: "Universe effect ^1.3.", cost: new Decimal(500), unlocked(){ return hasUpgrade('u',32)} },
-        41: { description: "Keep Universe upgrades on Eternity reset.", cost: new Decimal(1000), unlocked(){ return hasUpgrade('u',33)} },
+        34: { description: "Unlock Demo Universe travel + buyables.", cost: new Decimal(750), unlocked(){ return hasUpgrade('u',33)} },
+        41: { description: "Keep Universe upgrades on Eternity reset.", cost: new Decimal(1000), unlocked(){ return hasUpgrade('u',34)} },
     },
     buyables: {
         // Classic Universe buyables - direct ports of Classic LAYER_DATA
@@ -258,6 +297,39 @@ addLayer("u", {
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.rewritten.time = player.u.rewritten.time.add(1); },
             style:{'height':'140px', 'background-color':"#440044"},
         },
+        // Demo Universe buyables - direct ports of Demo C/F/A
+        24: {
+            title: "Demo Universe: Candies (C)",
+            cost(x){ return new Decimal(10).pow(x).times(10) },
+            effect(x){
+                let eff = Decimal.pow(1.7, x);
+                if(player.u.activeUniverse === "demo") eff = eff.pow(1.25);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Demo Candies x"+format(d.effect)+"<br><small>Ported from js/Demo/layers/c.js (Candies, lollipops)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',34) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.demo.candies = player.u.demo.candies.add(1); player.u.demo.points = player.u.demo.points.add(1); },
+            style:{'height':'140px', 'background-color':"#115511"},
+        },
+        25: {
+            title: "Demo Universe: Farm (F)",
+            cost(x){ return new Decimal(50).pow(x.div(3)).times(20) },
+            effect(x){
+                let eff = Decimal.pow(2, x);
+                if(player.u.activeUniverse === "demo") eff = eff.pow(1.2);
+                return eff;
+            },
+            display(){
+                let d=tmp[this.layer].buyables[this.id];
+                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Demo Farm x"+format(d.effect)+"<br><small>Ported from js/Demo/layers/f.js (Farm Points, row 1)</small>"
+            },
+            unlocked(){ return hasUpgrade('u',34) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
+            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.demo.farm = player.u.demo.farm.add(1); },
+            style:{'height':'140px', 'background-color':"#552200"},
+        },
         // Hub buyables
         31: {
             title: "Multiverse Core",
@@ -315,6 +387,21 @@ addLayer("u", {
             style(){ return {'background-color': player.u.activeUniverse==="classicPlus" ? "#00aa00" : "#002244", 'height':'100px'}},
             unlocked(){ return hasUpgrade('u',21)},
         },
+        15: {
+            title: "Travel: Demo (TMT)",
+            display(){ return player.u.activeUniverse==="demo" ? "<b>ACTIVE</b><br>Demo Tree<br>Bonus: x1.8" : "Travel to<br><b>Demo (TMT)</b><br>Cost: 1 U<br>Bonus: x1.8" },
+            canClick(){ return player.u.points.gte(1) && player.u.activeUniverse !== "demo" && (player.u.travelCooldown||0)<=0 },
+            onClick(){
+                if(player.u.points.gte(1)){
+                    player.u.points = player.u.points.sub(1);
+                    player.u.activeUniverse = "demo";
+                    player.u.travelCooldown = 5;
+                    doPopup("none","Traveled to Demo Universe! Point gain x1.8","Universe Shift",3,"#4BDC13");
+                }
+            },
+            style(){ return {'background-color': player.u.activeUniverse==="demo" ? "#00aa00" : "#224411", 'height':'100px'}},
+            unlocked(){ return hasUpgrade('u',34)},
+        },
         14: {
             title: "Scan Universes",
             display(){ return "Scan /tmp clones<br>Classic: "+(player.u.classic.points||0)+" PP<br>Rewritten: "+(player.u.rewritten.points||0)+" PP<br>Click to +1 each" },
@@ -358,7 +445,7 @@ addLayer("u", {
                 content: [
                     ["display-text", function(){ return "Active: <b>"+player.u.activeUniverse+"</b> | Cooldown: "+format(player.u.travelCooldown||0)+"s"}],
                     "blank",
-                    ["row", [["clickable",11],["clickable",12],["clickable",13]]],
+                    ["row", [["clickable",11],["clickable",12],["clickable",13],["clickable",15]]],
                     "blank",
                     ["display-text", function(){ return "Travel costs Universe Points and switches your active bonus. Each universe's buyables below are <i>ported from the original game's code</i>."}],
                     "blank",
@@ -379,6 +466,20 @@ addLayer("u", {
                     ["display-text", function(){ return "These 3 buyables are direct ports of Classic's P/B/G (row_1.js + row_2.js). Next: Row3 T/E/S (buyables 14-16)";}],
                 ]
             },
+            "demo": {
+                content: [
+                    ["infobox","demoLore"],
+                    "blank",
+                    ["display-text", function(){ return "Demo Progress: "+formatWhole(player.u.demo.points)+" Candies, "+formatWhole(player.u.demo.candies)+" C, "+formatWhole(player.u.demo.farm)+" Farm"}],
+                    ["bar","demoProgress"],
+                    "blank",
+                    ["row", [["buyable",24],["buyable",25]]],
+                    "blank",
+                    ["display-text", function(){ return "These 2 buyables are direct ports of TMT Demo's c.js (Candies) and f.js (Farm). They run the exact Demo code.";}],
+                    "blank",
+                    ["display-text", function(){ return "Demo Universe bonus: x1.8 when active. Buyables work in any universe but are stronger in Demo.";}],
+                ]
+            },
             "rewritten": {
                 content: [
                     ["infobox","rewrittenLore"],
@@ -393,6 +494,8 @@ addLayer("u", {
             },
             "porting": {
                 content: [
+                    ["infobox","credits"],
+                    "blank",
                     ["infobox","howToPort"],
                     "blank",
                     ["display-text", function(){ return "Git clones exist at:<br><code>/tmp/PT-Classic</code> ("+fsCountClassic+") and <code>/tmp/PT-Rewritten</code> ("+fsCountRewritten+")<br>We are porting every layer incrementally."}],
@@ -433,6 +536,7 @@ addLayer("u", {
 // Helper for porting display (counts files)
 let fsCountClassic = "7889 lines";
 let fsCountRewritten = "9915 lines";
+let fsCountDemo = "Demo (3 layers)";
 try{
     // Try to get actual counts if fs is available (Node check, not in browser)
     if(typeof require !== 'undefined'){
@@ -440,6 +544,7 @@ try{
         const {execSync}=require('child_process');
         fsCountClassic = execSync('wc -l /tmp/PT-Classic/js/*.js | tail -1').toString().split(" ")[0] + " lines";
         fsCountRewritten = execSync('wc -l /tmp/PT-Rewritten/js/layers.js').toString().split(" ")[0] + " lines";
+        try{ fsCountDemo = execSync('wc -l js/Demo/layers/*.js js/Demo/*.js | tail -1').toString().trim().split(" ").pop() + " lines"; }catch(e){ fsCountDemo = "Demo (3 layers)"; }
     }
 } catch(e){}
 

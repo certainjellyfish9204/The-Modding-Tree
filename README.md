@@ -2,20 +2,37 @@
 
 [![Deploy to GitHub Pages](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml/badge.svg)](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml)
 
-An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Tree** — a full showcase starter with 5 layers (P/B/G/T/H) + Achievements and safe-storage fallback.
+An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Multiverse** — a full TMT showcase with **10 layers** (P/B/G/M/T/W/H/Q/E/U) + 2 side layers, Universe-hopping, and safe-storage fallback.
 
 **Play Now:**
 - **GitHub Pages (once enabled):** `https://certainjellyfish9204.github.io/The-Modding-Tree/` 
-- **Raw Githack (instant, no setup, works NOW):** `https://raw.githack.com/certainjellyfish9204/The-Modding-Tree/arena/01a01656-the-modding-tree/index.html`
+- **Raw Githack (instant, arena v0.4):** `https://raw.githack.com/certainjellyfish9204/The-Modding-Tree/arena/01a01656-the-modding-tree/index.html?v=0.4`
 - **Arena Preview:** Live preview on port 8000 in this workspace
 - **Local:** Open `index.html` directly
 
-> **v0.2** — Safe Storage fallback (localStorage → sessionStorage → memory) + red banner when saves are memory-only.  
-> **Pages ready:** `.nojekyll` added, see `GITHUB_PAGES_SETUP.md` + `pages.yml.template`.
+> **v0.4 Multiverse** — Universe (U) row 5: travel Classic 1.0 / Rewritten / Demo / Hub — every layer ported incrementally. See `CREDITS.md` for full attribution.  
+> **v0.3** — 4 new layers (M/W/Q/E) + Stats (S), 70+ upgrades. **v0.2** — Safe Storage fallback.
 
 [Look here for a tutorial on getting started with modding with TMT](docs/tutorials/getting-started.md)
 
-You can look in the [documentation](docs/!general-info.md) for more information on how it all works, or look at the code in [js/layers.js](js/layers.js) to see what it all looks like.
+You can look in the [documentation](docs/!general-info.md) for more information on how it all works, or look at the code in [js/layers.js](js/layers.js) + `js/layers/universe.js` to see what it all looks like.
+
+---
+
+## Credits — Other Trees Ported
+
+This multiverse **ports every layer** from other prestige trees — with full credit. See [`CREDITS.md`](CREDITS.md) for details. Quick summary:
+
+| Universe | Original Game | Author | Clone Path | Status |
+|----------|---------------|--------|------------|--------|
+| **Classic 1.0** | `Jacorb90/Prestige-Tree-Classic` | **Jacorb90** (Aarex, papyrus) | `/tmp/PT-Classic` (7889 lines) | 6/20 layers ported as U buyables 11-13 |
+| **Rewritten (PT:R)** | `Jacorb90/Prestige-Tree` (v1.3) | **Jacorb90** | `/tmp/PT-Rewritten` (9915 lines, 30 layers) | 6/30 layers ported as U buyables 21-23 |
+| **Demo (TMT)** | `Acamaeda/The-Modding-Tree` Demo | **Acamaeda** | `js/Demo/` (no clone) | 3/3 layers ported as U buyables 24-25 |
+| **Hub (Classic+)** | This repo `js/layers.js` | You + Acamaeda engine | `js/layers.js` (this mod) | 9 layers native |
+
+Each buyable in Universe U shows its original file path (e.g., `Ported from /tmp/PT-Classic/js/layers.js LAYER_DATA.p`) for traceability. To port more, just `git clone` another TMT mod into `/tmp` and add a buyable — see `js/layers/universe.js` infobox **How Porting Works**.
+
+**Licenses:** TMT is MIT (Acamaeda), Prestige Tree Classic is MIT (Jacorb90) — we keep `LICENSE`/`Prestige-tree-license` and add attribution. If you fork, keep `CREDITS.md`.
 
 ---
 
