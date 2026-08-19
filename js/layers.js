@@ -787,7 +787,7 @@ addLayer("w", {
     },
     milestones: {
         0: { requirementDescription: "2 warp", effectDescription: "Keep G/M upgrades, time gain x2", done(){ return player.w.best.gte(2)} },
-        1: { requirementDescription: "6 warp", effectDescription: "Keep Warp upgrades, unlock Q", done(){ return player.w.best.gte(6)}, unlocked(){return hasMilestone('w',0)} },
+        1: { requirementDescription: "6 warp", effectDescription: "Keep Warp upgrades, Q gain x2", done(){ return player.w.best.gte(6)}, unlocked(){return hasMilestone('w',0)} },
         2: { requirementDescription: "15 warp", effectDescription: "Unlock Mana Warp buyable, Warp gain x2", done(){ return player.w.best.gte(15)}, unlocked(){return hasMilestone('w',1)} },
         3: { requirementDescription: "40 warp", effectDescription: "Gain 15% Warp passively", done(){ return player.w.best.gte(40)}, unlocked(){return hasMilestone('w',2)} },
         4: { requirementDescription: "100 warp", effectDescription: "W effect ^1.5, W buyables scale 2x slower", done(){ return player.w.best.gte(100)}, unlocked(){return hasMilestone('w',3)} },
@@ -912,7 +912,7 @@ addLayer("q", {
     color: "#00FFAA",
     requires: new Decimal(15), resource: "quantum shards", baseResource: "warp shards", baseAmount(){ return player.w.points },
     type: "static", base: 2.2, exponent: 1.3, row: 3, branches: [["w","#00AAFF"], ["t","#AA00FF"]],
-    layerShown(){ return hasUpgrade('h',13) && hasMilestone('w',1) || player.q.unlocked },
+    layerShown(){ return hasUpgrade('h',13) || player.q.unlocked },
     effect(){
         let eff=Decimal.pow(50, player.q.points);
         if(hasUpgrade('q',12)) eff=eff.pow(1.4);
