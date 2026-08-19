@@ -29,6 +29,7 @@ addLayer("p", {
         if (hasMilestone('p', 3)) mult = mult.times(2.5)
         if (hasAchievement('a', 12)) mult = mult.times(1.5)
         if (hasAchievement('a', 33)) mult = mult.times(2)
+        if (player.r && hasUpgrade('r', 11)) mult = mult.times(upgradeEffect('r', 11))
         return mult
     },
     gainExp() {
@@ -486,6 +487,7 @@ addLayer("t", {
         if (player.b.points.gte(5)) mult = mult.times(player.b.points)
         if (hasUpgrade('p',41)) mult = mult.times(1.5)
         if (hasMilestone('t',4)) mult = mult.times(2)
+        if (player.r && hasUpgrade('r',11)) mult = mult.times(upgradeEffect('r',11))
         return mult
     },
     gainExp() { return new Decimal(1) },
@@ -601,6 +603,7 @@ addLayer("w", {
         if(hasUpgrade('t',31)) m=m.times(2);
         if(player.g.points.gte(10)) m=m.times(player.g.points.div(10).add(1));
         if(hasUpgrade('w',22)) m=m.times(3);
+        if(player.r && hasUpgrade('r',11)) m=m.times(upgradeEffect('r',11));
         return m;
     },
     gainExp(){ return new Decimal(1)},
@@ -865,6 +868,12 @@ addLayer("e", {
     requires: new Decimal(25), resource: "eternity points", baseResource: "hyper points", baseAmount(){ return player.h.points },
     type: "static", base: 3, exponent: 1.5, row: 4, branches: [["h","#DD2222"], ["q","#00FFAA"]],
     layerShown(){ return hasUpgrade('h',13) && hasUpgrade('q',11) || player.e.unlocked },
+    gainMult(){
+        let mult = new Decimal(1);
+        if(player.r && tmp.r && tmp.r.effect) mult = mult.div(tmp.r.effect.pow(0.08));
+        if(player.r && tmp.r && tmp.r.buyables && tmp.r.buyables[12]) mult = mult.div(buyableEffect('r',12));
+        return mult;
+    },
     effect(){
         let eff=Decimal.pow(1000, player.e.points);
         if(hasUpgrade('e',12)) eff=eff.pow(1.5);

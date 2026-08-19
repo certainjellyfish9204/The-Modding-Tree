@@ -3,7 +3,7 @@ let modInfo = {
 	id: "classicPlusFull", // <- keep this unique! Change if you fork
 	author: "You",
 	pointsName: "points",
-	modFiles: ["layers.js", "layers/universe.js", "tree.js"],
+	modFiles: ["layers.js", "layers/universe.js", "layers/reality.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -13,11 +13,15 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.5",
-	name: "Eternal Notations",
+	num: "0.6",
+	name: "Fractured Reality",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.6 - Fractured Reality</h3><br>
+		- <b>NEW ROW 5 BRANCH: Reality (R)</b> — a full second path branching directly from Eternity alongside Universe<br>
+		- Reality Shards, Stability, two Dimension buyables, nine upgrades, five milestones, two Reality Fracture challenges, and automation<br>
+		- Reality boosts point and Eternity gain; master the branch at 25 Reality Shards for an alternate victory<br><br>
 	<h3>v0.5 - Eternal Notations (by MathCookie17) — Every Preset!</h3><br>
 		- <b>Eternal Notations</b> by <b>MathCookie17</b> — <a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank">GitHub</a> (MIT, <b>144 presets + 65 notations + 144 HTML presets = 288 total</b>, built on break_eternity, up to 10^^(10^308)) — <code>js/utils/eternal_notations.js</code> (1.2M, 17122 lines) + <code>.min.js</code> + updated <code>break_eternity.js</code> (now supports <code>mod</code>/<code>slog</code>)<br>
 		- <b>Every preset added</b> (146 options: TMT + 145 Eternal) — including <b>HTML presets like Colored Dominoes</b> (requires <code>eternal_notations_images/dominoes.css</code> + <code>dominoes.png</code> — <b>both included</b> at <code>eternal_notations_images/</code> and loaded via <code>index.html</code> + <code>v-html</code> for points)<br>
@@ -57,7 +61,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		- Added things.<br>
 		- Added stuff.`
 
-let winText = `Congratulations! You have reached Eternity and beaten the Classic+ Tree v0.5! <br><br> You hit 10 Eternity Points, 25 Universe Points, or 1e500 points — now displayable as Infinity/Eternity via Eternal Notations! Explore all 5 universes (Classic, Rewritten, Demo, Incrementreeverse, Hub) in U, and switch notations in Options → Notation. Every layer from every game is being ported with credit!`
+let winText = `Congratulations! You have mastered the Classic+ Tree v0.6! <br><br> You reached 25 Universe Points, 25 Reality Shards, or 1e500 points. Explore the five universes through U, stabilize the main timeline through R, and switch notations in Options → Notation.`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
@@ -95,12 +99,17 @@ function getPointGen() {
 	if (tmp.q.effect) gain = gain.times(tmp.q.effect)
 	// Row 4
 	if (tmp.e.effect) gain = gain.times(tmp.e.effect)
-	// Row 5 - Universe
-	if (tmp.u && tmp.u.effect) gain = gain.times(tmp.u.effect)
+	// Row 5 branches - Universe and Reality
+	// Shattered Timeline disables both capstone effects while the challenge is active.
+	if (tmp.u && tmp.u.effect && !(player.r && inChallenge('r', 11))) gain = gain.times(tmp.u.effect)
+	if (tmp.r && tmp.r.effect && !inChallenge('r', 11)) gain = gain.times(tmp.r.effect)
+	if (player.r && hasUpgrade('r', 11)) gain = gain.times(upgradeEffect('r', 11))
+	if (player.r && hasMilestone('r', 0)) gain = gain.times(2)
 	// Buyable point boosts
 	if (tmp.g.buyables && tmp.g.buyables[12]) gain = gain.times(buyableEffect('g', 12))
 	if (tmp.m.buyables && tmp.m.buyables[12]) gain = gain.times(buyableEffect('m', 12))
 	if (tmp.u && tmp.u.buyables && tmp.u.buyables[11]) gain = gain.times(buyableEffect('u', 11).pow(0.1))
+	if (tmp.r && tmp.r.buyables && tmp.r.buyables[11]) gain = gain.times(buyableEffect('r', 11))
 	// Achievements
 	if (hasAchievement('a', 11)) gain = gain.times(1.5)
 	if (hasAchievement('a', 12)) gain = gain.times(1.5)
@@ -125,6 +134,8 @@ function getPointGen() {
 	if (inChallenge('e', 11)) gain = gain.pow(0.3)
 	if (inChallenge('u', 11)) gain = gain.pow(0.6)
 	if (inChallenge('u', 12)) gain = gain.pow(0.5)
+	if (player.r && inChallenge('r', 11)) gain = gain.pow(0.35)
+	if (player.r && inChallenge('r', 12)) gain = gain.pow(0.25)
 	return gain
 }
 
@@ -152,12 +163,13 @@ var displayThings = [
 	function() { if (player.q.unlocked) return "Q: "+format(tmp.q.effect)+"x" },
 	function() { if (player.e.unlocked) return "E: "+format(tmp.e.effect)+"x | "+format(player.e.points)+" Eternities" },
 	function() { if (player.u && player.u.unlocked) return "U: "+format(tmp.u.effect)+"x ("+player.u.activeUniverse+") | "+formatWhole(player.u.points)+" U" },
-	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11) || (player.u && inChallenge('u',11))) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
+	function() { if (player.r && player.r.unlocked) return "R: "+format(tmp.r.effect)+"x | "+formatWhole(player.r.points)+" shards | "+formatWhole(player.r.stability)+" stability" },
+	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11) || (player.u && inChallenge('u',11)) || (player.r && (inChallenge('r',11) || inChallenge('r',12)))) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.e.points.gte(new Decimal(10)) || player.u.points.gte(new Decimal(25)) || player.points.gte(new Decimal("1e500"))
+	return player.u.points.gte(new Decimal(25)) || player.r.points.gte(new Decimal(25)) || player.points.gte(new Decimal("1e500"))
 }
 
 
@@ -190,5 +202,10 @@ function fixOldSave(oldVersion){
 		if (player.u && !player.u.rewritten) player.u.rewritten = {points: new Decimal(0), boosters: new Decimal(0), time: new Decimal(0)};
 		if (player.u && !player.u.demo) player.u.demo = {points: new Decimal(0), candies: new Decimal(0), farm: new Decimal(0)};
 		if (player.u && !player.u.incrementverse) player.u.incrementverse = {points: new Decimal(0), incrementy: new Decimal(0), prestige: new Decimal(0)};
+	}
+	if (oldVersion < "0.6") {
+		if (!player.r) player.r = getStartLayerData("r");
+		if (player.r && player.r.stability === undefined) player.r.stability = new Decimal(0);
+		if (player.r && player.r.auto === undefined) player.r.auto = false;
 	}
 }
