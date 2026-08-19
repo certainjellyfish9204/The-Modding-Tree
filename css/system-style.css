@@ -1,7 +1,7 @@
 * {
 	transition-duration: 0.5s;
 	text-align: center;
-	font-family: "Inconsolata", "Symbola", "Noto Sans Symbols", "Noto Sans Symbols 2", "Segoe UI Symbol", "Tahoma", "Arial Unicode MS", monospace;
+	font-family: "Inconsolata", "DozenalFallback", "Noto Sans Symbols", "Noto Sans Symbols 2", "Segoe UI Symbol", "Tahoma", "Arial Unicode MS", monospace;
 	font-weight: bold;
 	table-align: center;
 	margin: auto;
