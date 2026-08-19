@@ -18,7 +18,7 @@ addLayer("s2", {
             field: new Decimal(0),       // Singularity Field — generated passively
             collapses: 0,                // Collapse count for grid
             auto: false,
-            grid: Array(9).fill(0),      // 3x3 Collapse Grid (0=empty, 1=compressed, 2=singulon)
+            // grid is managed by TMT's grid system — do NOT predefine it here
         }
     },
     color: "#FF00FF",
@@ -290,13 +290,15 @@ addLayer("s2", {
                 return "Click to compress a random Collapse Grid tile<br>Cost: 2 Singularities"
             },
             canClick() {
-                return player.s2.points.gte(2) && hasUpgrade('s2', 21) &&
-                       player.s2.grid.some(v => v < 2)
+                if (!player.s2.points.gte(2) || !hasUpgrade('s2', 21) || !player.s2.grid) return false
+                for (let k in player.s2.grid) { if (player.s2.grid[k] < 2) return true }
+                return false
             },
             onClick() {
                 player.s2.points = player.s2.points.sub(2)
-                let empty = player.s2.grid.findIndex(v => v < 2)
-                if (empty >= 0) player.s2.grid[empty]++
+                for (let k in player.s2.grid) {
+                    if (player.s2.grid[k] < 2) { player.s2.grid[k]++; break }
+                }
                 player.s2.collapses++
             },
             style: { 'height': '90px', 'background-color': '#660066' },
@@ -306,13 +308,14 @@ addLayer("s2", {
             title: "Grid Overload",
             display() { return "Spend 5 Singularities to +1 ALL grid tiles" },
             canClick() {
-                return player.s2.points.gte(5) && hasUpgrade('s2', 21) &&
-                       player.s2.grid.some(v => v < 2)
+                if (!player.s2.points.gte(5) || !hasUpgrade('s2', 21) || !player.s2.grid) return false
+                for (let k in player.s2.grid) { if (player.s2.grid[k] < 2) return true }
+                return false
             },
             onClick() {
                 player.s2.points = player.s2.points.sub(5)
-                for (let i = 0; i < player.s2.grid.length; i++) {
-                    if (player.s2.grid[i] < 2) player.s2.grid[i]++
+                for (let k in player.s2.grid) {
+                    if (player.s2.grid[k] < 2) player.s2.grid[k]++
                 }
                 player.s2.collapses += 3
             },
@@ -351,8 +354,10 @@ addLayer("s2", {
     },
     getGridEffect() {
         if (!player.s2 || !player.s2.grid) return new Decimal(1)
-        let compressed = player.s2.grid.filter(v => v === 1).length
-        let singulons = player.s2.grid.filter(v => v === 2).length
+        let grid = player.s2.grid
+        let compressed = 0, singulons = 0
+        // TMT grid may be object with numeric keys
+        for (let k in grid) { if (grid[k] === 1) compressed++; if (grid[k] === 2) singulons++ }
         let mult = new Decimal(1)
         mult = mult.times(Decimal.pow(2, compressed))
         mult = mult.times(Decimal.pow(hasUpgrade('s2', 32) ? 30 : 10, singulons))
@@ -374,26 +379,22 @@ addLayer("s2", {
         }
     },
     update(diff) {
+        if (!player.s2) return
         // Singularity Field grows over time
-        if (player.s2 && player.s2.unlocked && hasUpgrade('s2', 14)) {
+        if (player.s2.unlocked && hasUpgrade('s2', 14)) {
             let rate = new Decimal(1)
             if (hasChallenge('s2', 12)) rate = rate.times(3)
             if (hasMilestone('s2', 3)) rate = rate.times(2)
             player.s2.field = player.s2.field.add(rate.times(diff))
         }
         // Auto-compress with Grid Mastery upgrade
-        if (player.s2 && hasUpgrade('s2', 32)) {
-            if (player.s2.grid.some(v => v < 2) && player.s2.points.gte(1)) {
-                // Auto-compress one tile per second
-                let idx = player.s2.grid.findIndex(v => v < 2)
-                if (idx >= 0 && player.s2.points.gte(1)) {
-                    // Only auto-compress if we haven't this tick (simple throttle)
-                    if (Math.random() < diff) {
-                        player.s2.points = player.s2.points.sub(1)
-                        player.s2.grid[idx]++
-                        player.s2.collapses++
-                    }
-                }
+        if (hasUpgrade('s2', 32) && player.s2.grid && player.s2.points.gte(1)) {
+            let target = -1
+            for (let k in player.s2.grid) { if (player.s2.grid[k] < 2) { target = k; break } }
+            if (target >= 0 && Math.random() < diff) {
+                player.s2.points = player.s2.points.sub(1)
+                player.s2.grid[target]++
+                player.s2.collapses++
             }
         }
     },
@@ -468,7 +469,9 @@ addLayer("s2", {
                     txt += "Singularities: " + formatWhole(player.s2.points) + " (best: " + formatWhole(player.s2.best) + ")<br>"
                     txt += "Singularity Field: " + format(player.s2.field) + "<br>"
                     txt += "Collapses: " + player.s2.collapses + "<br>"
-                    txt += "Grid: " + player.s2.grid.map(v => v === 0 ? "⬛" : v === 1 ? "🔮" : "✦").join("") + "<br>"
+                    let gridIcons = ""
+                    if (player.s2.grid) { for (let k in player.s2.grid) gridIcons += player.s2.grid[k] === 0 ? "⬛" : player.s2.grid[k] === 1 ? "🔮" : "✦" }
+                    txt += "Grid: " + gridIcons + "<br>"
                     txt += "Grid Effect: " + format(layers.s2.getGridEffect()) + "x<br>"
                     txt += "Singularity Effect: " + format(tmp.s2.effect) + "x<br><br>"
                     txt += "<i>v0.7 Developer Preview — Balance in progress!</i>"

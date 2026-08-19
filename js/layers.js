@@ -964,7 +964,7 @@ addLayer("a", {
         53: { name: "Completionist", done(){ return Object.keys(player.a.achievements).length>=20}, tooltip: "Get 20 achievements.", unlocked(){ return player.a.achievements.length>=10} },
         // Singularity achievements (v0.7)
         61: { name: "Singularity!", done(){ return player.s2 && player.s2.best.gte(1)}, tooltip: "Get 1 singularity.", unlocked(){ return player.s2 && player.s2.unlocked} },
-        62: { name: "Grid Collapse", done(){ return player.s2 && player.s2.grid.filter(v=>v===2).length >= 5}, tooltip: "Get 5 Singulons on the Collapse Grid.", unlocked(){ return player.s2 && hasUpgrade('s2',21)} },
+        62: { name: "Grid Collapse", done(){ return player.s2 && Array.isArray(player.s2.grid) && player.s2.grid.filter(v=>v===2).length >= 5}, tooltip: "Get 5 Singulons on the Collapse Grid.", unlocked(){ return player.s2 && hasUpgrade('s2',21)} },
         63: { name: "Rift Master", done(){ return hasChallenge('s2',11) && hasChallenge('s2',12)}, tooltip: "Complete both Singularity Rift Alpha and Omega.", unlocked(){ return player.s2 && hasUpgrade('s2',23)} },
         64: { name: "Multiverse Collapse", done(){ return player.s2 && player.s2.best.gte(10)}, tooltip: "Get 10 singularities.", unlocked(){ return player.s2 && player.s2.best.gte(5)} },
         65: { name: "Absolute Singularity", done(){ return player.s2 && player.s2.best.gte(20)}, tooltip: "Reach 20 singularities. ULTIMATE VICTORY!", unlocked(){ return player.s2 && player.s2.best.gte(15)} },

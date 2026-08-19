@@ -117,13 +117,15 @@ function getPointGen() {
 	if (tmp.r && tmp.r.effect && !inChallenge('r', 11)) gain = gain.times(tmp.r.effect)
 	if (player.r && hasUpgrade('r', 11)) gain = gain.times(upgradeEffect('r', 11))
 	if (player.r && hasMilestone('r', 0)) gain = gain.times(2)
-	// Row 6 - Singularity
-	if (tmp.s2 && tmp.s2.effect && player.s2 && player.s2.unlocked) gain = gain.times(tmp.s2.effect)
-	if (layers.s2 && typeof layers.s2.getGridEffect === 'function' && player.s2 && player.s2.unlocked) gain = gain.times(layers.s2.getGridEffect())
-	if (player.s2 && hasUpgrade('s2', 13)) gain = gain.times(1e50)
-	if (player.s2 && hasUpgrade('s2', 14) && player.s2.field) gain = gain.times(player.s2.field.add(1).pow(0.5))
-	if (player.s2 && hasUpgrade('s2', 33)) gain = gain.pow(1.5)
-	if (player.s2 && buyableEffect('s2', 12)) gain = gain.times(buyableEffect('s2', 12))
+	// Row 6 - Singularity (guarded so it never crashes pre-Singularity saves)
+	if (player.s2 && player.s2.unlocked) {
+		if (tmp.s2 && tmp.s2.effect) gain = gain.times(tmp.s2.effect)
+		try { if (layers.s2 && typeof layers.s2.getGridEffect === 'function') gain = gain.times(layers.s2.getGridEffect()) } catch(e) {}
+		if (hasUpgrade('s2', 13)) gain = gain.times(1e50)
+		if (hasUpgrade('s2', 14) && player.s2.field) gain = gain.times(player.s2.field.add(1).pow(0.5))
+		if (hasUpgrade('s2', 33)) gain = gain.pow(1.5)
+		try { if (typeof buyableEffect === 'function' && tmp.s2 && tmp.s2.buyables && tmp.s2.buyables[12]) gain = gain.times(buyableEffect('s2', 12)) } catch(e) {}
+	}
 	// Buyable point boosts
 	if (tmp.g.buyables && tmp.g.buyables[12]) gain = gain.times(buyableEffect('g', 12))
 	if (tmp.m.buyables && tmp.m.buyables[12]) gain = gain.times(buyableEffect('m', 12))
@@ -189,7 +191,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return (player.s2 && player.s2.points.gte(new Decimal(20))) || player.u.points.gte(new Decimal(25)) || player.r.points.gte(new Decimal(25)) || player.points.gte(new Decimal("1e500"))
+	return (player.s2 && player.s2.points.gte(new Decimal(20))) || (player.u && player.u.points.gte(new Decimal(25))) || (player.r && player.r.points.gte(new Decimal(25))) || player.points.gte(new Decimal("1e500"))
 }
 
 
@@ -232,6 +234,5 @@ function fixOldSave(oldVersion){
 		if (!player.s2) player.s2 = getStartLayerData("s2");
 		if (player.s2 && player.s2.field === undefined) player.s2.field = new Decimal(0);
 		if (player.s2 && player.s2.collapses === undefined) player.s2.collapses = 0;
-		if (player.s2 && !Array.isArray(player.s2.grid)) player.s2.grid = Array(9).fill(0);
 	}
 }
