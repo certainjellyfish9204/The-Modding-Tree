@@ -619,7 +619,7 @@ addLayer("t", {
         11: { description: "Time Shards boost G effect.", cost: new Decimal(1), effect() { return player.t.points.add(1).pow(0.5) }, effectDisplay() { return format(this.effect())+"x" } },
         12: { description: "Double T gain.", cost: new Decimal(2), unlocked() { return hasUpgrade('t', 11) } },
         13: { description: "Unlock Hyper layer.", cost: new Decimal(5), unlocked() { return hasUpgrade('t', 12) } },
-        21: { description: "T effect ^1.15 and Warp unlock.", cost: new Decimal(20), effect(){ return new Decimal(1.15)}, unlocked(){ return hasUpgrade('t',13) && hasMilestone('t',2)} },
+        21: { description: "T effect ^1.15 and unlock Warp (W).", cost: new Decimal(20), effect(){ return new Decimal(1.15)}, unlocked(){ return hasUpgrade('t',13) && hasMilestone('t',2)} },
         22: { description: "T gain x3 and keep B/G on W reset.", cost: new Decimal(50), unlocked(){ return hasUpgrade('t',21)} },
         23: { description: "Time Shards boost Mana gain x2.", cost: new Decimal(100), effect(){ return new Decimal(2)}, unlocked(){ return hasUpgrade('t',22)} },
         31: { description: "Unlock T buyables.", cost: new Decimal(500), unlocked(){ return hasUpgrade('t',23) && hasMilestone('t',3)} },
@@ -680,7 +680,7 @@ addLayer("t", {
         0: { requirementDescription: "1 time shard", effectDescription: "Keep B upgrades, gain 10% prestige passively", done() {return player.t.best.gte(1)} },
         1: { requirementDescription: "3 time shards", effectDescription: "Keep G upgrades+buyables, T gain x2", done() {return player.t.best.gte(3)}, unlocked() {return hasMilestone('t',0)} },
         2: { requirementDescription: "8 time shards", effectDescription: "Auto-buy T upgrades, keep T upgrades on next layer", done() {return player.t.best.gte(8)}, unlocked() {return hasMilestone('t',1)} },
-        3: { requirementDescription: "25 time shards", effectDescription: "Unlock T buyables & Warp", done(){ return player.t.best.gte(25)}, unlocked(){ return hasMilestone('t',2)} },
+        3: { requirementDescription: "25 time shards", effectDescription: "Unlock T buyables & Warp (W) on the tree", done(){ return player.t.best.gte(25)}, unlocked(){ return hasMilestone('t',2)} },
         4: { requirementDescription: "100 time shards", effectDescription: "T buyables x2, Warp gain x2", done(){ return player.t.best.gte(100)}, unlocked(){ return hasMilestone('t',3)} },
         5: { requirementDescription: "500 time shards", effectDescription: "Gain 20% T passively", done(){ return player.t.best.gte(500)}, unlocked(){ return hasMilestone('t',4)} },
         6: { requirementDescription: "2000 time shards", effectDescription: "T effect softcap removed, T buyables scale 3x slower", done(){ return player.t.best.gte(2000)}, unlocked(){ return hasMilestone('t',5)} },
@@ -718,8 +718,16 @@ addLayer("w", {
         return m;
     },
     gainExp(){ return new Decimal(1)},
-    row: 2, branches: [["g","#0080FF"], ["m","#00FF88"]],
-    layerShown(){ return hasMilestone('g',4) && hasMilestone('m',2) || player.w.unlocked },
+    row: 2, branches: [["g","#0080FF"], ["m","#00FF88"], ["t","#AA00FF"]],
+    layerShown(){
+        return hasUpgrade('t', 21)
+            || hasMilestone('t', 3)
+            || (hasMilestone('g', 4) && hasMilestone('m', 2))
+            || player.w.unlocked
+    },
+    tooltipLocked(){
+        return "Unlock Warp by buying Time upgrade 21, reaching 25 Time shards, or getting 35 Generators + 25 Mana"
+    },
     effect(){
         let eff=player.w.points.add(1).pow(0.65);
         if(hasChallenge('w',11)) eff=eff.times(challengeEffect('w',11));
@@ -840,7 +848,7 @@ addLayer("h", {
     upgrades: {
         11: { description: "Hyper points boost T gain.", cost: new Decimal(1), effect() { return player.h.points.add(1).pow(0.8) }, effectDisplay() { return format(this.effect())+"x" } },
         12: { description: "Hyper effect ^1.5", cost: new Decimal(2), unlocked() { return hasUpgrade('h', 11) } },
-        13: { description: "Gain 5x more points, unlock Q.", cost: new Decimal(3), unlocked() { return hasUpgrade('h', 12) } },
+        13: { description: "Gain 5x more points, unlock Quantum (needs Warp).", cost: new Decimal(3), unlocked() { return hasUpgrade('h', 12) } },
         21: { description: "Hyper boosts Warp gain.", cost: new Decimal(5), effect(){ return player.h.points.add(1).pow(0.5)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('h',13)} },
         22: { description: "Hyper effect ^1.3.", cost: new Decimal(10), unlocked(){ return hasUpgrade('h',21)} },
         23: { description: "Unlock H buyables.", cost: new Decimal(20), unlocked(){ return hasUpgrade('h',22)} },
@@ -912,7 +920,13 @@ addLayer("q", {
     color: "#00FFAA",
     requires: new Decimal(15), resource: "quantum shards", baseResource: "warp shards", baseAmount(){ return player.w.points },
     type: "static", base: 2.2, exponent: 1.3, row: 3, branches: [["w","#00AAFF"], ["t","#AA00FF"]],
-    layerShown(){ return hasUpgrade('h',13) || player.q.unlocked },
+    layerShown(){
+        return (hasUpgrade('h', 13) && (player.w.unlocked || (player.w.best && player.w.best.gte(1)) || hasUpgrade('t', 21) || hasMilestone('t', 3)))
+            || player.q.unlocked
+    },
+    tooltipLocked(){
+        return "Need Hyper upgrade 13 and Warp unlocked (Time upgrade 21 or 25 Time shards)"
+    },
     effect(){
         let eff=Decimal.pow(50, player.q.points);
         if(hasUpgrade('q',12)) eff=eff.pow(1.4);

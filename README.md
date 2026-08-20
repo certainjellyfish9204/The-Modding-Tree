@@ -41,12 +41,6 @@ Each buyable in Universe U shows its original file path (e.g., `Ported from /tmp
 
 ---
 
-## Contributing
-
-Want to help port more layers or add features? See [`CONTRIBUTING.md`](CONTRIBUTING.md) for setup instructions, branch strategy, and code style guidelines.
-
----
-
 ## GitHub Pages — github.io treatment
 
 This repo is **ready for Pages** — `.nojekyll` is already pushed. You just need to enable it once:

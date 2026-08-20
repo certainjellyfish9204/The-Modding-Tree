@@ -40,21 +40,6 @@ addLayer("u", {
             incrementy: new Decimal(0),
             prestige: new Decimal(0),
         },
-        basic: {
-            points: new Decimal(0), // Basic Tree basic points
-            cheapeners: new Decimal(0), // c layer - cheapeners
-            darkness: new Decimal(0), // d layer
-            exponents: new Decimal(0), // e layer
-            funity: new Decimal(0), // f layer
-            games: new Decimal(0), // g layer
-        },
-        miletree: {
-            points: new Decimal(0), // Milestone Tree milestones
-            prestige: new Decimal(0), // Prestige points
-            superPrestige: new Decimal(0), // Super-Prestige points
-            transcend: new Decimal(0), // Transcend points
-            reincarnate: new Decimal(0), // Reincarnate points
-        },
     }},
     color: "#AA00FF",
     requires: new Decimal(10), // 10 Eternity
@@ -81,14 +66,12 @@ addLayer("u", {
         if (player.u.rewritten.points.gt(0)) eff = eff.times(player.u.rewritten.points.add(1).pow(0.12));
         if (player.u.demo.points.gt(0)) eff = eff.times(player.u.demo.points.add(1).pow(0.11));
         if (player.u.incrementverse.points.gt(0)) eff = eff.times(player.u.incrementverse.points.add(1).pow(0.13));
-        if (player.u.basic.points.gt(0)) eff = eff.times(player.u.basic.points.add(1).pow(0.1));
-        if (player.u.miletree.points.gt(0)) eff = eff.times(player.u.miletree.points.add(1).pow(0.12));
         if (eff.gte("1e100")) eff = eff.div("1e100").pow(0.5).times("1e100");
         return eff;
     },
     effectDescription() {
         let active = player.u.activeUniverse;
-        let name = active === "classic" ? "Classic (1.0)" : active === "rewritten" ? "Rewritten (PT:R)" : active === "demo" ? "Demo (TMT)" : active === "incrementverse" ? "Incrementreeverse" : active === "basic" ? "The Basic Tree" : active === "miletree" ? "Milestone Tree" : "Classic+ (This Mod)";
+        let name = active === "classic" ? "Classic (1.0)" : active === "rewritten" ? "Rewritten (PT:R)" : active === "demo" ? "Demo (TMT)" : active === "incrementverse" ? "Incrementreeverse" : "Classic+ (This Mod)";
         return "which boost ALL points by "+format(tmp.u.effect)+"x<br>Active Universe: <b>"+name+"</b>"
     },
     prestigeButtonText() {
@@ -133,20 +116,6 @@ addLayer("u", {
             display() { return "Incrementreeverse: "+formatWhole(player.u.incrementverse.points)+" / 100"},
             fillStyle: {'background-color': "#FF44AA"},
             unlocked() { return player.u.activeUniverse === "incrementverse" },
-        },
-        basicProgress: {
-            direction: RIGHT, width: 300, height: 18,
-            progress() { return player.u.basic.points.div(100).toNumber() },
-            display() { return "Basic Tree: "+formatWhole(player.u.basic.points)+" / 100"},
-            fillStyle: {'background-color': "#939192"},
-            unlocked() { return player.u.activeUniverse === "basic" },
-        },
-        miletreeProgress: {
-            direction: RIGHT, width: 300, height: 18,
-            progress() { return player.u.miletree.points.div(100).toNumber() },
-            display() { return "Milestone Tree: "+formatWhole(player.u.miletree.points)+" / 100"},
-            fillStyle: {'background-color': "#658091"},
-            unlocked() { return player.u.activeUniverse === "miletree" },
         },
     },
     infoboxes: {
@@ -201,39 +170,6 @@ addLayer("u", {
                 <b>Credit:</b> The Incrementreeverse by <b>pg132</b> — see <code>/tmp/Incrementreeverse/js/layers.js</code> (8182 lines) and <code>js/mod.js</code> (id incrementy).
             `,
         },
-        miletreeLore: {
-            title: "Milestone Tree Universe - Ported",
-            body: `
-                <b>Source:</b> <code>/tmp/Milestone-Tree</code> — <code>loader3229/milestone-tree</code> (The Milestone Tree, id c2nv4in9eusojg59bmo) — https://github.com/loader3229/milestone-tree — https://loader3229.github.io/milestone-tree/<br>
-                <b>Author:</b> <b>loader3229</b> — The Milestone Tree is a TMT mod focused entirely on milestones. It has 16+ layers across 11 rows, with milestones as the core progression mechanic.<br>
-                <b>Original:</b> 20 TMT layers across 12 files (9,563 total lines): m (milestone, 2725 lines), p (prestige, 395), sp (super-prestige, 385), pb (prestige-boost, 281), hp (hyper-prestige, 410), ap (atomic-prestige, 729), t (transcend, 848), hb (hyper-boost, 248), pe (prestige-energy, 149), se (super-energy, 143), mm (meta-milestone, 472), em (extra-milestone, 180), he (hyper-energy, 142), um (upgraded-milestone, 110), a (atoms, 148), r (reincarnate, 378), pp/ep/mp/co (extend layers, 1820)<br>
-                We ported:<br><br>
-                - <b>M</b> (Milestone, row 0, normal, milestones boost everything, 2725 lines of milestone logic)<br>
-                - <b>P</b> (Prestige, row 1, normal, from points, 4×4 upgrades)<br>
-                - <b>SP</b> (Super-Prestige, row 2, normal, from prestige, 4×4 upgrades, buyables)<br>
-                - <b>T</b> (Transcend, row 5, normal, special points system, challenges, buyables)<br>
-                - <b>R</b> (Reincarnate, row 11, normal, endgame layer, stages, corruptions)<br><br>
-                These become buyables <b>Milestone Tree: M/P/SP/T/R</b> below. Buying them runs the <i>exact Milestone Tree code</i> (9,563 lines) inside this universe.<br>
-                <b>Credit:</b> The Milestone Tree by <b>loader3229</b> — see <code>/tmp/Milestone-Tree/js/layers/milestone.js</code> (2725 lines) and <code>js/mod.js</code> (id c2nv4in9eusojg59bmo).
-            `,
-        },
-        basicLore: {
-            title: "Basic Tree Universe - Ported",
-            body: `
-                <b>Source:</b> <code>/tmp/The-Basic-Tree</code> — <code>gapples2/The-Modding-Tree</code> (The Basic Tree, id gapples2, v1.6.2.1) — https://github.com/gapples2/The-Modding-Tree — <b>Finished</b>, 2 days — listed on https://modding-tree.fandom.com/wiki/List_of_mods<br>
-                <b>Author:</b> <b>gapples2, thepaperpilot</b> — The Basic Tree is a quirky, compact TMT mod with "dust" as its base currency and unique progression through Basic Points, Cheapeners, Darkness, Exponents, Funity, and Games.<br>
-                <b>Original:</b> 7 TMT layers: b (basic points, row 0), c (cheapeners, row 1), d (darkness, row 2), e (exponent, row 1), f (funity, row 0), g (games, row 2), a (achievements, side) — 831 lines in <code>js/layers.js</code><br>
-                We ported:<br><br>
-                - <b>B</b> (Basic Points, row 0, normal, from dust, 3×5 upgrades including Add, More Dust, Multiply paths)<br>
-                - <b>C</b> (Cheapeners, row 1, static, from basic points, base scaling, milestones, auto-buyers)<br>
-                - <b>D</b> (Darkness, row 2, static, from cheapeners, 5 milestones, exponent unlock)<br>
-                - <b>E</b> (Exponent, row 1, static, from basic points, upgrade exponent boost, passive basic points)<br>
-                - <b>F</b> (Funity, row 0, normal, from dust, wall of text milestone, softcap mechanics)<br>
-                - <b>G</b> (Games, row 2, static, from funity, funity softcap boost)<br><br>
-                These become buyables <b>Basic Points / Cheapeners / Darkness / Exponent / Funity / Games</b> below. Buying them runs the <i>exact Basic Tree code</i> (831 lines) inside this universe.<br>
-                <b>Credit:</b> The Basic Tree by <b>gapples2 & thepaperpilot</b> — see <code>/tmp/The-Basic-Tree/js/layers.js</code> (831 lines) and <code>js/mod.js</code> (id gapples2).
-            `,
-        },
         demoLore: {
             title: "Demo Universe (TMT Demo) - Ported",
             body: `
@@ -254,8 +190,6 @@ addLayer("u", {
                 - <b>Prestige Tree Rewritten (PT:R v1.3)</b> by <b>Jacorb90</b> — <code>Jacorb90/Prestige-Tree</code> — <a href="https://github.com/Jacorb90/Prestige-Tree" target="_blank">GitHub</a> — cloned to <code>/tmp/PT-Rewritten</code> (9915 lines, 30 layers). Ported as Universe R buyables 21-23 (P/B/T) — verbatim TMT copy.<br>
                 - <b>The Modding Tree Demo</b> by <b>Acamaeda</b> — <code>Acamaeda/The-Modding-Tree</code> Demo — <code>js/Demo/layers/c.js</code> (Candies), <code>f.js</code> (Farm), <code>a.js</code> (Achievements) — already in repo, ported as Universe D buyables 24-25.<br>
                 - <b>The Incrementreeverse</b> by <b>pg132</b> — <code>pg132/The-Modding-Tree</code> (The Incrementreeverse, id incrementy) — <a href="https://github.com/pg132/The-Modding-Tree" target="_blank">GitHub</a> — cloned to <code>/tmp/Incrementreeverse</code> (8182 lines, 16 layers: i, am, a, m, e, p, n, g, q, s, b, sp, pi, o, f, c) — ported as Universe I buyables 26-27 — <b>from https://modding-tree.fandom.com/wiki/List_of_mods (finished, 10 days)</b>.<br>
-                - <b>The Basic Tree</b> by <b>gapples2 & thepaperpilot</b> — <code>gapples2/The-Modding-Tree</code> (The Basic Tree, id gapples2, v1.6.2.1) — <a href="https://github.com/gapples2/The-Modding-Tree" target="_blank">GitHub</a> — cloned to <code>/tmp/The-Basic-Tree</code> (831 lines, 7 layers: b, c, d, e, f, g, a) — ported as Universe B buyables 41-46 — <b>from https://modding-tree.fandom.com/wiki/List_of_mods (finished, 2 days)</b>.<br>
-                - <b>The Milestone Tree</b> by <b>loader3229</b> — <code>loader3229/milestone-tree</code> (The Milestone Tree, id c2nv4in9eusojg59bmo) — <a href="https://github.com/loader3229/milestone-tree" target="_blank">GitHub</a> — <a href="https://loader3229.github.io/milestone-tree/" target="_blank">Play</a> — cloned to <code>/tmp/Milestone-Tree</code> (9,563 lines, 20 layers: m, p, sp, pb, hp, ap, t, hb, pe, se, mm, em, he, um, a, r, pp, ep, mp, co) — ported as Universe MT buyables 51-55 — <b>from https://modding-tree.fandom.com/wiki/List_of_mods</b>.<br>
                 - <b>The Modding Tree Engine</b> by <b>Acamaeda</b> — https://github.com/Acamaeda/The-Modding-Tree — MIT, powers this multiverse.<br>
                 - <b>Eternal Notations</b> by <b>MathCookie17</b> — <a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank">GitHub</a> — <a href="https://mathcookie17.github.io/Eternal-Notations/" target="_blank">Demo</a> — MIT, 144 presets + 65 notations, built on break_eternity — powers <b>Options → Notation</b> (TMT, Scientific, Standard, Infinity, Eternity…) — <code>js/utils/eternal_notations.js</code> (1.2M) + <code>js/utils/NumberFormating.js</code> wrapper.<br>
                 - <b>Classic+ Hub</b> (this mod) — 9 layers (P/B/G/M/T/W/H/Q/E) + U + S + A — by You.<br><br>
@@ -269,7 +203,7 @@ addLayer("u", {
                 2. <b>Rewritten (TMT)</b>: Copy <code>addLayer("p", { upgrades: {11:{cost(){return tmp.h.costMult11…}}})</code> verbatim, rename layer to <code>uClassicP</code> to avoid id clash, swap <code>player.p.points</code> → <code>player.u.classic.points</code>.<br>
                 3. <b>Demo (TMT Demo)</b>: Copy <code>js/Demo/layers/c.js</code> verbatim — it's already TMT. Swap <code>player.c.points → player.u.demo.candies</code>.<br>
                 4. This hub's <code>player.u.activeUniverse</code> picks which universe's <code>tmp</code> is used for point gain multiplier.<br><br>
-                <b>Status:</b> 8 universes playable (C/R/D/I/B/MT/M + Hub), 6/20 Classic layers ported, 6/30 Rewritten layers stubbed, 3/3 Demo layers stubbed, 3/16 Incrementreeverse layers stubbed, 6/7 Basic Tree layers ported, 5/20 Milestone Tree layers ported. Next: port Classic Row3, Rewritten SB/SG/H, more Milestone Tree layers.
+                <b>Status:</b> 5/6 universes stubbed, 6/20 Classic layers ported, 6/30 Rewritten layers stubbed, 3/16 Incrementreeverse layers stubbed. Next: port Classic Row3 (T/E/S), Rewritten SB/SG/H, Incrementreeverse A/M/E.
             `,
         },
     },
@@ -288,8 +222,6 @@ addLayer("u", {
         34: { description: "Unlock Demo Universe travel + buyables.", cost: new Decimal(750), unlocked(){ return hasUpgrade('u',33)} },
         35: { description: "Unlock Incrementreeverse Universe travel + buyables.", cost: new Decimal(1200), unlocked(){ return hasUpgrade('u',34)} },
         41: { description: "Keep Universe upgrades on Eternity reset.", cost: new Decimal(2000), unlocked(){ return hasUpgrade('u',35)} },
-        42: { description: "Unlock The Basic Tree universe. Dust is power!", cost: new Decimal(3000), unlocked(){ return hasUpgrade('u',41)} },
-        43: { description: "Unlock The Milestone Tree universe. Milestones are everything!", cost: new Decimal(5000), unlocked(){ return hasUpgrade('u',42)} },
     },
     buyables: {
         // Classic Universe buyables - direct ports of Classic LAYER_DATA
@@ -460,571 +392,6 @@ addLayer("u", {
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.incrementverse.prestige = player.u.incrementverse.prestige.add(1); },
             style:{'height':'140px', 'background-color':"#AA44FF"},
         },
-        // Milestone Tree Universe buyables - direct ports of Milestone Tree m/p/sp/t/r
-        51: {
-            title: "Milestone Tree: Milestones (M)",
-            cost(x){ return new Decimal(10).pow(x).times(10) },
-            effect(x){
-                // Milestone M effect: milestones boost point gain
-                let eff = Decimal.pow(1.5, x);
-                if(player.u.activeUniverse === "miletree") eff = eff.times(1.5);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Milestones x"+format(d.effect)+" to points<br><small>Ported from /tmp/Milestone-Tree/js/layers/milestone.js (2725 lines)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.points = player.u.miletree.points.add(1); },
-            style:{'height':'140px', 'background-color':"#334455"},
-        },
-        52: {
-            title: "Milestone Tree: Prestige (P)",
-            cost(x){ return new Decimal(50).pow(x.div(3)).times(25) },
-            effect(x){
-                // Prestige P effect
-                let eff = Decimal.pow(2, x);
-                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Prestige x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/prestige.js (395 lines)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.prestige = player.u.miletree.prestige.add(1); },
-            style:{'height':'140px', 'background-color':"#445566"},
-        },
-        53: {
-            title: "Milestone Tree: Super-Prestige (SP)",
-            cost(x){ return new Decimal(100).pow(x.div(3)).times(50) },
-            effect(x){
-                let eff = Decimal.pow(3, x);
-                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.25);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Super-Prestige x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/super-prestige.js (385 lines)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.superPrestige = player.u.miletree.superPrestige.add(1); },
-            style:{'height':'140px', 'background-color':"#556677"},
-        },
-        54: {
-            title: "Milestone Tree: Transcend (T)",
-            cost(x){ return new Decimal(200).pow(x.div(3)).times(100) },
-            effect(x){
-                let eff = Decimal.pow(5, x);
-                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.2);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Transcend x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/transcend.js (848 lines)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.transcend = player.u.miletree.transcend.add(1); },
-            style:{'height':'140px', 'background-color':"#667788"},
-        },
-        55: {
-            title: "Milestone Tree: Reincarnate (R)",
-            cost(x){ return new Decimal(500).pow(x.div(3)).times(250) },
-            effect(x){
-                let eff = Decimal.pow(10, x);
-                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Reincarnate x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/reincarnate.js (378 lines)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.miletree.reincarnate = player.u.miletree.reincarnate.add(1); },
-            style:{'height':'140px', 'background-color':"#778899"},
-        },
-        // Classic Universe buyables - ALL 22 layers from Prestige Tree Classic
-        // Row 1 (already have 11-13: P/B/G)
-        14: {
-            title: "Classic Universe: Enhance (E)",
-            cost(x){ return new Decimal(500).pow(x.div(3)).times(300) },
-            effect(x){
-                let eff = Decimal.pow(2.8, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.2);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Enhance x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.e (enhance points)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#550055"},
-        },
-        15: {
-            title: "Classic Universe: Time (T)",
-            cost(x){ return new Decimal(600).pow(x.div(3)).times(400) },
-            effect(x){
-                let eff = Decimal.pow(2.5, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.2);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Time x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.t (time capsules)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#550055"},
-        },
-        16: {
-            title: "Classic Universe: Space (S)",
-            cost(x){ return new Decimal(700).pow(x.div(3)).times(500) },
-            effect(x){
-                let eff = Decimal.pow(2.3, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.2);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Space x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.s (space energy)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#005500"},
-        },
-        // Row 3 extra: Super-Boosters, Super-Generators
-        17: {
-            title: "Classic Universe: Super-Boosters (SB)",
-            cost(x){ return new Decimal(800).pow(x.div(3)).times(600) },
-            effect(x){
-                let eff = Decimal.pow(3, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.25);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic SB x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.sb</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#005555"},
-        },
-        18: {
-            title: "Classic Universe: Super-Generators (SG)",
-            cost(x){ return new Decimal(900).pow(x.div(3)).times(700) },
-            effect(x){
-                let eff = Decimal.pow(3.5, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.25);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic SG x"+format(d.effect)+"<br><small>Ported from Classic row_3.js LAYER_DATA.sg</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#005555"},
-        },
-        // Row 4: Hindrance Spirit, Quirks, Hyper-Boosters, Subspace
-        19: {
-            title: "Classic Universe: Hindrance (H)",
-            cost(x){ return new Decimal(1000).pow(x.div(3)).times(800) },
-            effect(x){
-                let eff = Decimal.pow(4, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Hindrance x"+format(d.effect)+"<br><small>Ported from Classic row_4.js LAYER_DATA.h (hindrance spirit)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#550000"},
-        },
-        110: {
-            title: "Classic Universe: Quirks (Q)",
-            cost(x){ return new Decimal(1100).pow(x.div(3)).times(900) },
-            effect(x){
-                let eff = Decimal.pow(3.5, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Quirks x"+format(d.effect)+"<br><small>Ported from Classic row_4.js LAYER_DATA.q (quirks)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#550055"},
-        },
-        111: {
-            title: "Classic Universe: Hyper-Boosters (HB)",
-            cost(x){ return new Decimal(1200).pow(x.div(3)).times(1000) },
-            effect(x){
-                let eff = Decimal.pow(4.5, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic HB x"+format(d.effect)+"<br><small>Ported from Classic row_4.js LAYER_DATA.hb (hyper-boosters)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#555500"},
-        },
-        112: {
-            title: "Classic Universe: Subspace (SS)",
-            cost(x){ return new Decimal(1300).pow(x.div(3)).times(1100) },
-            effect(x){
-                let eff = Decimal.pow(5, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Subspace x"+format(d.effect)+"<br><small>Ported from Classic row_4.js LAYER_DATA.ss (subspace energy)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#005555"},
-        },
-        // Row 5: Magic, Balance, Phantom Souls, Super-Prestige
-        113: {
-            title: "Classic Universe: Magic (M)",
-            cost(x){ return new Decimal(1500).pow(x.div(3)).times(1200) },
-            effect(x){
-                let eff = Decimal.pow(5.5, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Magic x"+format(d.effect)+"<br><small>Ported from Classic row_5.js LAYER_DATA.m (magic)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#880088"},
-        },
-        114: {
-            title: "Classic Universe: Balance (BA)",
-            cost(x){ return new Decimal(1600).pow(x.div(3)).times(1300) },
-            effect(x){
-                let eff = Decimal.pow(6, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Balance x"+format(d.effect)+"<br><small>Ported from Classic row_5.js LAYER_DATA.ba (balance energy)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#888800"},
-        },
-        115: {
-            title: "Classic Universe: Phantom Souls (PS)",
-            cost(x){ return new Decimal(1700).pow(x.div(3)).times(1400) },
-            effect(x){
-                let eff = Decimal.pow(6.5, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic PS x"+format(d.effect)+"<br><small>Ported from Classic row_5.js LAYER_DATA.ps (phantom souls)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#008888"},
-        },
-        116: {
-            title: "Classic Universe: Super-Prestige (SP)",
-            cost(x){ return new Decimal(1800).pow(x.div(3)).times(1500) },
-            effect(x){
-                let eff = Decimal.pow(7, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic SP x"+format(d.effect)+"<br><small>Ported from Classic row_5.js LAYER_DATA.sp (super-prestige points)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#880088"},
-        },
-        // Row 6: Life, Hyperspace, Imperium, Mastery
-        117: {
-            title: "Classic Universe: Life (L)",
-            cost(x){ return new Decimal(2000).pow(x.div(3)).times(1600) },
-            effect(x){
-                let eff = Decimal.pow(8, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Life x"+format(d.effect)+"<br><small>Ported from Classic row_6.js LAYER_DATA.l (life essence)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#008800"},
-        },
-        118: {
-            title: "Classic Universe: Hyperspace (HN)",
-            cost(x){ return new Decimal(2200).pow(x.div(3)).times(1800) },
-            effect(x){
-                let eff = Decimal.pow(9, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Hyperspace x"+format(d.effect)+"<br><small>Ported from Classic row_6.js LAYER_DATA.hn (hyperspace energy)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#000088"},
-        },
-        119: {
-            title: "Classic Universe: Imperium (I)",
-            cost(x){ return new Decimal(2400).pow(x.div(3)).times(2000) },
-            effect(x){
-                let eff = Decimal.pow(10, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Imperium x"+format(d.effect)+"<br><small>Ported from Classic row_6.js LAYER_DATA.i (imperium bricks)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#888800"},
-        },
-        120: {
-            title: "Classic Universe: Mastery (MA)",
-            cost(x){ return new Decimal(2600).pow(x.div(3)).times(2200) },
-            effect(x){
-                let eff = Decimal.pow(11, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Mastery x"+format(d.effect)+"<br><small>Ported from Classic row_6.js LAYER_DATA.ma (mastery bricks)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#888888"},
-        },
-        // Row 7: Gears, Machine Power, Nebula, Infinity
-        121: {
-            title: "Classic Universe: Gears (GE)",
-            cost(x){ return new Decimal(3000).pow(x.div(3)).times(2500) },
-            effect(x){
-                let eff = Decimal.pow(12, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Gears x"+format(d.effect)+"<br><small>Ported from Classic row_7.js LAYER_DATA.ge (gears)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#555555"},
-        },
-        122: {
-            title: "Classic Universe: Machine (MC)",
-            cost(x){ return new Decimal(3200).pow(x.div(3)).times(2800) },
-            effect(x){
-                let eff = Decimal.pow(13, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Machine x"+format(d.effect)+"<br><small>Ported from Classic row_7.js LAYER_DATA.mc (machine power)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#550000"},
-        },
-        // Milestone Tree extra buyables
-        56: {
-            title: "Milestone Tree: Hyper-Prestige (HP)",
-            cost(x){ return new Decimal(800).pow(x.div(3)).times(500) },
-            effect(x){
-                let eff = Decimal.pow(15, x);
-                if(player.u.activeUniverse === "miletree") eff = eff.pow(1.2);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Hyper-Prestige x"+format(d.effect)+"<br><small>Ported from /tmp/Milestone-Tree/js/layers/hyper-prestige.js (410 lines)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',43) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#889999"},
-        },
-        // Classic extra buyables
-        14: {
-            title: "Classic Universe: Time (T)",
-            cost(x){ return new Decimal(300).pow(x.div(3)).times(200) },
-            effect(x){
-                let eff = Decimal.pow(2.5, x);
-                if(player.u.activeUniverse === "classic") eff = eff.pow(1.2);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Classic Time x"+format(d.effect)+"<br><small>Ported from Classic row_3.js getTimeEffect()</small>"
-            },
-            unlocked(){ return hasUpgrade('u',31) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#550055"},
-        },
-        // Rewritten extra buyables
-        24: {
-            title: "Rewritten Universe: Energy (E)",
-            cost(x){ return new Decimal(150).pow(x.div(3)).times(100) },
-            effect(x){
-                let eff = Decimal.pow(2.5, x);
-                if(player.u.activeUniverse === "rewritten") eff = eff.pow(1.2);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Rewritten Energy x"+format(d.effect)+"<br><small>Ported from Rewritten e layer</small>"
-            },
-            unlocked(){ return hasUpgrade('u',32) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#444400"},
-        },
-        // Incrementreeverse extra buyables
-        28: {
-            title: "Incrementreeverse: Anti-Matter (AM)",
-            cost(x){ return new Decimal(200).pow(x.div(3)).times(150) },
-            effect(x){
-                let eff = Decimal.pow(2.2, x);
-                if(player.u.activeUniverse === "incrementverse") eff = eff.pow(1.25);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Anti-Matter x"+format(d.effect)+"<br><small>Ported from Incrementreeverse am layer</small>"
-            },
-            unlocked(){ return hasUpgrade('u',35) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
-            style:{'height':'140px', 'background-color':"#222244"},
-        },
-        // Basic Tree Universe buyables - direct ports of Basic Tree b/c/d/e/f/g
-        41: {
-            title: "Basic Tree: Basic Points (B)",
-            cost(x){ return new Decimal(10).pow(x).times(10) },
-            effect(x){
-                // Basic B effect: points^0.5 (core dust multiplier)
-                let eff = Decimal.pow(x.add(1), 0.5).times(2);
-                if(player.u.activeUniverse === "basic") eff = eff.times(1.5);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Basic Points x"+format(d.effect)+" to points<br><small>Ported from /tmp/The-Basic-Tree/js/layers.js LAYER b (basic points)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',42) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.basic.points = player.u.basic.points.add(1); },
-            style:{'height':'140px', 'background-color':"#333333"},
-        },
-        42: {
-            title: "Basic Tree: Cheapeners (C)",
-            cost(x){ return new Decimal(50).pow(x.div(3)).times(25) },
-            effect(x){
-                // Basic C effect: cheapens basic upgrades
-                let eff = Decimal.pow(1.5, x);
-                if(player.u.activeUniverse === "basic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Cheapener x"+format(d.effect)+" (cheapens upgrades)<br><small>Ported from /tmp/The-Basic-Tree/js/layers.js LAYER c (cheapeners)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',42) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.basic.cheapeners = player.u.basic.cheapeners.add(1); },
-            style:{'height':'140px', 'background-color':"#4a3828"},
-        },
-        43: {
-            title: "Basic Tree: Darkness (D)",
-            cost(x){ return new Decimal(100).pow(x.div(3)).times(50) },
-            effect(x){
-                // Basic D effect: multiplies everything
-                let eff = Decimal.pow(2, x);
-                if(player.u.activeUniverse === "basic") eff = eff.pow(1.25);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Darkness x"+format(d.effect)+" to all gains<br><small>Ported from /tmp/The-Basic-Tree/js/layers.js LAYER d (darkness)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',42) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.basic.darkness = player.u.basic.darkness.add(1); },
-            style:{'height':'140px', 'background-color':"#1a1a1a"},
-        },
-        44: {
-            title: "Basic Tree: Exponent (E)",
-            cost(x){ return new Decimal(200).pow(x.div(3)).times(100) },
-            effect(x){
-                // Basic E effect: raises upgrade effects to a power
-                let eff = Decimal.pow(1.15, x);
-                if(player.u.activeUniverse === "basic") eff = eff.pow(1.2);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Exponent ^"+format(d.effect)+" to upgrade effects<br><small>Ported from /tmp/The-Basic-Tree/js/layers.js LAYER e (exponent)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',42) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.basic.exponents = player.u.basic.exponents.add(1); },
-            style:{'height':'140px', 'background-color':"#4a4200"},
-        },
-        45: {
-            title: "Basic Tree: Funity (F)",
-            cost(x){ return new Decimal(300).pow(x.div(3)).times(200) },
-            effect(x){
-                // Basic F effect: dust multiplier from funity
-                let eff = Decimal.pow(1.8, x);
-                if(player.u.activeUniverse === "basic") eff = eff.pow(1.3);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Funity x"+format(d.effect)+" to dust gain<br><small>Ported from /tmp/The-Basic-Tree/js/layers.js LAYER f (funity)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',42) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.basic.funity = player.u.basic.funity.add(1); },
-            style:{'height':'140px', 'background-color':"#003300"},
-        },
-        46: {
-            title: "Basic Tree: Games (G)",
-            cost(x){ return new Decimal(500).pow(x.div(3)).times(500) },
-            effect(x){
-                // Basic G effect: increases funity softcap
-                let eff = Decimal.pow(1.5, x);
-                if(player.u.activeUniverse === "basic") eff = eff.pow(1.2);
-                return eff;
-            },
-            display(){
-                let d=tmp[this.layer].buyables[this.id];
-                return "Cost: "+format(d.cost)+" universe points<br>Amount: "+formatWhole(player.u.buyables[this.id])+"<br>Effect: Games x"+format(d.effect)+" (extends softcap)<br><small>Ported from /tmp/The-Basic-Tree/js/layers.js LAYER g (games)</small>"
-            },
-            unlocked(){ return hasUpgrade('u',42) }, canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost)},
-            buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.u.points=player.u.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); player.u.basic.games = player.u.basic.games.add(1); },
-            style:{'height':'140px', 'background-color':"#003322"},
-        },
         // Hub buyables
         31: {
             title: "Multiverse Core",
@@ -1112,36 +479,6 @@ addLayer("u", {
             style(){ return {'background-color': player.u.activeUniverse==="incrementverse" ? "#00aa00" : "#661144", 'height':'100px'}},
             unlocked(){ return hasUpgrade('u',35)},
         },
-        18: {
-            title: "Travel: Milestone Tree",
-            display(){ return player.u.activeUniverse==="miletree" ? "<b>ACTIVE</b><br>Milestone Tree<br>Bonus: x2.0" : "Travel to<br><b>Milestone Tree</b><br>Cost: 3 U<br>Bonus: x2.0" },
-            canClick(){ return player.u.points.gte(3) && player.u.activeUniverse !== "miletree" && (player.u.travelCooldown||0)<=0 },
-            onClick(){
-                if(player.u.points.gte(3)){
-                    player.u.points = player.u.points.sub(3);
-                    player.u.activeUniverse = "miletree";
-                    player.u.travelCooldown = 5;
-                    doPopup("none","Traveled to Milestone Tree Universe! Point gain x2.0<br>Milestones are everything!","Universe Shift",3,"#658091");
-                }
-            },
-            style(){ return {'background-color': player.u.activeUniverse==="miletree" ? "#00aa00" : "#223344", 'height':'100px'}},
-            unlocked(){ return hasUpgrade('u',43)},
-        },
-        17: {
-            title: "Travel: The Basic Tree",
-            display(){ return player.u.activeUniverse==="basic" ? "<b>ACTIVE</b><br>The Basic Tree<br>Bonus: x1.7" : "Travel to<br><b>The Basic Tree</b><br>Cost: 2 U<br>Bonus: x1.7" },
-            canClick(){ return player.u.points.gte(2) && player.u.activeUniverse !== "basic" && (player.u.travelCooldown||0)<=0 },
-            onClick(){
-                if(player.u.points.gte(2)){
-                    player.u.points = player.u.points.sub(2);
-                    player.u.activeUniverse = "basic";
-                    player.u.travelCooldown = 5;
-                    doPopup("none","Traveled to The Basic Tree Universe! Point gain x1.7<br>Dust is power!","Universe Shift",3,"#939192");
-                }
-            },
-            style(){ return {'background-color': player.u.activeUniverse==="basic" ? "#00aa00" : "#333333", 'height':'100px'}},
-            unlocked(){ return hasUpgrade('u',42)},
-        },
         14: {
             title: "Scan Universes",
             display(){ return "Scan /tmp clones<br>Classic: "+(player.u.classic.points||0)+" PP<br>Rewritten: "+(player.u.rewritten.points||0)+" PP<br>Click to +1 each" },
@@ -1185,7 +522,7 @@ addLayer("u", {
                 content: [
                     ["display-text", function(){ return "Active: <b>"+player.u.activeUniverse+"</b> | Cooldown: "+format(player.u.travelCooldown||0)+"s"}],
                     "blank",
-                    ["row", [["clickable",11],["clickable",12],["clickable",13],["clickable",15],["clickable",16],["clickable",17],["clickable",18]]],
+                    ["row", [["clickable",11],["clickable",12],["clickable",13],["clickable",15],["clickable",16]]],
                     "blank",
                     ["display-text", function(){ return "Travel costs Universe Points and switches your active bonus. Each universe's buyables below are <i>ported from the original game's code</i>."}],
                     "blank",
@@ -1246,45 +583,13 @@ addLayer("u", {
                     ["display-text", function(){ return "These 3 buyables are direct TMT ports of Rewritten's p (281 lines), b (271 lines), t (405 lines). Next: e, s, sb, sg, h, q... (9915 lines total)";}],
                 ]
             },
-            "miletree": {
-                content: [
-                    ["infobox","miletreeLore"],
-                    "blank",
-                    ["display-text", function(){ return "Milestone Tree Progress: "+formatWhole(player.u.miletree.points)+" M, "+formatWhole(player.u.miletree.prestige)+" P, "+formatWhole(player.u.miletree.superPrestige)+" SP, "+formatWhole(player.u.miletree.transcend)+" T, "+formatWhole(player.u.miletree.reincarnate)+" R"}],
-                    ["bar","miletreeProgress"],
-                    "blank",
-                    ["row", [["buyable",51],["buyable",52],["buyable",53]]],
-                    "blank",
-                    ["row", [["buyable",54],["buyable",55]]],
-                    "blank",
-                    ["display-text", function(){ return "These 5 buyables are direct ports of The Milestone Tree's m/p/sp/t/r layers (9,563 lines total). They run the exact Milestone Tree code.";}],
-                    "blank",
-                    ["display-text", function(){ return "Milestone Tree bonus: x2.0 when active. Buyables work in any universe but are stronger in Milestone Tree.";}],
-                ]
-            },
-            "basic": {
-                content: [
-                    ["infobox","basicLore"],
-                    "blank",
-                    ["display-text", function(){ return "Basic Tree Progress: "+formatWhole(player.u.basic.points)+" Basic, "+formatWhole(player.u.basic.cheapeners)+" Cheapeners, "+formatWhole(player.u.basic.darkness)+" Darkness, "+formatWhole(player.u.basic.exponents)+" Exponents, "+formatWhole(player.u.basic.funity)+" Funity, "+formatWhole(player.u.basic.games)+" Games"}],
-                    ["bar","basicProgress"],
-                    "blank",
-                    ["row", [["buyable",41],["buyable",42],["buyable",43]]],
-                    "blank",
-                    ["row", [["buyable",44],["buyable",45],["buyable",46]]],
-                    "blank",
-                    ["display-text", function(){ return "These 6 buyables are direct ports of The Basic Tree's b/c/d/e/f/g layers (831 lines). They run the exact Basic Tree code.";}],
-                    "blank",
-                    ["display-text", function(){ return "Basic Tree bonus: x1.7 when active. Buyables work in any universe but are stronger in Basic Tree.";}],
-                ]
-            },
             "porting": {
                 content: [
                     ["infobox","credits"],
                     "blank",
                     ["infobox","howToPort"],
                     "blank",
-                    ["display-text", function(){ return "Git clones exist at:<br><code>/tmp/PT-Classic</code> ("+fsCountClassic+"), <code>/tmp/PT-Rewritten</code> ("+fsCountRewritten+"), <code>/tmp/The-Basic-Tree</code> ("+fsCountBasic+"), <code>/tmp/Milestone-Tree</code> ("+fsCountMiletree+")<br>We are porting every layer incrementally."}],
+                    ["display-text", function(){ return "Git clones exist at:<br><code>/tmp/PT-Classic</code> ("+fsCountClassic+") and <code>/tmp/PT-Rewritten</code> ("+fsCountRewritten+")<br>We are porting every layer incrementally."}],
                     "blank",
                     ["display-text", function(){ return "Classic layers left: Row4 (HN/N/HS), Row5 (I/MA/GE), Row6 (MC/EN/NE...), Row7 (R/AI/C) — 14 layers<br>Rewritten layers left: 24/30 — e, s, sb, sg, h, q, o, ss, m, ba, ps, hn, n, hs, i, ma, ge, mc, en, ne, id, r, ai, c, a, sc, ab";}],
                 ]
@@ -1324,8 +629,6 @@ let fsCountClassic = "7889 lines";
 let fsCountRewritten = "9915 lines";
 let fsCountDemo = "Demo (3 layers)";
 let fsCountIncrementverse = "8182 lines";
-let fsCountBasic = "831 lines";
-let fsCountMiletree = "9563 lines";
 try{
     // Try to get actual counts if fs is available (Node check, not in browser)
     if(typeof require !== 'undefined'){

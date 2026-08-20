@@ -513,6 +513,7 @@ function load() {
     versionCheck();
     changeTheme();
     changeTreeQuality();
+    if (typeof applyGameFont === "function") applyGameFont(options.font);
     updateLayers();
     setupModInfo();
 

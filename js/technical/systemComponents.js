@@ -138,6 +138,7 @@ var systemComponents = {
         The Prestige Tree made by Jacorb and Aarex
 		<br><br>
 		<div class="link" onclick="showTab('changelog-tab')">Changelog</div><br>
+		<div class="link" onclick="showTab('savebank-tab')">Official Save Bank</div><br>
         <span v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink" target="_blank">{{modInfo.discordName}}</a><br></span>
         <a class="link" href="https://discord.gg/F3xveHV" target="_blank" v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree Discord</a><br>
         <a class="link" href="http://discord.gg/wwQfgPa" target="_blank" v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a><br>
@@ -151,7 +152,6 @@ var systemComponents = {
     'options-tab': {
         data() { return {
             saveSlots: [],
-            saveBank: [],
             currentSlot: 0,
         }},
         mounted() {
@@ -160,7 +160,6 @@ var systemComponents = {
         methods: {
             refreshSaves() {
                 try { this.saveSlots = getSaveSlots(); } catch(e) { this.saveSlots = []; }
-                try { this.saveBank = getSaveBank(); } catch(e) { this.saveBank = []; }
                 try { this.currentSlot = currentSaveSlot; } catch(e) { this.currentSlot = 0; }
             },
             doSaveSlot(id) { saveToSlot(id); this.refreshSaves(); },
@@ -177,16 +176,9 @@ var systemComponents = {
                 if (slot !== null) importSaveSlot(parseInt(slot) || 0);
                 this.refreshSaves();
             },
-            doDeposit() {
-                let name = prompt('Bank save name:') || '';
-                depositToBank(name);
-                this.refreshSaves();
-            },
-            doWithdraw(id) { withdrawFromBank(id); },
-            doExportBank(id) { exportBankSlot(id); },
-            doDeleteBank(id) { deleteFromBank(id); this.refreshSaves(); },
             fmtTime(s) { return formatSaveTime(s); },
             fmtDate(t) { return formatSaveDate(t); },
+            openSaveBank() { showTab('savebank-tab'); },
         },
         template: `
         <div>
@@ -217,6 +209,13 @@ var systemComponents = {
                     <option v-for="n in getNotationOptions()" :key="n.id" :value="n.id" :selected="n.id === options.notation">{{ n.name }}</option>
                 </select></td>
                 <td><span style="font-size: 10px">Eternal Notations by<br><a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank" class="link">MathCookie17</a> (146 presets)</span></td>
+            </tr>
+            <tr>
+                <td><select class="opt" style="font-size: 11px; min-width: 180px;" onchange="setFontFromDropdown(this.value)">
+                    <option v-for="f in getFontOptions()" :key="f.id" :value="f.id" :selected="f.id === options.font">{{ f.name }}</option>
+                </select></td>
+                <td><span style="font-size: 11px">UI Font<br><small>restyles the whole tree</small></span></td>
+                <td><button class="opt" onclick="setFontFromDropdown('orbitron')">Reset Font</button></td>
             </tr>
         </table>
         <br>
