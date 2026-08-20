@@ -16,7 +16,47 @@ function getStartOptions() {
 		forceTooltips: true,
 		hideMilestonePopups: false,
 		notation: "tmt", // Eternal Notations: tmt, eternalDefault, eternalScientific, etc. (credit: MathCookie17)
+		font: "orbitron",
 	}
+}
+
+const GAME_FONTS = {
+	classic: { name: "Classic (Inconsolata)", family: '"Inconsolata"', node: "40px", letter: "0", weight: "bold" },
+	orbitron: { name: "Sci-Fi (Orbitron)", family: '"Orbitron"', node: "32px", letter: "0.04em", weight: "700" },
+	audiowide: { name: "Arcade (Audiowide)", family: '"Audiowide"', node: "30px", letter: "0.02em", weight: "400" },
+	exo2: { name: "Clean Tech (Exo 2)", family: '"Exo 2"', node: "36px", letter: "0.02em", weight: "700" },
+	rajdhani: { name: "HUD (Rajdhani)", family: '"Rajdhani"', node: "40px", letter: "0.06em", weight: "700" },
+	sharetech: { name: "Terminal Mono", family: '"Share Tech Mono"', node: "34px", letter: "0", weight: "400" },
+	vt323: { name: "CRT (VT323)", family: '"VT323"', node: "42px", letter: "0.02em", weight: "400" },
+	pressstart: { name: "Pixel (Press Start)", family: '"Press Start 2P"', node: "16px", letter: "0", weight: "400" },
+	rubik: { name: "Modern (Rubik)", family: '"Rubik"', node: "34px", letter: "0", weight: "700" },
+	cinzel: { name: "Fantasy (Cinzel)", family: '"Cinzel"', node: "28px", letter: "0.08em", weight: "700" },
+	specialelite: { name: "Typewriter", family: '"Special Elite"', node: "28px", letter: "0.02em", weight: "400" },
+	unifraktur: { name: "Blackletter", family: '"UnifrakturMaguntia"', node: "30px", letter: "0", weight: "400" },
+}
+
+function getFontOptions() {
+	return Object.keys(GAME_FONTS).map(function(id) { return { id: id, name: GAME_FONTS[id].name } })
+}
+
+function applyGameFont(id) {
+	if (!id || !GAME_FONTS[id]) id = (options && options.font) || "orbitron"
+	if (!GAME_FONTS[id]) id = "classic"
+	if (options) options.font = id
+	let f = GAME_FONTS[id]
+	let stack = f.family + ', "DozenalFallback", "Noto Sans Symbols", "Noto Sans Symbols 2", "Segoe UI Symbol", "Lucida Console", monospace'
+	let root = document.documentElement
+	if (!root || !root.style) return
+	root.style.setProperty("--game-font", stack)
+	root.style.setProperty("--game-node-font", f.node)
+	root.style.setProperty("--game-letter-spacing", f.letter)
+	root.style.setProperty("--game-font-weight", f.weight)
+	if (typeof needCanvasUpdate !== "undefined") needCanvasUpdate = true
+}
+
+function setFontFromDropdown(id) {
+	applyGameFont(id)
+	if (typeof save === "function") save()
 }
 
 function toggleOpt(name) {

@@ -1,8 +1,16 @@
+:root {
+	--game-font: "Orbitron", "DozenalFallback", "Noto Sans Symbols", "Noto Sans Symbols 2", "Inconsolata", monospace;
+	--game-node-font: 32px;
+	--game-letter-spacing: 0.04em;
+	--game-font-weight: 700;
+}
+
 * {
 	transition-duration: 0.5s;
 	text-align: center;
-	font-family: "Inconsolata", monospace;
-	font-weight: bold;
+	font-family: var(--game-font);
+	font-weight: var(--game-font-weight);
+	letter-spacing: var(--game-letter-spacing);
 	table-align: center;
 	margin: auto;
 	-webkit-text-size-adjust: none;

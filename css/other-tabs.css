@@ -83,7 +83,7 @@ a {
 	font-size: 20px;
 	color: #41f5f5;
 	cursor: pointer;
-	font-family: "Lucida Console", "Courier New", monospace;
+	font-family: var(--game-font);
 	-webkit-text-stroke-width: 1px;
 	-webkit-text-stroke-color: #02f2f2;
 	text-decoration: none;
@@ -108,4 +108,13 @@ a {
 
 .opt:hover {
 	background-color: #439ea3;
+}
+
+select.opt {
+	height: 48px;
+	width: auto;
+	min-width: 160px;
+	border-radius: 10px;
+	font-size: 12px;
+	padding: 4px 8px;
 }
