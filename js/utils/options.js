@@ -33,6 +33,9 @@ const GAME_FONTS = {
 	cinzel: { name: "Fantasy (Cinzel)", family: '"Cinzel"', node: "28px", letter: "0.08em", weight: "700" },
 	specialelite: { name: "Typewriter", family: '"Special Elite"', node: "28px", letter: "0.02em", weight: "400" },
 	unifraktur: { name: "Blackletter", family: '"UnifrakturMaguntia"', node: "30px", letter: "0", weight: "400" },
+	latex: { name: "LaTeX (Computer Modern)", family: '"KaTeX_Main", "KaTeX_Math", "Computer Modern Serif", "STIX Two Text"', node: "32px", letter: "0", weight: "400", generic: "serif" },
+	latexitalic: { name: "LaTeX Math Italic", family: '"KaTeX_Math", "KaTeX_Main", "STIX Two Text"', node: "34px", letter: "0", weight: "400", generic: "serif" },
+	stix: { name: "STIX Two (journal math)", family: '"STIX Two Text"', node: "34px", letter: "0", weight: "400", generic: "serif" },
 }
 
 function getFontOptions() {
@@ -44,7 +47,8 @@ function applyGameFont(id) {
 	if (!GAME_FONTS[id]) id = "classic"
 	if (options) options.font = id
 	let f = GAME_FONTS[id]
-	let stack = f.family + ', "DozenalFallback", "Noto Sans Symbols", "Noto Sans Symbols 2", "Segoe UI Symbol", "Lucida Console", monospace'
+	let generic = f.generic || "monospace"
+	let stack = f.family + ', "DozenalFallback", "Noto Sans Symbols", "Noto Sans Symbols 2", "Segoe UI Symbol", ' + generic
 	let root = document.documentElement
 	if (!root || !root.style) return
 	root.style.setProperty("--game-font", stack)

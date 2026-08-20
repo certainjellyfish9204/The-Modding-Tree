@@ -19,7 +19,7 @@ let VERSION = {
 
 let changelog = `<h1>Changelog:</h1><br>
 	<h3>v0.7.3 - UI Fonts</h3><br>
-		- Options → UI Font restyles the whole game (Orbitron default, plus Arcade, Pixel, CRT, Fantasy, Blackletter, Typewriter, and more).<br><br>
+		- Options → UI Font restyles the whole game (Orbitron default, plus Arcade, Pixel, CRT, Fantasy, Blackletter, Typewriter, <b>LaTeX / Computer Modern</b>, math italic, STIX Two).<br><br>
 	<h3>v0.7.2 - Warp unlock</h3><br>
 		- Warp (W) now actually unlocks from Time upgrade 21 or 25 Time shards (as advertised), not only 35 Generators + 25 Mana.<br>
 		- Quantum no longer appears before Warp exists (it still spends Warp shards).<br><br>
