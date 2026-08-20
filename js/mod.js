@@ -3,7 +3,7 @@ let modInfo = {
 	id: "classicPlusFull", // <- keep this unique! Change if you fork
 	author: "You",
 	pointsName: "points",
-	modFiles: ["layers.js", "layers/universe.js", "layers/reality.js", "tree.js"],
+	modFiles: ["layers.js", "layers/universe.js", "layers/reality.js", "layers/singularity.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -13,11 +13,44 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.6",
-	name: "Fractured Reality",
+	num: "0.7",
+	name: "Singularity",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.7.1 - Official Save Bank</h3><br>
+		- Replaced the personal \"deposit\" bank with a real <b>official Save Bank</b> (community TMT style: Communitree / Multitree / AD).<br>
+		- Premade snapshots: new game, each hub row, Eternity, Multiverse, Singularity, plus Classic / Rewritten / Basic Tree / Milestone Tree / Incrementreeverse / Demo universe starts.<br>
+		- Info → Official Save Bank, or Options → Open Save Bank. Load replaces the current run (export/slots first).<br><br>
+	<h3>v0.7 - Singularity & Mastery</h3><br>
+		- <b>MASSIVE CONTENT UPDATE</b> — Every layer expanded with new upgrades, milestones, and challenges!<br>
+		- <b>P Layer:</b> 8 new upgrades (rows 5-6), 3 new milestones (6-8), 2 new challenges (Prestige Purge, Ultimate Prestige), 1 new buyable (Prestige Singularity), P effect softcap removable<br>
+		- <b>B Layer:</b> 7 new upgrades (rows 4-5), 2 new milestones (7-8), 1 new challenge (Booster Overdrive), B effect softcap removable, B effect ^2 at milestone 8<br>
+		- <b>G Layer:</b> 7 new upgrades (rows 4-5), 3 new milestones (6-8), 1 new challenge (Generator Overload), G effect ^2 at milestone 7<br>
+		- <b>M Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (4-5), 1 new challenge (Mana Storm), M effect ^1.5/^2 at milestones 4/5<br>
+		- <b>T Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (6-7), T effect ^2 at milestone 7<br>
+		- <b>W Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (4-5), W effect ^2 at milestone 5<br>
+		- <b>H Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (5-6), H effect softcap removable, H effect ^2 at milestone 6<br>
+		- <b>Q Layer:</b> 4 new upgrades (rows 4-5), 2 new milestones (4-5), Q effect ^2 at milestone 5<br>
+		- <b>E Layer:</b> 4 new upgrades (rows 4-5), 2 new milestones (4-5), E effect softcap removable, E effect ^2 at milestone 5<br>
+		- <b>25+ new achievements</b> (rows 7-10): Booster God, Generator God, Mana God, Challenge Master, Billionaire→Googol, Multiverse Master, Full Completionist, Infinite Power<br>
+		- <b>NEW: Mastery side layer (MA)</b> — tracks overall completion %, layer breakdown, achievements, lore<br>
+		- All passive generation increased at high milestones (up to 100%)<br>
+		- <b>NEW UNIVERSE: The Basic Tree</b> — gapples2/The-Modding-Tree, 6 buyables + travel<br>
+		- <b>NEW ROW 6: Singularity (S)</b> — Collapse Grid, Singularity Field, Rift Challenges<br>
+		- 7 total universes in the Multiverse!<br><br>
+		- <b>NEW ROW 6: Singularity (S)</b> — the ultimate endgame layer, merging Universe (U) and Reality (R) branches<br>
+		- Singularities collapse all multiverse timelines into a single point of infinite power<br>
+		- <b>Collapse Grid</b> (3x3) — compress tiles (⬛→🔮→✦) for exponential bonuses. Grid Mastery auto-compresses.<br>
+		- <b>Singularity Field</b> — passive multiplier that grows over time (unlocks at S upgrade 14)<br>
+		- <b>10 upgrades</b>: Timeline Collapse, Dimensional Crunch, Multiverse Merge, Singularity Field, Collapse Grid, Singulon Amplifier, Rift Breaker, Eternal Singularity, Grid Mastery, Absolute Singularity<br>
+		- <b>2 buyables</b>: Singulon Core (amplifies S effect), Timeline Compressor (boosts all points)<br>
+		- <b>3 Rift Challenges</b>: Singularity Rift Alpha (all effects ^0.1), Rift Omega (all effects disabled), Collapsed Timeline (auto-resets)<br>
+		- <b>5 milestones</b>: from 1 to 20 Singularities, culminating in ULTIMATE VICTORY<br>
+		- <b>2 clickables</b>: Compress Tile (spend S to compress grid), Grid Overload (mass compress)<br>
+		- New endgame: 20 Singularities, 25 U + 25 R, or 1e500 points<br>
+		- <b>NEW UNIVERSE: The Basic Tree</b> — <code>gapples2/The-Modding-Tree</code> by gapples2 & thepaperpilot — 831 lines, 7 layers (b/c/d/e/f/g/a), "dust" currency — git cloned to <code>/tmp/The-Basic-Tree</code> — ported as6 buyables (B/C/D/E/F/G) + travel clickable + lore infobox — from <a href="https://modding-tree.fandom.com/wiki/List_of_mods" target="_blank">List of Mods</a> (finished, 2 days)<br>
+		- <i>Developer Preview — balance may change!</i><br><br>
 	<h3>v0.6 - Fractured Reality</h3><br>
 		- <b>NEW ROW 5 BRANCH: Reality (R)</b> — a full second path branching directly from Eternity alongside Universe<br>
 		- Reality Shards, Stability, two Dimension buyables, nine upgrades, five milestones, two Reality Fracture challenges, and automation<br>
@@ -61,7 +94,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		- Added things.<br>
 		- Added stuff.`
 
-let winText = `Congratulations! You have mastered the Classic+ Tree v0.6! <br><br> You reached 25 Universe Points, 25 Reality Shards, or 1e500 points. Explore the five universes through U, stabilize the main timeline through R, and switch notations in Options → Notation.`
+let winText = `Congratulations! You have mastered the Classic+ Tree v0.7 — THE SINGULARITY! <br><br> You reached 20 Singularities, 25 Universe Points, 25 Reality Shards, or 1e500 points. You collapsed all timelines into a single point of infinite power. The multiverse is yours.`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
@@ -105,6 +138,15 @@ function getPointGen() {
 	if (tmp.r && tmp.r.effect && !inChallenge('r', 11)) gain = gain.times(tmp.r.effect)
 	if (player.r && hasUpgrade('r', 11)) gain = gain.times(upgradeEffect('r', 11))
 	if (player.r && hasMilestone('r', 0)) gain = gain.times(2)
+	// Row 6 - Singularity (guarded so it never crashes pre-Singularity saves)
+	if (player.s2 && player.s2.unlocked) {
+		if (tmp.s2 && tmp.s2.effect) gain = gain.times(tmp.s2.effect)
+		try { if (layers.s2 && typeof layers.s2.getGridEffect === 'function') gain = gain.times(layers.s2.getGridEffect()) } catch(e) {}
+		if (hasUpgrade('s2', 13)) gain = gain.times(1e50)
+		if (hasUpgrade('s2', 14) && player.s2.field) gain = gain.times(player.s2.field.add(1).pow(0.5))
+		if (hasUpgrade('s2', 33)) gain = gain.pow(1.5)
+		try { if (typeof buyableEffect === 'function' && tmp.s2 && tmp.s2.buyables && tmp.s2.buyables[12]) gain = gain.times(buyableEffect('s2', 12)) } catch(e) {}
+	}
 	// Buyable point boosts
 	if (tmp.g.buyables && tmp.g.buyables[12]) gain = gain.times(buyableEffect('g', 12))
 	if (tmp.m.buyables && tmp.m.buyables[12]) gain = gain.times(buyableEffect('m', 12))
@@ -119,6 +161,11 @@ function getPointGen() {
 	if (hasAchievement('a', 16)) gain = gain.times(1.3)
 	if (hasAchievement('a', 31)) gain = gain.times(1.5)
 	if (hasAchievement('a', 32)) gain = gain.times(2)
+	// Row 7-10 achievements
+	if (hasAchievement('a', 91)) gain = gain.times(achievementEffect('a', 91))
+	if (hasAchievement('a', 92)) gain = gain.times(achievementEffect('a', 92))
+	if (hasAchievement('a', 93)) gain = gain.times(achievementEffect('a', 93))
+	if (hasAchievement('a', 96)) gain = gain.times(achievementEffect('a', 96))
 	// Milestone / challenge boosts
 	if (hasMilestone('p', 4)) gain = gain.times(2)
 	if (hasMilestone('b', 5)) gain = gain.times(3)
@@ -164,12 +211,13 @@ var displayThings = [
 	function() { if (player.e.unlocked) return "E: "+format(tmp.e.effect)+"x | "+format(player.e.points)+" Eternities" },
 	function() { if (player.u && player.u.unlocked) return "U: "+format(tmp.u.effect)+"x ("+player.u.activeUniverse+") | "+formatWhole(player.u.points)+" U" },
 	function() { if (player.r && player.r.unlocked) return "R: "+format(tmp.r.effect)+"x | "+formatWhole(player.r.points)+" shards | "+formatWhole(player.r.stability)+" stability" },
+	function() { if (player.s2 && player.s2.unlocked) return "S: "+format(tmp.s2.effect)+"x | "+formatWhole(player.s2.points)+" singularities | Field: "+format(player.s2.field) },
 	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11) || (player.u && inChallenge('u',11)) || (player.r && (inChallenge('r',11) || inChallenge('r',12)))) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.u.points.gte(new Decimal(25)) || player.r.points.gte(new Decimal(25)) || player.points.gte(new Decimal("1e500"))
+	return (player.s2 && player.s2.points.gte(new Decimal(20))) || (player.u && player.u.points.gte(new Decimal(25))) || (player.r && player.r.points.gte(new Decimal(25))) || player.points.gte(new Decimal("1e500"))
 }
 
 
@@ -207,5 +255,12 @@ function fixOldSave(oldVersion){
 		if (!player.r) player.r = getStartLayerData("r");
 		if (player.r && player.r.stability === undefined) player.r.stability = new Decimal(0);
 		if (player.r && player.r.auto === undefined) player.r.auto = false;
+	}
+	if (oldVersion < "0.7") {
+		if (!player.s2) player.s2 = getStartLayerData("s2");
+		if (player.s2 && player.s2.field === undefined) player.s2.field = new Decimal(0);
+		if (player.s2 && player.s2.collapses === undefined) player.s2.collapses = 0;
+		if (player.u && !player.u.basic) player.u.basic = { points: new Decimal(0), cheapeners: new Decimal(0), darkness: new Decimal(0), exponents: new Decimal(0), funity: new Decimal(0), games: new Decimal(0) };
+		if (player.u && !player.u.miletree) player.u.miletree = { points: new Decimal(0), prestige: new Decimal(0), superPrestige: new Decimal(0), transcend: new Decimal(0), reincarnate: new Decimal(0) };
 	}
 }

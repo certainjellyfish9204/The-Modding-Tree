@@ -138,6 +138,7 @@ var systemComponents = {
         The Prestige Tree made by Jacorb and Aarex
 		<br><br>
 		<div class="link" onclick="showTab('changelog-tab')">Changelog</div><br>
+		<div class="link" onclick="showTab('savebank-tab')">Official Save Bank</div><br>
         <span v-if="modInfo.discordLink"><a class="link" v-bind:href="modInfo.discordLink" target="_blank">{{modInfo.discordName}}</a><br></span>
         <a class="link" href="https://discord.gg/F3xveHV" target="_blank" v-bind:style="modInfo.discordLink ? {'font-size': '16px'} : {}">The Modding Tree Discord</a><br>
         <a class="link" href="http://discord.gg/wwQfgPa" target="_blank" v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a><br>
@@ -149,7 +150,38 @@ var systemComponents = {
     },
 
     'options-tab': {
+        data() { return {
+            saveSlots: [],
+            currentSlot: 0,
+        }},
+        mounted() {
+            this.refreshSaves();
+        },
+        methods: {
+            refreshSaves() {
+                try { this.saveSlots = getSaveSlots(); } catch(e) { this.saveSlots = []; }
+                try { this.currentSlot = currentSaveSlot; } catch(e) { this.currentSlot = 0; }
+            },
+            doSaveSlot(id) { saveToSlot(id); this.refreshSaves(); },
+            doLoadSlot(id) { loadFromSlot(id); },
+            doExportSlot(id) { exportSaveSlot(id); },
+            doDeleteSlot(id) { deleteSaveSlot(id); this.refreshSaves(); },
+            doNewSlot() {
+                let name = prompt('Enter save name:') || ('Save ' + (this.saveSlots.length + 1));
+                createSaveSlot(name);
+                this.refreshSaves();
+            },
+            doImportSlot() {
+                let slot = prompt('Import to which slot? (0-' + (this.saveSlots.length) + '):');
+                if (slot !== null) importSaveSlot(parseInt(slot) || 0);
+                this.refreshSaves();
+            },
+            fmtTime(s) { return formatSaveTime(s); },
+            fmtDate(t) { return formatSaveDate(t); },
+            openSaveBank() { showTab('savebank-tab'); },
+        },
         template: `
+        <div>
         <table>
             <tr>
                 <td><button class="opt" onclick="save()">Save</button></td>
@@ -169,14 +201,102 @@ var systemComponents = {
             <tr>
                 <td><button class="opt" onclick="toggleOpt('hideChallenges')">Completed Challenges: {{ options.hideChallenges?"HIDDEN":"SHOWN" }}</button></td>
                 <td><button class="opt" onclick="toggleOpt('forceOneTab'); needsCanvasUpdate = true">Single-Tab Mode: {{ options.forceOneTab?"ALWAYS":"AUTO" }}</button></td>
-				<td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true">Shift-Click to Toggle Tooltips: {{ options.forceTooltips?"ON":"OFF" }}</button></td>
-				</tr> 
-			<tr>
-                <td><button class="opt" onclick="toggleOpt('hideMilestonePopups')">Show Milestone Popups: {{ formatOption(!options.hideMilestonePopups) }}</button></td>
-                <td><button class="opt" onclick="cycleNotation()" style="font-size: 11px">Notation: {{ getCurrentNotationName() }}</button></td>
-                <td><span style="font-size: 10px">Eternal Notations by<br><a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank" class="link">MathCookie17</a> (144 presets)</span></td>
+                <td><button class="opt" onclick="toggleOpt('forceTooltips'); needsCanvasUpdate = true">Shift-Click to Toggle Tooltips: {{ options.forceTooltips?"ON":"OFF" }}</button></td>
             </tr>
-        </table>`
+            <tr>
+                <td><button class="opt" onclick="toggleOpt('hideMilestonePopups')">Show Milestone Popups: {{ formatOption(!options.hideMilestonePopups) }}</button></td>
+                <td><select class="opt" style="font-size: 11px; min-width: 180px;" onchange="setNotationFromDropdown(this.value)">
+                    <option v-for="n in getNotationOptions()" :key="n.id" :value="n.id" :selected="n.id === options.notation">{{ n.name }}</option>
+                </select></td>
+                <td><span style="font-size: 10px">Eternal Notations by<br><a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank" class="link">MathCookie17</a> (146 presets)</span></td>
+            </tr>
+        </table>
+        <br>
+        <h3 style="color: #FFD700;">💾 Save Slots</h3>
+        <div style="margin: 10px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: rgba(0,0,0,0.2);">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr v-for="slot in saveSlots" :key="slot.id" style="border-bottom: 1px solid #333;">
+                    <td style="padding: 6px; text-align: left;">
+                        <b :style="{'color': slot.id === currentSlot ? '#4BDC13' : '#fff'}">{{ slot.name }}</b>
+                        <br><small style="color: #888;">{{ slot.points }} pts | {{ fmtTime(slot.timePlayed) }} | {{ fmtDate(slot.lastSaved) }}</small>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 28px; width: 55px; font-size: 10px; border-radius: 6px;" 
+                            :style="{'background-color': slot.id === currentSlot ? '#4BDC13' : '#555'}"
+                            @click="doSaveSlot(slot.id)">
+                            {{ slot.id === currentSlot ? '✓ Active' : 'Save' }}
+                        </button>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 28px; width: 50px; font-size: 10px; border-radius: 6px; background-color: #4488ff;" 
+                            @click="doLoadSlot(slot.id)">
+                            Load
+                        </button>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 28px; width: 55px; font-size: 10px; border-radius: 6px;" 
+                            @click="doExportSlot(slot.id)">
+                            Export
+                        </button>
+                    </td>
+                    <td style="padding: 4px;" v-if="slot.id !== 0">
+                        <button class="opt" style="height: 28px; width: 28px; font-size: 10px; border-radius: 6px; background-color: #cc3333;" 
+                            @click="doDeleteSlot(slot.id)">
+                            ✕
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            <div style="margin-top: 10px;">
+                <button class="opt" style="height: 32px; width: 120px; font-size: 11px; border-radius: 6px; background-color: #4BDC13;" 
+                    @click="doNewSlot()">
+                    + New Slot
+                </button>
+                <button class="opt" style="height: 32px; width: 120px; font-size: 11px; border-radius: 6px; margin-left: 8px; background-color: #ff8800;" 
+                    @click="doImportSlot()">
+                    Import to Slot
+                </button>
+            </div>
+        </div>
+        <br>
+        <h3 style="color: #FFD700;">🏦 Save Bank</h3>
+        <div style="margin: 10px 0; padding: 10px; border: 1px solid #444; border-radius: 8px; background: rgba(0,0,0,0.2);">
+            <button class="opt" style="height: 35px; width: 200px; font-size: 12px; border-radius: 6px; background-color: #FFD700; color: #000; font-weight: bold;" 
+                @click="doDeposit()">
+                💰 Deposit Current Game
+            </button>
+            <table style="width: 100%; margin-top: 10px; border-collapse: collapse;" v-if="saveBank.length > 0">
+                <tr v-for="entry in saveBank" :key="entry.id" style="border-bottom: 1px solid #333;">
+                    <td style="padding: 6px; text-align: left;">
+                        <b style="color: #FFD700;">{{ entry.name }}</b>
+                        <br><small style="color: #888;">{{ entry.points }} pts | {{ entry.achievements }} achievements | {{ fmtDate(entry.deposited) }}</small>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 28px; width: 65px; font-size: 10px; border-radius: 6px; background-color: #4BDC13;" 
+                            @click="doWithdraw(entry.id)">
+                            Withdraw
+                        </button>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 28px; width: 55px; font-size: 10px; border-radius: 6px;" 
+                            @click="doExportBank(entry.id)">
+                            Export
+                        </button>
+                    </td>
+                    <td style="padding: 4px;">
+                        <button class="opt" style="height: 28px; width: 28px; font-size: 10px; border-radius: 6px; background-color: #cc3333;" 
+                            @click="doDeleteBank(entry.id)">
+                            ✕
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            <div v-else style="margin-top: 10px; color: #666; font-style: italic;">
+                No saves in bank yet. Click "Deposit Current Game" to create a backup!
+            </div>
+        </div>
+        </div>
+        `
     },
 
     'back-button': {

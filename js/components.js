@@ -605,6 +605,7 @@ function loadVue() {
 	Vue.component('overlay-head', systemComponents['overlay-head'])
 	Vue.component('info-tab', systemComponents['info-tab'])
 	Vue.component('options-tab', systemComponents['options-tab'])
+	Vue.component('savebank-tab', systemComponents['savebank-tab'])
 	Vue.component('tooltip', systemComponents['tooltip'])
 	Vue.component('particle', systemComponents['particle'])
 	Vue.component('bg', systemComponents['bg'])

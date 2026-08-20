@@ -292,3 +292,8 @@ addLayer("changelog-tab", {
     tabFormat() {return ([["raw-html", modInfo.changelog]])},
     row: "otherside"
 })
+
+addLayer("savebank-tab", {
+    tabFormat: ["savebank-tab"],
+    row: "otherside"
+})

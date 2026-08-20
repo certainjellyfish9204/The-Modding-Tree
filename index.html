@@ -13,6 +13,28 @@
 	<link rel="stylesheet" type="text/css" href="eternal_notations_images/dominoes.css" />
 
 	<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+	<style>
+		/*
+		 * ↊ (U+218A, Turned Digit Two) and ↋ (U+218B, Turned Digit Three)
+		 * These dozenal digits are in the Number Forms block (U+2150-218F).
+		 * Most web fonts don't include them. System fonts that DO:
+		 *   Windows: Segoe UI Symbol, Tahoma, Microsoft Sans Serif
+		 *   macOS: Apple Symbols, Menlo
+		 *   Linux: DejaVu Sans, Symbola (if installed)
+		 * We declare them as separate @font-face with local() first.
+		 */
+		@font-face {
+			font-family: 'DozenalFallback';
+			src: local('Segoe UI Symbol'),
+				 local('Tahoma'),
+				 local('Microsoft Sans Serif'),
+				 local('Apple Symbols'),
+				 local('DejaVu Sans'),
+				 local('Symbola');
+			unicode-range: U+218A-218B;
+		}
+	</style>
 
 	<script src="https://unpkg.com/vue@2.7.16/dist/vue.min.js"></script>
 	<script src="js/technical/break_eternity.js"></script>
@@ -34,6 +56,8 @@
 	<script src="js/technical/particleSystem.js"></script>
 	<script src="js/utils/NumberFormating.js"></script>
 	<script src="js/utils/options.js"></script>
+	<script src="js/utils/saveSlots.js"></script>
+	<script src="js/utils/officialSaveBank.js"></script>
 	<script src="js/utils/save.js"></script>
 	<script src="js/utils/themes.js"></script>
 
