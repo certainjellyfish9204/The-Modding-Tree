@@ -18,6 +18,9 @@ let VERSION = {
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.7.2 - Warp unlock</h3><br>
+		- Warp (W) now actually unlocks from Time upgrade 21 or 25 Time shards (as advertised), not only 35 Generators + 25 Mana.<br>
+		- Quantum no longer appears before Warp exists (it still spends Warp shards).<br><br>
 	<h3>v0.7.1 - Official Save Bank</h3><br>
 		- Replaced the personal \"deposit\" bank with a real <b>official Save Bank</b> (community TMT style: Communitree / Multitree / AD).<br>
 		- Premade snapshots: new game, each hub row, Eternity, Multiverse, Singularity, plus Classic / Rewritten / Basic Tree / Milestone Tree / Incrementreeverse / Demo universe starts.<br>
