@@ -750,7 +750,7 @@ addLayer("w", {
         22: { description: "Warp gain x3.", cost: new Decimal(60), unlocked(){return hasUpgrade('w',21)} },
         23: { description: "Keep G/M upgrades on W reset.", cost: new Decimal(150), unlocked(){return hasUpgrade('w',22)} },
         31: { description: "Unlock W challenges.", cost: new Decimal(500), unlocked(){return hasUpgrade('w',23)} },
-        32: { description: "Auto-warp prestige.", cost: new Decimal(2000), unlocked(){return hasUpgrade('w',31)} },
+        32: { description: "Auto-warp prestige (toggle in milestones).", cost: new Decimal(2000), unlocked(){return hasUpgrade('w',31)} },
         // Row 4 — Hyper/Quantum era
         41: { title: "Hyper Warp", description: "Hyper points boost Warp effect.", cost: new Decimal(5000), effect(){ return player.h.points.add(1).pow(0.3)}, effectDisplay(){ return format(this.effect())+"x"}, unlocked(){ return hasUpgrade('w',32) && player.h.unlocked} },
         42: { description: "Warp effect ^1.3. Warp buyables are 50% cheaper.", cost: new Decimal(10000), unlocked(){ return hasUpgrade('w',41)} },
@@ -795,14 +795,14 @@ addLayer("w", {
     },
     milestones: {
         0: { requirementDescription: "2 warp", effectDescription: "Keep G/M upgrades, time gain x2", done(){ return player.w.best.gte(2)} },
-        1: { requirementDescription: "6 warp", effectDescription: "Keep Warp upgrades, Q gain x2", done(){ return player.w.best.gte(6)}, unlocked(){return hasMilestone('w',0)} },
+        1: { requirementDescription: "6 warp", effectDescription: "Keep Warp upgrades, Q gain x2", done(){ return player.w.best.gte(6)}, toggles: [["w","auto"]], unlocked(){return hasMilestone('w',0)} },
         2: { requirementDescription: "15 warp", effectDescription: "Unlock Mana Warp buyable, Warp gain x2", done(){ return player.w.best.gte(15)}, unlocked(){return hasMilestone('w',1)} },
         3: { requirementDescription: "40 warp", effectDescription: "Gain 15% Warp passively", done(){ return player.w.best.gte(40)}, unlocked(){return hasMilestone('w',2)} },
         4: { requirementDescription: "100 warp", effectDescription: "W effect ^1.5, W buyables scale 2x slower", done(){ return player.w.best.gte(100)}, unlocked(){return hasMilestone('w',3)} },
         5: { requirementDescription: "300 warp", effectDescription: "W effect ^2, gain 50% Warp passively", done(){ return player.w.best.gte(300)}, unlocked(){return hasMilestone('w',4)} },
     },
     passiveGeneration(){ return hasMilestone('w',5) ? 0.5 : hasMilestone('w',3) ? 0.15 : 0 },
-    autoPrestige(){ return hasUpgrade('w',32) && hasMilestone('w',1) },
+    autoPrestige(){ return hasUpgrade('w',32) && player.w.auto },
     doReset(resettingLayer){
         if(layers[resettingLayer].row > this.row){
             let keep=[];
