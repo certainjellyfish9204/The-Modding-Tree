@@ -32,6 +32,17 @@ function _sbFill(p, layer, spec) {
     }
 }
 
+// Ensure a nested universe sub-object exists before a preset writes into it.
+// New saves get these from the u layer's startData(), but an imported/older
+// save may predate them, and a missing object would throw mid-preset.
+function _sbSub(p, layer, key, defaults) {
+    if (!p[layer]) return null;
+    if (!p[layer][key]) p[layer][key] = {};
+    let obj = p[layer][key];
+    for (let k in defaults) if (obj[k] === undefined) obj[k] = _sbD(defaults[k]);
+    return obj;
+}
+
 function _sbAch(p, ids) {
     if (!p.a) return;
     p.a.unlocked = true;
@@ -226,6 +237,7 @@ function officialSaveBankList() {
                 officialSaveBankById("multiverse").apply(p);
                 if (p.u) {
                     p.u.activeUniverse = "basic";
+                    _sbSub(p, "u", "basic", {points:0,cheapeners:0,darkness:0,exponents:0,funity:0,games:0});
                     p.u.basic.points = _sbD(20);
                     p.u.basic.cheapeners = _sbD(4);
                     p.u.basic.darkness = _sbD(1);
@@ -246,6 +258,7 @@ function officialSaveBankList() {
             apply: function(p) {
                 officialSaveBankById("uni-basic").apply(p);
                 if (p.u) {
+                    _sbSub(p, "u", "basic", {points:0,cheapeners:0,darkness:0,exponents:0,funity:0,games:0});
                     p.u.basic.points = _sbD(1e6);
                     p.u.basic.cheapeners = _sbD(12);
                     p.u.basic.darkness = _sbD(5);
@@ -264,6 +277,7 @@ function officialSaveBankList() {
                 officialSaveBankById("multiverse").apply(p);
                 if (p.u) {
                     p.u.activeUniverse = "miletree";
+                    _sbSub(p, "u", "miletree", {points:0,prestige:0,superPrestige:0,transcend:0,reincarnate:0});
                     p.u.miletree.points = _sbD(15);
                     p.u.miletree.prestige = _sbD(5);
                     p.u.miletree.superPrestige = _sbD(1);

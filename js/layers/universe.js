@@ -40,6 +40,21 @@ addLayer("u", {
             incrementy: new Decimal(0),
             prestige: new Decimal(0),
         },
+        basic: {
+            points: new Decimal(0), // The Basic Tree "dust"
+            cheapeners: new Decimal(0),
+            darkness: new Decimal(0),
+            exponents: new Decimal(0),
+            funity: new Decimal(0),
+            games: new Decimal(0),
+        },
+        miletree: {
+            points: new Decimal(0), // Milestone Tree points
+            prestige: new Decimal(0),
+            superPrestige: new Decimal(0),
+            transcend: new Decimal(0),
+            reincarnate: new Decimal(0),
+        },
     }},
     color: "#AA00FF",
     requires: new Decimal(10), // 10 Eternity
