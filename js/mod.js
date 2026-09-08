@@ -18,6 +18,10 @@ let VERSION = {
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+<h3>v0.7.4 - Notation fixes</h3><br>
+   - Fixed the two Eternal Notations presets that never rendered: <b>Simplified Written</b> and <b>Numeric Dominoes</b> are factory presets (<code>SimplifiedWritten(base)</code>, <code>NumericDominoes(highest)</code>) that were being handed to <code>format()</code> un-called, so they silently fell back to TMT and logged a warning every frame. They now build with base 10 / a double-six domino set.<br>
+   - <code>setNotation()</code> validates that a preset is really a Notation before enabling it, so any future un-mapped factory degrades to TMT once, with one clear console warning, instead of throwing on every number drawn.<br>
+   - Hyper and Quantum now buy the maximum affordable reset amount after their best total reaches 100, so this automation remains unlocked after later resets.<br><br>
 	<h3>v0.7.3 - UI Fonts</h3><br>
 		- Options → UI Font restyles the whole game (Orbitron default, plus Arcade, Pixel, CRT, Fantasy, Blackletter, Typewriter, <b>LaTeX / Computer Modern</b>, math italic, STIX Two).<br><br>
 	<h3>v0.7.2 - Warp unlock</h3><br>
