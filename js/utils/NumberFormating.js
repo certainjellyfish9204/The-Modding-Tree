@@ -148,7 +148,9 @@ function getEternalPreset(id) {
         case "eternalNaturalLogarithm": return presets.NaturalLogarithm || htmlPresets.NaturalLogarithm
         case "eternalNaturalPentaLogarithm": return presets.NaturalPentaLogarithm || htmlPresets.NaturalPentaLogarithm
         case "eternalNaturalSuperLogarithm": return presets.NaturalSuperLogarithm || htmlPresets.NaturalSuperLogarithm
-        case "eternalNumericDominoes": return presets.NumericDominoes || htmlPresets.NumericDominoes
+        // NumericDominoes is a factory: (highest) => LetterDigitsNotation. Highest = 6 gives the
+        // standard "double six" set of 28 tiles, same argument Colored Dominoes uses below.
+        case "eternalNumericDominoes": return typeof presets.NumericDominoes === "function" ? presets.NumericDominoes(6) : (presets.NumericDominoes || htmlPresets.NumericDominoes)
         case "eternalOctal": return presets.Octal || htmlPresets.Octal
         case "eternalOmega": return presets.Omega || htmlPresets.Omega
         case "eternalOmegaLayerNumber": return presets.OmegaLayerNumber || htmlPresets.OmegaLayerNumber
@@ -184,7 +186,9 @@ function getEternalPreset(id) {
         case "eternalScientific": return presets.Scientific || htmlPresets.Scientific
         case "eternalSeptecoman": return presets.Septecoman || htmlPresets.Septecoman
         case "eternalSeximal": return presets.Seximal || htmlPresets.Seximal
-        case "eternalSimplifiedWritten": return presets.SimplifiedWritten || htmlPresets.SimplifiedWritten
+        // SimplifiedWritten is a factory: (base) => HypersplitNotation. Base 10 is the preset's
+        // "Simplified Written" name case (any other base gets "(Base X)" appended by the library).
+        case "eternalSimplifiedWritten": return typeof presets.SimplifiedWritten === "function" ? presets.SimplifiedWritten(10) : (presets.SimplifiedWritten || htmlPresets.SimplifiedWritten)
         case "eternalSquare": return presets.Square || htmlPresets.Square
         case "eternalSquareRoot": return presets.SquareRoot || htmlPresets.SquareRoot
         case "eternalStandard": return presets.Standard || htmlPresets.Standard
@@ -212,14 +216,16 @@ function setNotation(id) {
         currentEternalNotation = null
     } else {
         let preset = getEternalPreset(id)
-        if (preset) {
+        // A usable preset must be a Notation instance (some library presets are factories that need
+        // arguments - if one slips through un-called it has no .format and would throw every frame).
+        if (preset && typeof preset.format === "function") {
             eternalNotationsEnabled = true
             currentEternalNotation = preset
         } else {
-            // Fallback if EternalNotations not loaded or preset not found
+            // Fallback if EternalNotations not loaded, preset not found, or preset isn't a Notation
             eternalNotationsEnabled = false
             currentEternalNotation = null
-            console.warn("[Eternal Notations] Preset not found or library not loaded:", id)
+            console.warn("[Eternal Notations] Preset not usable (not found, library not loaded, or not a Notation), falling back to TMT:", id, preset)
         }
     }
     // Save to options if available

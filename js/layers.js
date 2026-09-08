@@ -836,6 +836,8 @@ addLayer("h", {
         return eff
     },
     effectDescription() { return "which are boosting ALL previous gains by "+format(tmp.h.effect)+"x" },
+    // Once 100 Hyper has been reached, future Hyper resets buy the maximum affordable amount.
+    canBuyMax() { return player.h.best.gte(100) },
     prestigeButtonText() {
         let gain = (typeof tmp !== 'undefined' && tmp.h && tmp.h.resetGain instanceof Decimal) ? tmp.h.resetGain : getResetGain(this.layer)
         let at = (typeof tmp !== 'undefined' && tmp.h && tmp.h.nextAt instanceof Decimal) ? tmp.h.nextAt : getNextAt(this.layer)
@@ -935,6 +937,8 @@ addLayer("q", {
         return eff;
     },
     effectDescription(){ return "which boost points, warp, and hyper by "+format(tmp.q.effect)+"x"},
+    // Once 100 Quantum has been reached, future Quantum resets buy the maximum affordable amount.
+    canBuyMax(){ return player.q.best.gte(100) },
     prestigeButtonText(){
         let gain=(tmp.q && tmp.q.resetGain instanceof Decimal) ? tmp.q.resetGain : getResetGain(this.layer);
         let at=(tmp.q && tmp.q.nextAt instanceof Decimal) ? tmp.q.nextAt : getNextAt(this.layer);
