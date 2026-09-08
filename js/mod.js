@@ -13,11 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.7",
+	num: "0.7.4",
 	name: "Singularity",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.7.4 - Warp autoreset fix</h3><br>
+		- <b>Fixed:</b> Warp upgrade 32 ("Auto-warp prestige") permanently forced auto-prestige on, resetting rows 0-2 (points, P/B/G/M/T) every tick with no way to stop it.<br>
+		- Auto-warp is now an ON/OFF toggle on Warp milestone 1, matching Booster and Reality automation. It starts OFF, including on affected saves.<br><br>
 	<h3>v0.7.3 - UI Fonts</h3><br>
 		- Options → UI Font restyles the whole game (Orbitron default, plus Arcade, Pixel, CRT, Fantasy, Blackletter, Typewriter, <b>LaTeX / Computer Modern</b>, math italic, STIX Two).<br><br>
 	<h3>v0.7.2 - Warp unlock</h3><br>
@@ -267,5 +270,11 @@ function fixOldSave(oldVersion){
 		if (player.s2 && player.s2.collapses === undefined) player.s2.collapses = 0;
 		if (player.u && !player.u.basic) player.u.basic = { points: new Decimal(0), cheapeners: new Decimal(0), darkness: new Decimal(0), exponents: new Decimal(0), funity: new Decimal(0), games: new Decimal(0) };
 		if (player.u && !player.u.miletree) player.u.miletree = { points: new Decimal(0), prestige: new Decimal(0), superPrestige: new Decimal(0), transcend: new Decimal(0), reincarnate: new Decimal(0) };
+	}
+	if (oldVersion < "0.7.4") {
+		// Warp auto-prestige used to be forced on by upgrade 32, which reset rows 0-2
+		// every tick with no way to turn it off. It is now gated behind player.w.auto,
+		// so make sure the flag exists and starts OFF for saves stuck in the reset loop.
+		if (player.w && player.w.auto === undefined) player.w.auto = false;
 	}
 }
