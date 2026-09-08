@@ -153,6 +153,7 @@ var systemComponents = {
         data() { return {
             saveSlots: [],
             currentSlot: 0,
+            saveBank: [],
         }},
         mounted() {
             this.refreshSaves();
@@ -161,7 +162,16 @@ var systemComponents = {
             refreshSaves() {
                 try { this.saveSlots = getSaveSlots(); } catch(e) { this.saveSlots = []; }
                 try { this.currentSlot = currentSaveSlot; } catch(e) { this.currentSlot = 0; }
+                try { this.saveBank = getSaveBank(); } catch(e) { this.saveBank = []; }
             },
+            doDeposit() {
+                let name = prompt('Name this bank deposit:') || '';
+                depositToBank(name);
+                this.refreshSaves();
+            },
+            doWithdraw(id) { withdrawFromBank(id); },
+            doExportBank(id) { exportBankSlot(id); },
+            doDeleteBank(id) { deleteFromBank(id); this.refreshSaves(); },
             doSaveSlot(id) { saveToSlot(id); this.refreshSaves(); },
             doLoadSlot(id) { loadFromSlot(id); },
             doExportSlot(id) { exportSaveSlot(id); },
