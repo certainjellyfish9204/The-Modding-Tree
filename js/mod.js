@@ -13,11 +13,16 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.7.4",
-	name: "Singularity",
+	num: "0.7.5",
+	name: "Buy Max",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.7.5 - Buy Max Everything (below Eternity)</h3><br>
+		- <b>Every buyable below Eternity (P, B, G, M, T, W, H, Q) is now buy-maxable</b>: click buys as many levels as you can afford, Shift+click buys a single level.<br>
+		- Static layers below Eternity now buy max on prestige: B no longer needs milestone 2, and H + Q get it from the start.<br>
+		- B milestone 2 (6 boosters) reworked to "B cost /1.5" since buy max is free now.<br>
+		- Eternity and above (E, U, R, S) are unchanged - still one at a time.<br><br>
 	<h3>v0.7.4 - Warp autoreset fix</h3><br>
 		- <b>Fixed:</b> Warp upgrade 32 ("Auto-warp prestige") permanently forced auto-prestige on, resetting rows 0-2 (points, P/B/G/M/T) every tick with no way to stop it.<br>
 		- Auto-warp is now an ON/OFF toggle on Warp milestone 1, matching Booster and Reality automation. It starts OFF, including on affected saves.<br><br>
@@ -209,6 +214,7 @@ var displayThings = [
 		}
 	},
 	function() { if (tmp.p && tmp.p.effect) return "P: "+format(tmp.p.effect)+"x" },
+	function() { if (player.g.unlocked || hasMilestone('p', 4)) return "<b style='color:#7fd4ff'>💡 Buyables: click = buy max, Shift+click = buy one (everything below Eternity)</b>" },
 	function() { if (player.b.unlocked) return "B: "+format(tmp.b.effect)+"x" },
 	function() { if (player.g.unlocked) return "G: "+formatWhole(player.g.points)+" (×"+format(tmp.g.effect)+")" },
 	function() { if (player.m.unlocked) return "M: "+format(tmp.m.effect)+"x" },

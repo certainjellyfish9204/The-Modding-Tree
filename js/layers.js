@@ -5,6 +5,31 @@
 //  Docs: /docs -> upgrades.md, milestones.md, buyables.md, challenges.md, etc
 // ============================================================================
 
+// ---------------- BUY MAX (everything below Eternity) ----------------
+// All buyables in rows 0-3 (P, B, G, M, T, W, H, Q) are buy-maxable:
+// clicking one buys as many levels as you can afford (Shift+click buys a
+// single level). Eternity and above (E, U, R, S) stay one-at-a-time.
+//
+// "currency" is the object whose .points the buyable spends
+// (e.g. player.p for prestige points, player for regular points).
+// Buys level-by-level so it works with every cost curve in this tree,
+// including G Mk I's post-10 discount and its 25-level purchase limit.
+function buyMaxLevels(layer, id, currency) {
+	let bought = 0
+	const data = layers[layer].buyables[id]
+	while (bought < 10000) {
+		const x = getBuyableAmount(layer, id)
+		if (data.purchaseLimit !== undefined && x.gte(data.purchaseLimit)) break
+		const cost = data.cost(x)
+		if (!currency.points.gte(cost)) break
+		currency.points = currency.points.sub(cost)
+		setBuyableAmount(layer, id, x.add(1))
+		bought++
+	}
+	if (bought > 0) updateBuyableTemp(layer)
+	return bought
+}
+
 // ---------------- ROW 0: PRESTIGE (P) - Expanded ----------------
 addLayer("p", {
     name: "prestige",
@@ -116,6 +141,7 @@ addLayer("p", {
             unlocked(){ return hasUpgrade('p',34) },
             canAfford(){ return player.p.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.p.points=player.p.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.p) },
             style:{'height':'110px'},
         },
         12: {
@@ -129,6 +155,7 @@ addLayer("p", {
             unlocked(){ return hasMilestone('p',4) },
             canAfford(){ return player.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.points=player.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player) },
             style:{'height':'110px'},
         },
         13: {
@@ -142,6 +169,7 @@ addLayer("p", {
             unlocked(){ return hasUpgrade('p',63) },
             canAfford(){ return player.p.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.p.points=player.p.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.p) },
             style:{'height':'110px', 'background-color':'#226622'},
         },
     },
@@ -198,7 +226,7 @@ addLayer("p", {
     autoUpgrade() { return hasMilestone('p', 0) && player.p.auto },
     tabFormat: {
         "Main": { content: ["main-display","prestige-button","resource-display","blank",["bar","prestigeBar"],"blank",["display-text", function() {return hasMilestone('p',0)?"Milestone 0 gives autobuyer!":"Get 5 prestige for autobuyer!"} ],"blank","milestones","blank","upgrades"]},
-        "Buyables": { content: ["main-display","blank","buyables","blank",["display-text", function(){return "Condensers boost prestige. Amplifiers boost points."}]], unlocked(){return hasMilestone('p',4)}},
+        "Buyables": { content: ["main-display","blank","buyables","blank",["display-text", function(){return "Condensers boost prestige. Amplifiers boost points.<br>Click to buy max, Shift+click to buy one!"}]], unlocked(){return hasMilestone('p',4)}},
         "Challenge": { content: ["main-display","blank","challenges"], unlocked(){return hasMilestone('p',4)}},
     }
 })
@@ -225,6 +253,7 @@ addLayer("b", {
     gainMult() {
         let mult = new Decimal(1)
         if (hasUpgrade('b', 14)) mult = mult.div(1.5)
+        if (hasMilestone('b', 2)) mult = mult.div(1.5)
         if (hasMilestone('b', 5)) mult = mult.div(2)
         if (hasUpgrade('q', 13)) mult = mult.div(1.3)
         return mult
@@ -232,7 +261,7 @@ addLayer("b", {
     bars: {
         boosterBar: { direction: RIGHT, width: 320, height: 20, progress() { return player.b.points.div(15).toNumber() }, display(){ return formatWhole(player.b.points)+"/15 for next milestone"}, fillStyle:{'background-color':"#FF8800"}, baseStyle:{'background-color':"#333"}, },
     },
-    canBuyMax() { return hasMilestone('b', 2) },
+    canBuyMax: true, // buy max is free now - everything below Eternity is buy-maxable
     autoPrestige() { return hasMilestone('b', 3) && player.b.auto },
     hotkeys: [{key: "b", description: "B: Reset for boosters", onPress(){if (canReset(this.layer)) doReset(this.layer)}}],
     upgrades: {
@@ -260,6 +289,7 @@ addLayer("b", {
             display() { let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" boosters<br>Amount: "+formatWhole(player.b.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to points" },
             unlocked() { return hasUpgrade('b', 21) }, canAfford() { return player.b.points.gte(tmp[this.layer].buyables[this.id].cost) },
             buy() { let c=tmp[this.layer].buyables[this.id].cost; player.b.points=player.b.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.b) },
             style: {'height':'120px'},
         },
         12: {
@@ -267,6 +297,7 @@ addLayer("b", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" prestige points<br>Amount: "+formatWhole(player.b.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to B effect"},
             unlocked(){ return hasMilestone('b',4)}, canAfford(){ return player.p.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.p.points=player.p.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.p) },
             style:{'height':'110px'},
         },
         13: {
@@ -274,6 +305,7 @@ addLayer("b", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" points<br>Amount: "+formatWhole(player.b.buyables[this.id])+"<br>Effect: passive B gain "+format(d.effect.times(100).sub(100))+"%"},
             unlocked(){ return hasMilestone('b',5)}, canAfford(){ return player.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.points=player.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player) },
             style:{'height':'110px'},
         },
     },
@@ -296,7 +328,7 @@ addLayer("b", {
     milestones: {
         0: { requirementDescription: "1 booster", effectDescription: "Keep P upgrades, gain 2x points", done() {return player.b.best.gte(1)} },
         1: { requirementDescription: "3 boosters", effectDescription: "Unlock another P upgrade. Autobuy B.", done() {return player.b.best.gte(3)}, toggles: [["b","auto"]], unlocked() {return hasMilestone('b',0)} },
-        2: { requirementDescription: "6 boosters", effectDescription: "You can buy max boosters", done() {return player.b.best.gte(6)}, unlocked() {return hasMilestone('b',1)} },
+        2: { requirementDescription: "6 boosters", effectDescription: "B cost /1.5", done() {return player.b.best.gte(6)}, unlocked() {return hasMilestone('b',1)} },
         3: { requirementDescription: "10 boosters", effectDescription: "Auto-prestige for boosters", done() {return player.b.best.gte(10)}, unlocked() {return hasMilestone('b',2)} },
         4: { requirementDescription: "20 boosters", effectDescription: "Unlock Booster Farm buyable", done(){ return player.b.best.gte(20)}, unlocked(){return hasMilestone('b',3)} },
         5: { requirementDescription: "35 boosters", effectDescription: "B cost /2, points x3", done(){ return player.b.best.gte(35)}, unlocked(){return hasMilestone('b',4)} },
@@ -408,6 +440,7 @@ addLayer("g", {
             display() { let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" prestige<br>Amount: "+formatWhole(player.g.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to G effect" },
             unlocked() { return true }, canAfford() { return player.p.points.gte(tmp[this.layer].buyables[this.id].cost) },
             buy() { let c=tmp[this.layer].buyables[this.id].cost; player.p.points=player.p.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.p) },
             style: {'height':'120px'}, purchaseLimit: new Decimal(25),
         },
         12: {
@@ -415,6 +448,7 @@ addLayer("g", {
             display() { let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" points<br>Amount: "+formatWhole(player.g.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to points" },
             unlocked() { return hasMilestone('g', 2) }, canAfford() { return player.points.gte(tmp[this.layer].buyables[this.id].cost) },
             buy() { let c=tmp[this.layer].buyables[this.id].cost; player.points=player.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player) },
             style: {'height':'120px'},
         },
         13: {
@@ -422,6 +456,7 @@ addLayer("g", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" points<br>Amount: "+formatWhole(player.g.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to Warp gain"},
             unlocked(){ return hasMilestone('g',5)}, canAfford(){ return player.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.points=player.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player) },
             style:{'height':'110px'},
         },
     },
@@ -523,6 +558,7 @@ addLayer("m", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" mana<br>Amount: "+formatWhole(player.m.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to points"},
             unlocked(){ return hasUpgrade('m',21)}, canAfford(){ return player.m.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.m.points=player.m.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.m) },
             style:{'height':'110px'},
         },
         12: {
@@ -531,6 +567,7 @@ addLayer("m", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" points<br>Amount: "+formatWhole(player.m.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to prestige gain"},
             unlocked(){ return hasMilestone('m',2)}, canAfford(){ return player.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.points=player.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player) },
             style:{'height':'110px'},
         },
     },
@@ -637,6 +674,7 @@ addLayer("t", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" time shards<br>Amount: "+formatWhole(player.t.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to point gain"},
             unlocked(){ return hasUpgrade('t',31)}, canAfford(){ return player.t.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.t.points=player.t.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.t) },
             style:{'height':'110px'},
         },
         12: {
@@ -644,6 +682,7 @@ addLayer("t", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" time shards<br>Amount: "+formatWhole(player.t.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to prestige gain"},
             unlocked(){ return hasUpgrade('t',31) && player.w.unlocked}, canAfford(){ return player.t.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.t.points=player.t.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.t) },
             style:{'height':'110px'},
         },
     },
@@ -764,6 +803,7 @@ addLayer("w", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" warp<br>Amount: "+formatWhole(player.w.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to points"},
             unlocked(){ return hasUpgrade('w',21)}, canAfford(){ return player.w.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.w.points=player.w.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.w) },
             style:{'height':'110px'},
         },
         12: {
@@ -771,6 +811,7 @@ addLayer("w", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" time shards<br>Amount: "+formatWhole(player.w.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to Warp gain"},
             unlocked(){ return hasUpgrade('w',21) && player.t.unlocked}, canAfford(){ return player.t.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.t.points=player.t.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.t) },
             style:{'height':'110px'},
         },
         13: {
@@ -778,6 +819,7 @@ addLayer("w", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" mana<br>Amount: "+formatWhole(player.w.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to Mana gain"},
             unlocked(){ return hasMilestone('w',2)}, canAfford(){ return player.m.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.m.points=player.m.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.m) },
             style:{'height':'110px'},
         },
     },
@@ -822,6 +864,7 @@ addLayer("h", {
     color: "#DD2222",
     requires: new Decimal(20), resource: "hyper points", baseResource: "time shards", baseAmount() {return player.t.points},
     type: "static", base: 2.5, exponent: 1.4, row: 3, branches: ["t"],
+    canBuyMax: true, // buy max is free now - everything below Eternity is buy-maxable
     layerShown() { return hasUpgrade('t', 13) || player.h.unlocked },
     effect() {
         let eff = Decimal.pow(100, player.h.points)
@@ -868,6 +911,7 @@ addLayer("h", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" hyper<br>Amount: "+formatWhole(player.h.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to points"},
             unlocked(){ return hasUpgrade('h',23)}, canAfford(){ return player.h.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.h.points=player.h.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.h) },
             style:{'height':'110px'},
         },
         12: {
@@ -875,6 +919,7 @@ addLayer("h", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" hyper<br>Amount: "+formatWhole(player.h.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to prestige gain"},
             unlocked(){ return hasMilestone('h',2)}, canAfford(){ return player.h.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.h.points=player.h.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.h) },
             style:{'height':'110px'},
         },
     },
@@ -920,6 +965,7 @@ addLayer("q", {
     color: "#00FFAA",
     requires: new Decimal(15), resource: "quantum shards", baseResource: "warp shards", baseAmount(){ return player.w.points },
     type: "static", base: 2.2, exponent: 1.3, row: 3, branches: [["w","#00AAFF"], ["t","#AA00FF"]],
+    canBuyMax: true, // buy max is free now - everything below Eternity is buy-maxable
     layerShown(){
         return (hasUpgrade('h', 13) && (player.w.unlocked || (player.w.best && player.w.best.gte(1)) || hasUpgrade('t', 21) || hasMilestone('t', 3)))
             || player.q.unlocked
@@ -968,6 +1014,7 @@ addLayer("q", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" quantum<br>Amount: "+formatWhole(player.q.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to points"},
             unlocked(){ return hasUpgrade('q',21)}, canAfford(){ return player.q.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.q.points=player.q.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.q) },
             style:{'height':'110px'},
         },
         12: {
@@ -975,6 +1022,7 @@ addLayer("q", {
             display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" quantum<br>Amount: "+formatWhole(player.q.buyables[this.id])+"<br>Effect: "+format(d.effect)+"x to prestige"},
             unlocked(){ return hasMilestone('q',2)}, canAfford(){ return player.q.points.gte(tmp[this.layer].buyables[this.id].cost)},
             buy(){ let c=tmp[this.layer].buyables[this.id].cost; player.q.points=player.q.points.sub(c); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); },
+            buyMax(){ buyMaxLevels(this.layer, this.id, player.q) },
             style:{'height':'110px'},
         },
     },

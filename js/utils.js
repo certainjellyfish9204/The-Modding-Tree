@@ -105,7 +105,13 @@ function buyBuyable(layer, id) {
 	if (!tmp[layer].buyables[id].unlocked) return
 	if (!tmp[layer].buyables[id].canBuy) return
 
-	run(layers[layer].buyables[id].buy, layers[layer].buyables[id])
+	// If the buyable defines buyMax (every rows 0-3 buyable in this mod),
+	// a plain click buys the maximum affordable amount.
+	// Hold Shift to buy a single level instead.
+	if (!shiftDown && layers[layer].buyables[id].buyMax !== undefined)
+		run(layers[layer].buyables[id].buyMax, layers[layer].buyables[id])
+	else
+		run(layers[layer].buyables[id].buy, layers[layer].buyables[id])
 	updateBuyableTemp(layer)
 }
 
