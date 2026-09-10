@@ -758,7 +758,7 @@ addLayer("u", {
         "Multiverse": {
             content: [
                 "main-display",
-                ["display-text", function(){ return tmp.u.prestigeButtonText}],
+                "prestige-button",
                 "blank",
                 "resource-display",
                 "blank",

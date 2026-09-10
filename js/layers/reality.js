@@ -288,7 +288,7 @@ addLayer("r", {
     },
     tabFormat: {
         "Reality": {
-            content: ["main-display", ["display-text", function() { return tmp.r.prestigeButtonText }], "blank", "resource-display", "blank", ["infobox", "lore"], "blank", ["bar", "realityBar"], "blank", "milestones", "blank", "upgrades"],
+            content: ["main-display", "prestige-button", "blank", "resource-display", "blank", ["infobox", "lore"], "blank", ["bar", "realityBar"], "blank", "milestones", "blank", "upgrades"],
         },
         "Stability": {
             content: ["main-display", ["bar", "stabilityBar"], "blank", "clickables", "blank", "buyables"],

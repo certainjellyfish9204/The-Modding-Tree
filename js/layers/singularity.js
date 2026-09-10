@@ -462,7 +462,7 @@ addLayer("s2", {
         "Main": {
             content: [
                 "main-display",
-                ["display-text", function() { return tmp.s2.prestigeButtonText }],
+                "prestige-button",
                 "blank",
                 "resource-display",
                 "blank",

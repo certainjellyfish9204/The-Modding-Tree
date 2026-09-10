@@ -549,7 +549,7 @@ addLayer("o", {
         "Omniverse": {
             content: [
                 "main-display",
-                ["display-text", function() { return tmp.o.prestigeButtonText }],
+                "prestige-button",
                 "blank",
                 "resource-display",
                 "blank",
