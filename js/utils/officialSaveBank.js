@@ -318,6 +318,128 @@ function officialSaveBankList() {
                     [14,34].forEach(function(id){ if (p.u.upgrades.indexOf(id)<0) p.u.upgrades.push(id); });
                 }
             }
+        },
+        {
+            id: "uni-dimensions",
+            category: "Universes",
+            name: "PT: Dimensions start",
+            desc: "loader3229 PT: Dimensions — spatial shards and dimension boosts.",
+            apply: function(p) {
+                officialSaveBankById("multiverse").apply(p);
+                if (p.u) {
+                    p.u.activeUniverse = "dimensions";
+                    _sbSub(p, "u", "dimensions", {points:0,dim1:0,dim2:0,dimBoost:0});
+                    p.u.dimensions.points = _sbD(25);
+                    p.u.dimensions.dim1 = _sbD(10);
+                    p.u.dimensions.dimBoost = _sbD(2);
+                    [14,51].forEach(function(id){ if (p.u.upgrades.indexOf(id)<0) p.u.upgrades.push(id); });
+                }
+            }
+        },
+        {
+            id: "uni-particles",
+            category: "Universes",
+            name: "Particle Tree start",
+            desc: "cokecole526 Particle Increment Tree — electrons, protons, and quarks.",
+            apply: function(p) {
+                officialSaveBankById("multiverse").apply(p);
+                if (p.u) {
+                    p.u.activeUniverse = "particles";
+                    _sbSub(p, "u", "particles", {points:0,electrons:0,protons:0,neutrons:0,quarks:0});
+                    p.u.particles.points = _sbD(30);
+                    p.u.particles.electrons = _sbD(15);
+                    p.u.particles.protons = _sbD(8);
+                    [14,52].forEach(function(id){ if (p.u.upgrades.indexOf(id)<0) p.u.upgrades.push(id); });
+                }
+            }
+        },
+        {
+            id: "uni-pro",
+            category: "Universes",
+            name: "The Pro Tree start",
+            desc: "chuangyou123 The Pro Tree — ants, grass, and supernova cores.",
+            apply: function(p) {
+                officialSaveBankById("multiverse").apply(p);
+                if (p.u) {
+                    p.u.activeUniverse = "pro";
+                    _sbSub(p, "u", "pro", {points:0,ants:0,grass:0,supernova:0,void:0});
+                    p.u.pro.points = _sbD(35);
+                    p.u.pro.ants = _sbD(20);
+                    p.u.pro.supernova = _sbD(5);
+                    [14,53].forEach(function(id){ if (p.u.upgrades.indexOf(id)<0) p.u.upgrades.push(id); });
+                }
+            }
+        },
+        {
+            id: "uni-dice",
+            category: "Universes",
+            name: "The Dice Tree start",
+            desc: "chuangyou123 The Dice Tree — D6, D12, D20 rollers and luck charms.",
+            apply: function(p) {
+                officialSaveBankById("multiverse").apply(p);
+                if (p.u) {
+                    p.u.activeUniverse = "dice";
+                    _sbSub(p, "u", "dice", {points:0,d6:0,d12:0,d20:0,luck:0});
+                    p.u.dice.points = _sbD(40);
+                    p.u.dice.d20 = _sbD(12);
+                    p.u.dice.luck = _sbD(4);
+                    [14,54].forEach(function(id){ if (p.u.upgrades.indexOf(id)<0) p.u.upgrades.push(id); });
+                }
+            }
+        },
+        {
+            id: "uni-ng",
+            category: "Universes",
+            name: "PT: Rewritten NG+ start",
+            desc: "Seder3214 PT: Rewritten NG+ — NG Boosters and meta generators.",
+            apply: function(p) {
+                officialSaveBankById("multiverse").apply(p);
+                if (p.u) {
+                    p.u.activeUniverse = "ng";
+                    _sbSub(p, "u", "ng", {points:0,ngBoosters:0,metaGenerators:0,hyperTime:0});
+                    p.u.ng.points = _sbD(50);
+                    p.u.ng.ngBoosters = _sbD(15);
+                    p.u.ng.metaGenerators = _sbD(6);
+                    [14,55].forEach(function(id){ if (p.u.upgrades.indexOf(id)<0) p.u.upgrades.push(id); });
+                }
+            }
+        },
+        {
+            id: "omniverse-start",
+            category: "Hub",
+            name: "Row 7: Omniverse start (v0.8)",
+            desc: "Transcend Singularity! 20 Singularities, 25 U, 25 R, 1 Omniverse Energy ready.",
+            apply: function(p) {
+                officialSaveBankById("singularity").apply(p);
+                _sbFill(p, "s2", { points: 25, upgrades: [11,12,13,14,21,22,23,31,32,33,41], milestones: [0,1,2,3,4,5], extra: { field: _sbD(250), collapses: 25 } });
+                _sbFill(p, "o", { points: 1, upgrades: [11], milestones: [0], extra: { field: _sbD(0), syntheses: 0 } });
+                _sbAch(p, [231, 246]);
+            }
+        },
+        {
+            id: "endgame-08",
+            category: "Hub",
+            name: "v0.8 Omniverse Endgame (50 O)",
+            desc: "50 Omniverse Energy, maxed matrix grid, all 12 universes unlocked, 1e1000 points.",
+            apply: function(p) {
+                officialSaveBankById("omniverse-start").apply(p);
+                p.points = _sbD("1e1000");
+                _sbFill(p, "o", {
+                    points: 50,
+                    upgrades: [11,12,13,14,21,22,23,24,31,32,33,34,41,42,43],
+                    milestones: [0,1,2,3,4,5,6,7],
+                    extra: { field: _sbD(5000), syntheses: 64, grid: { 11:4,12:4,13:4,14:4, 21:4,22:4,23:4,24:4, 31:4,32:4,33:4,34:4, 41:4,42:4,43:4,44:4 } }
+                });
+                _sbFill(p, "u", {
+                    points: 150,
+                    upgrades: [11,12,13,14,21,22,23,31,32,33,34,35,41,42,43,51,52,53,54,55],
+                    milestones: [0,1,2,3,4,5],
+                    extra: { activeUniverse: "classicPlus", travelCooldown: 0 }
+                });
+                _sbFill(p, "r", { points: 60, upgrades: [11,12,13,14,21,22,23,31,32,33,34], milestones: [0,1,2,3,4,5], extra: { stability: _sbD(500) } });
+                _sbFill(p, "s2", { points: 100, upgrades: [11,12,13,14,21,22,23,31,32,33,41,42,43,44], milestones: [0,1,2,3,4,5,6,7], extra: { field: _sbD(10000), collapses: 100 } });
+                _sbAch(p, [101,102,103,104,105,111,112,113,114,115,116,121,122,123,124,125,126,127,131,132,133,141,142,143,144,145,146,147,148,149,140,211,212,213,214,215,216,217,218,219,210,221,222,223,224,225,231,232,233,234,235,236,241,242,243,244,245,246]);
+            }
         }
     ];
 }

@@ -253,6 +253,24 @@ addLayer("s2", {
             },
             style: { 'height': '120px' },
         },
+        13: {
+            title: "Singular Horizon",
+            cost(x) { return new Decimal(25).pow(x.pow(1.3)).times(10) },
+            effect(x) { return Decimal.pow(1e10, x) },
+            display() {
+                let d = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(d.cost) + " singularities<br>Amount: " + formatWhole(player.s2.buyables[this.id]) +
+                       "<br>Effect: " + format(d.effect) + "x to point gain and Omniverse Energy"
+            },
+            unlocked() { return hasMilestone('s2', 5) },
+            canAfford() { return player.s2.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy() {
+                let c = tmp[this.layer].buyables[this.id].cost
+                player.s2.points = player.s2.points.sub(c)
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: { 'height': '120px', 'background-color': "#330033" },
+        },
     },
     challenges: {
         11: {
