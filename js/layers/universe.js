@@ -964,7 +964,12 @@ addLayer("u", {
                     "blank",
                     ["row", [["clickable",22],["clickable",23],["clickable",24]]],
                     "blank",
-                    ["display-text", function(){ return "Travel costs Universe Points and switches your active bonus. Each universe's buyables are <i>ported from the original game's code</i>. New in v0.8 Full: <b>The Galaxy Tree, Synergism, and The Circuit Tree!</b>"}],
+                    ["display-text", function(){ return "Travel costs Universe Points and switches your active bonus. The buyables on each universe tab are Classic+'s <i>own interpretation</i> of that game — the real thing is one click away below."}],
+                    "blank",
+                    ["display-text", function(){ return "<h3>⟡ MULTIVERSE TRANSPORT TERMINAL</h3>Click a realm to drop into the <b>full, playable original game</b>. Your Classic+ run keeps going while you're gone."}],
+                    ["raw-html", function(){ return transportHubHTML() }],
+                    "blank",
+                    ["display-text", function(){ return "<i>⟡ = full standalone game bundled with this repo &nbsp;•&nbsp; ⌂ = this tree &nbsp;•&nbsp; ∅ = original to Classic+, no separate source</i>"}],
                     "blank",
                     ["infobox","lore"],
                     "blank",
@@ -979,6 +984,8 @@ addLayer("u", {
                     ["bar","classicProgress"],
                     "blank",
                     ["row", [["buyable",11],["buyable",12],["buyable",13]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("classic") }],
                 ]
             },
             "rewritten": {
@@ -989,6 +996,8 @@ addLayer("u", {
                     ["bar","rewrittenProgress"],
                     "blank",
                     ["row", [["buyable",21],["buyable",22],["buyable",23]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("rewritten") }],
                 ]
             },
             "dimensions": {
@@ -999,6 +1008,8 @@ addLayer("u", {
                     ["bar","dimensionsProgress"],
                     "blank",
                     ["row", [["buyable",61],["buyable",62],["buyable",63]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("dimensions") }],
                 ]
             },
             "particles": {
@@ -1009,6 +1020,8 @@ addLayer("u", {
                     ["bar","particlesProgress"],
                     "blank",
                     ["row", [["buyable",71],["buyable",72],["buyable",73]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("particles") }],
                 ]
             },
             "pro": {
@@ -1019,6 +1032,8 @@ addLayer("u", {
                     ["bar","proProgress"],
                     "blank",
                     ["row", [["buyable",81],["buyable",82]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("pro") }],
                 ]
             },
             "dice": {
@@ -1029,6 +1044,8 @@ addLayer("u", {
                     ["bar","diceProgress"],
                     "blank",
                     ["row", [["buyable",91],["buyable",92]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("dice") }],
                 ]
             },
             "ng": {
@@ -1039,6 +1056,8 @@ addLayer("u", {
                     ["bar","ngProgress"],
                     "blank",
                     ["row", [["buyable",101],["buyable",102]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("ng") }],
                 ]
             },
             "demo": {
@@ -1049,6 +1068,8 @@ addLayer("u", {
                     ["bar","demoProgress"],
                     "blank",
                     ["row", [["buyable",41],["buyable",42]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("demo") }],
                 ]
             },
             "incrementverse": {
@@ -1059,6 +1080,8 @@ addLayer("u", {
                     ["bar","incrementProgress"],
                     "blank",
                     ["row", [["buyable",43],["buyable",44]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("incrementverse") }],
                 ]
             },
             "basic": {
@@ -1069,6 +1092,8 @@ addLayer("u", {
                     ["bar","basicProgress"],
                     "blank",
                     ["row", [["buyable",45],["buyable",46],["buyable",47]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("basic") }],
                 ]
             },
             "miletree": {
@@ -1079,6 +1104,8 @@ addLayer("u", {
                     ["bar","miletreeProgress"],
                     "blank",
                     ["row", [["buyable",51],["buyable",52]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("miletree") }],
                 ]
             },
             "galaxy": {
@@ -1089,6 +1116,8 @@ addLayer("u", {
                     ["bar","galaxyProgress"],
                     "blank",
                     ["row", [["buyable",111],["buyable",112]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("galaxy") }],
                 ]
             },
             "synergism": {
@@ -1099,6 +1128,8 @@ addLayer("u", {
                     ["bar","synergismProgress"],
                     "blank",
                     ["row", [["buyable",121],["buyable",122]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("synergism") }],
                 ]
             },
             "circuit": {
@@ -1109,6 +1140,8 @@ addLayer("u", {
                     ["bar","circuitProgress"],
                     "blank",
                     ["row", [["buyable",131],["buyable",132]]],
+                    "blank",
+                    ["raw-html", function(){ return transportButtonHTML("circuit") }],
                 ]
             },
         },

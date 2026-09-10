@@ -2,7 +2,7 @@
 
 [![Deploy to GitHub Pages](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml/badge.svg)](https://github.com/certainjellyfish9204/The-Modding-Tree/actions/workflows/pages.yml)
 
-An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Multiverse** — a full TMT showcase with **11 main layers** (P/B/G/M/T/W/H/Q/E/U/R) + 2 side layers + **5 universes** (Classic 1.0, Rewritten, Demo, Incrementreeverse, Hub), two endgame branches from Eternity (**Universe** and **Reality**), Universe-hopping, **Eternal Notations** (by MathCookie17, **every preset (144+144 HTML, 146 total) incl. Colored Dominoes with CSS+PNG**), and safe-storage fallback.
+An incremental game engine based on The Prestige Tree. This fork is **The Classic+ Multiverse** — a full TMT showcase with **11 main layers** (P/B/G/M/T/W/H/Q/E/U/R) + 2 side layers + **15 universes** and a **Multiverse Transport Terminal** that teleports you into **11 full, playable original trees** bundled in `trees/`, two endgame branches from Eternity (**Universe** and **Reality**), Universe-hopping, **Eternal Notations** (by MathCookie17, **every preset (144+144 HTML, 146 total) incl. Colored Dominoes with CSS+PNG**), and safe-storage fallback.
 
 **Play Now:**
 - **GitHub Pages (once enabled):** `https://certainjellyfish9204.github.io/The-Modding-Tree/` 
@@ -22,22 +22,40 @@ You can look in the [documentation](docs/!general-info.md) for more information 
 
 ---
 
-## Credits — Other Trees Ported
+## Multiverse Transport — play the original trees
 
-This multiverse **ports every layer** from other prestige trees — with full credit. See [`CREDITS.md`](CREDITS.md) for details. Quick summary:
+The Universe (U) layer's **Multiverse Transport Terminal** drops you into the **full,
+playable original game** — not a buyable approximation. Your Classic+ run keeps ticking
+behind the overlay, and one button (or `Esc`) brings you back.
 
-| Universe | Original Game | Author | Clone Path | Status |
-|----------|---------------|--------|------------|--------|
-| **Classic 1.0** | `Jacorb90/Prestige-Tree-Classic` | **Jacorb90** (Aarex, papyrus) | `/tmp/PT-Classic` (7889 lines) | 6/20 layers ported as U buyables 11-13 |
-| **Rewritten (PT:R)** | `Jacorb90/Prestige-Tree` (v1.3) | **Jacorb90** | `/tmp/PT-Rewritten` (9915 lines, 30 layers) | 6/30 layers ported as U buyables 21-23 |
-| **Demo (TMT)** | `Acamaeda/The-Modding-Tree` Demo | **Acamaeda** | `js/Demo/` (no clone) | 3/3 layers ported as U buyables 24-25 |
-| **Incrementreeverse** | `pg132/The-Modding-Tree` (The Incrementreeverse) | **pg132** | `/tmp/Incrementreeverse` (8182 lines, 16 layers) | 3/16 layers ported as U buyables 26-27 — from [List of Mods](https://modding-tree.fandom.com/wiki/List_of_mods) (finished, 10 days) |
-| **Eternal Notations** | `MathCookie17/Eternal-Notations` | **MathCookie17** | `js/utils/eternal_notations.js` (1.2M) + `js/utils/NumberFormating.js` | 144 presets, Infinity/Eternity — **Options → Notation** |
-| **Hub (Classic+)** | This repo `js/layers.js` | You + Acamaeda engine | `js/layers.js` (this mod) | 9 layers native + Eternal |
+Eleven real trees are bundled in [`trees/`](trees/README.md):
 
-Each buyable in Universe U shows its original file path (e.g., `Ported from /tmp/PT-Classic/js/layers.js LAYER_DATA.p`) for traceability. To port more, just `git clone` another TMT mod into `/tmp` and add a buyable — see `js/layers/universe.js` infobox **How Porting Works**.
+| Universe | Original game | Author | Mod lines | License |
+|---|---|---|---|---|
+| Classic 1.0 | [Prestige-Tree-Classic](https://github.com/Jacorb90/Prestige-Tree-Classic) | **Jacorb90** | 5,163 | MIT |
+| Rewritten | [Prestige-Tree](https://github.com/Jacorb90/Prestige-Tree) | **Jacorb90** | 13,934 | MIT |
+| Rewritten NG+ | [Prestige-Tree-Rewritten-NG](https://github.com/Seder3214/Prestige-Tree-Rewritten-NG) | **Seder3214** | 16,877 | MIT |
+| TMT Demo | [The-Modding-Tree](https://github.com/Acamaeda/The-Modding-Tree) | **Acamaeda** | in-repo | MIT |
+| Incrementreeverse | [pg132/The-Modding-Tree](https://github.com/pg132/The-Modding-Tree) | **pg132** | 10,903 | MIT |
+| The Basic Tree | [gapples2/The-Modding-Tree](https://github.com/gapples2/The-Modding-Tree) | **gapples2** | 3,797 | MIT |
+| The Milestone Tree | [loader3229/milestone-tree](https://github.com/loader3229/milestone-tree) | **loader3229** | 16,573 | MIT |
+| PT: Dimensions | [Prestige-Tree-Dimensions](https://github.com/loader3229/Prestige-Tree-Dimensions) | **loader3229** | 13,997 | MIT |
+| Particle Increment Tree | [The-Particle-Increment-Tree](https://github.com/cokecole526/The-Particle-Increment-Tree) | **cokecole526** | 4,176 | ⚠️ none stated |
+| The Pro Tree | [The-pro-tree](https://github.com/chuangyou123/The-pro-tree) | **chuangyou123** | 24,047 | MIT (TMT) |
+| The Dice Tree | [The-Dice-Tree-ZH.github.io](https://github.com/chuangyou123/The-Dice-Tree-ZH.github.io) | **chuangyou123** | 5,686 | MIT (TMT) |
 
-**Licenses:** TMT is MIT (Acamaeda), Prestige Tree Classic is MIT (Jacorb90) — we keep `LICENSE`/`Prestige-tree-license` and add attribution. If you fork, keep `CREDITS.md`.
+The Galaxy Tree, Synergism, and The Circuit Tree are **original to Classic+** — they
+have no separate source game and say so in-game. The `U` layer's buyables are
+Classic+'s own reinterpretation of each game, balanced as part of this mod; the bundled
+copies in `trees/` are the genuine article, unmodified apart from unique save keys.
+
+See [`trees/README.md`](trees/README.md) for provenance (commit SHAs), measured line
+counts, and exactly which changes were made to each copy. Full attribution:
+[`CREDITS.md`](CREDITS.md).
+
+**Licenses:** TMT is MIT (Acamaeda); Prestige Tree Classic & Rewritten are MIT
+(Jacorb90). Every bundled tree keeps its `LICENSE` / `Prestige-tree-license`. If you
+fork, keep `CREDITS.md` and `trees/`.
 
 ---
 
