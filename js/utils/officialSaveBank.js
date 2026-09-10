@@ -440,6 +440,50 @@ function officialSaveBankList() {
                 _sbFill(p, "s2", { points: 100, upgrades: [11,12,13,14,21,22,23,31,32,33,41,42,43,44], milestones: [0,1,2,3,4,5,6,7], extra: { field: _sbD(10000), collapses: 100 } });
                 _sbAch(p, [101,102,103,104,105,111,112,113,114,115,116,121,122,123,124,125,126,127,131,132,133,141,142,143,144,145,146,147,148,149,140,211,212,213,214,215,216,217,218,219,210,221,222,223,224,225,231,232,233,234,235,236,241,242,243,244,245,246]);
             }
+        },
+        {
+            id: "finality-start",
+            category: "Finality",
+            name: "Row 8: Finality start (v0.8 Full)",
+            desc: "The full v0.8 release content! 30 Omniverse Energy, 1,000 U, all deep realms unlocked, 0 Finality — ready to ascend.",
+            apply: function(p) {
+                officialSaveBankById("endgame-08").apply(p);
+                p.points = _sbD("1e200");
+                _sbFill(p, "o", { points: 30, upgrades: [11,12,13,14,21,22,23,24,31,32,33,34,41,42,43,51,52,53], milestones: [0,1,2,3,4,5,6,7], extra: { field: _sbD(8000), syntheses: 64, grid: { 11:4,12:4,13:4,14:4, 21:4,22:4,23:4,24:4, 31:4,32:4,33:4,34:4, 41:4,42:4,43:4,44:4 } } });
+                _sbFill(p, "u", { points: 1000, upgrades: [11,12,13,14,21,22,23,31,32,33,34,35,41,42,43,51,52,53,54,55,61,62,63,64,65], milestones: [0,1,2,3,4,5,6], extra: { activeUniverse: "classicPlus", travelCooldown: 0 } });
+                _sbFill(p, "s2", { points: 150, upgrades: [11,12,13,14,21,22,23,31,32,33,41,42,43,44,51,52,53], milestones: [0,1,2,3,4,5,6,7], extra: { field: _sbD(20000), collapses: 120 } });
+                _sbFill(p, "r", { points: 80, upgrades: [11,12,13,14,21,22,23,31,32,33,34,41,42,43], milestones: [0,1,2,3,4,5], extra: { stability: _sbD(1000) } });
+                _sbFill(p, "f", { points: 0, unlocked: false });
+                _sbAch(p, [101,102,103,104,105,111,112,113,114,115,116,121,122,123,124,125,126,127,131,132,133,141,142,143,144,145,146,147,148,149,140,211,212,213,214,215,216,217,218,219,210,221,222,223,224,225,231,232,233,234,235,236,241,242,243,244,245,246,257,265]);
+            }
+        },
+        {
+            id: "finality-true-end",
+            category: "Finality",
+            name: "TRUE ENDING (8 Finality)",
+            desc: "8 Finality — the true end of the tree. All Finality upgrades through Beyond Infinity, 15 realms mastered.",
+            apply: function(p) {
+                officialSaveBankById("finality-start").apply(p);
+                p.points = _sbD("1e2500");
+                _sbFill(p, "f", { points: 8, upgrades: [11,12,13,14,21,22,23,24,31,32,33,41], milestones: [0,1,2,3,4], extra: { sigils: 5, burstTimer: 0 } });
+                _sbFill(p, "f", { buyables: { 11: 10, 12: 5 } });
+                _sbAch(p, [251,252,253,254,255,261]);
+            }
+        },
+        {
+            id: "finality-absolute",
+            category: "Finality",
+            name: "ABSOLUTE FINALITY (25 F, 100%)",
+            desc: "Everything. 25 Finality, all upgrades everywhere, all challenges complete, all 26 achievement rows. 100% Mastery.",
+            apply: function(p) {
+                officialSaveBankById("finality-true-end").apply(p);
+                p.points = _sbD("1e12000");
+                _sbFill(p, "f", { points: 25, upgrades: [11,12,13,14,21,22,23,24,31,32,33,41,42,43], milestones: [0,1,2,3,4,5,6,7], extra: { sigils: 25, burstTimer: 0 } });
+                _sbFill(p, "f", { buyables: { 11: 25, 12: 15, 13: 10, 14: 8 }, challenges: { 11: true, 12: true, 13: true, 14: true } });
+                _sbFill(p, "o", { challenges: { 11: true, 12: true, 13: true, 14: true, 15: true } });
+                _sbFill(p, "s2", { challenges: { 11: true, 12: true, 21: true, 22: true } });
+                _sbAch(p, [256,258,262,263,266]);
+            }
         }
     ];
 }

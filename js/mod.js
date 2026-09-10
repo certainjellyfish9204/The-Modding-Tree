@@ -3,7 +3,7 @@ let modInfo = {
 	id: "classicPlusFull", // <- keep this unique! Change if you fork
 	author: "You",
 	pointsName: "points",
-	modFiles: ["layers.js", "layers/universe.js", "layers/reality.js", "layers/singularity.js", "layers/omniverse.js", "tree.js"],
+	modFiles: ["layers.js", "layers/universe.js", "layers/reality.js", "layers/singularity.js", "layers/omniverse.js", "layers/finality.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -14,11 +14,25 @@ let modInfo = {
 // Set your version in num and name
 let VERSION = {
 	num: "0.8",
-	name: "The Omniverse & Expanded Multiverse",
+	name: "The Omniverse & Finality — FULL RELEASE",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.8 - The Omniverse & Expanded Multiverse (Developer Preview)</h3><br>
+	<h3>v0.8 FULL RELEASE — The Omniverse, Finality & The Fifteen Realms</h3><br>
+		- <b>NEW ROW 8: FINALITY (F)</b> — the layer beyond the Omniverse! Ascend with 25 Omniverse Energy and reach the <b>TRUE ENDING at 8 Finality</b>.<br>
+		- <b>Finality content:</b> 14 upgrades (ending in THE END AND THE BEGINNING), the Eternal Spire (4 buyables: Eternal Spire, Apotheosis Engine, Chronos Terminal, Absolute Core), permanent <b>Sigils of Power</b>, <b>The Final Trigger</b> (30s of 1e10x points), 8 milestones, and <b>4 Final Challenges</b> culminating in THE FINAL CHALLENGE.<br>
+		- <b>3 NEW UNIVERSES (15 total!)</b>: <b>The Galaxy Tree</b> (x3.4), <b>Synergism</b> (x3.6), and <b>The Circuit Tree</b> (x3.8) — unlocked by Universe upgrades 61-63, each with its own lore, progress bar, buyables and microtab.<br>
+		- <b>Filled the empty universes:</b> TMT Demo, Incrementreeverse, The Basic Tree, and The Milestone Tree finally have their own buyables, bars, lore and microtabs (15 new Universe buyables!).<br>
+		- <b>Universe expanded:</b> upgrades 61-65 (unlock deep realms, Universe effect ^1.15, active bonus ^1.5), milestones 6-7 (+0.5 / x2 active bonus), and passive Universe generation (upgrade 13 + milestone 3 now really work!).<br>
+		- <b>Singularity expanded:</b> upgrades 51-53 (Eternal Collapse, Multiverse Overlord, Singularity Dominion), the missing <b>Rift Omega+</b> challenge, and previously-displayed-but-fake effects now implemented: Rift Alpha x10, milestone ^1.2/^2/^5 exponents, Infinite Singularity softcap removal, Singulon doubling, and grid ^1.5.<br>
+		- <b>Omniverse expanded:</b> upgrades 51-53 (Final Horizon, Transfinite Matrix, Omega Paragon), Omega Reactor & Transfinite Loom buyables, a 5th Omega Challenge (<b>Final Omega</b>), Omniverse Cores /10 cost at milestone 6, and the Infinity Engine exponent now truly applies.<br>
+		- <b>Reality expanded:</b> upgrades 41-43 (Hyperstability, Resonant Collapse, Stability Overload with a 1,000 Stability cap); Cosmic Fabric's hidden ^1.25 now applies.<br>
+		- <b>Eternity expanded:</b> Singularity upgrade 31 now boosts Eternity gain, and Eternity upgrade 43's milestone boost now applies to Universe gain.<br>
+		- <b>14 NEW ACHIEVEMENTS (Rows 25-26)</b>: Finality Dawns, TRUE ENDING, Fifteen Realms, Finality Conqueror, Transfinite, The Final Number, The Whole Tree, and more.<br>
+		- <b>New Official Save Bank presets:</b> Finality start, TRUE ENDING, and ABSOLUTE FINALITY (25 F).<br>
+		- <b>Mastery & Stats updated</b> to track all 14 core layers and 15 universes.<br>
+		- <i>This is the full release of v0.8. Your v0.8 dev preview saves carry over automatically!</i><br><br>
+	<h3>v0.8 Dev Preview - The Omniverse & Expanded Multiverse</h3><br>
 		- <b>NEW ROW 7: The Omniverse (Ω / O)</b> — the ultimate metaphysical layer above Singularity, transcending all multiverse timelines into pure Omniverse Energy.<br>
 		- <b>4x4 Omni-Matrix Grid</b> (16 cosmic synthesis cells) — synthesize Void (🌌) → Particle (⚛️) → Energy (💠) → Singulon (🔮) → Omniverse (👑) for monumental exponential multipliers.<br>
 		- <b>4 Omniverse Cores (Buyables)</b>: Cosmic Synthesizer (point & Singularity multiplier), Dimensional Loom (O energy multiplier), Chrono-Nexus (Field speed), and Infinity Engine (overall exponent booster).<br>
@@ -59,7 +73,7 @@ let changelog = `<h1>Changelog:</h1><br>
 	<h3>v0.1 - The Classic+ Starter</h3><br>
 		- Initial 5 layers.<br>`
 
-let winText = `Congratulations! You have mastered the Classic+ Tree v0.8 — THE OMNIVERSE & EXPANDED MULTIVERSE! <br><br> You attained 50 Omniverse Energy, mastered all 12 community multiverse realms, conquered the Omni-Matrix, or surpassed 1e1000 points. You have achieved complete Transcendent Omnipotence.`
+let winText = `Congratulations! You have reached the <b>TRUE ENDING</b> of the Classic+ Tree v0.8 Full Release!<br><br> You attained 8 Finality — the point beyond the Omniverse where every timeline, every reality, and all fifteen multiverse realms became one. You have achieved <b>Absolute Transcendent Finality</b>.<br><br> The tree continues beyond: 25 Finality (ABSOLUTE FINALITY), all 4 Final Challenges, and 100% Mastery await.`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 var doNotCallTheseFunctionsEveryTick = ["blowUpEverything"]
@@ -113,7 +127,7 @@ function getPointGen() {
 		try { if (typeof buyableEffect === 'function' && tmp.s2 && tmp.s2.buyables && tmp.s2.buyables[13]) gain = gain.times(buyableEffect('s2', 13)) } catch(e) {}
 	}
 	// Row 7 - The Omniverse (Ω)
-	if (player.o && player.o.unlocked) {
+	if (player.o && player.o.unlocked && !(player.f && inChallenge('f', 12))) {
 		if (tmp.o && tmp.o.effect) gain = gain.times(tmp.o.effect)
 		try { if (layers.o && typeof layers.o.getGridEffect === 'function') gain = gain.times(layers.o.getGridEffect()) } catch(e) {}
 		if (hasUpgrade('o', 14) && player.o.field) gain = gain.times(player.o.field.add(1).pow(0.5))
@@ -123,12 +137,27 @@ function getPointGen() {
 		if (hasChallenge('o', 14)) gain = gain.times("1e100")
 		try { if (typeof buyableEffect === 'function' && tmp.o && tmp.o.buyables && tmp.o.buyables[11]) gain = gain.times(buyableEffect('o', 11)) } catch(e) {}
 	}
+	// Row 8 - Finality (F)
+	if (player.f && player.f.unlocked) {
+		if (tmp.f && tmp.f.effect) gain = gain.times(tmp.f.effect)
+		if (hasUpgrade('f', 43)) gain = gain.times("1e1000")
+		if (hasMilestone('f', 0)) gain = gain.times("1e10")
+		try { if (tmp.f && tmp.f.buyables && tmp.f.buyables[11]) gain = gain.times(buyableEffect('f', 11)) } catch(e) {}
+		try { if (tmp.f && tmp.f.buyables && tmp.f.buyables[13]) gain = gain.times(buyableEffect('f', 13)) } catch(e) {}
+		if (hasMilestone('f', 7)) gain = gain.pow(1.05)
+	}
+	// Omniverse cores that act on all point gain (Infinity Engine exponent, Omega Reactor)
+	if (player.o && player.o.unlocked && !(player.f && inChallenge('f', 13))) {
+		try { if (tmp.o && tmp.o.buyables && tmp.o.buyables[14]) gain = gain.pow(buyableEffect('o', 14)) } catch(e) {}
+		try { if (tmp.o && tmp.o.buyables && tmp.o.buyables[15]) gain = gain.times(buyableEffect('o', 15)) } catch(e) {}
+	}
 	// Buyable point boosts
-	if (tmp.g.buyables && tmp.g.buyables[12]) gain = gain.times(buyableEffect('g', 12))
-	if (tmp.m.buyables && tmp.m.buyables[12]) gain = gain.times(buyableEffect('m', 12))
-	if (tmp.u && tmp.u.buyables && tmp.u.buyables[11]) gain = gain.times(buyableEffect('u', 11).pow(0.1))
-	if (tmp.r && tmp.r.buyables && tmp.r.buyables[11]) gain = gain.times(buyableEffect('r', 11))
-	if (tmp.r && tmp.r.buyables && tmp.r.buyables[13]) gain = gain.times(buyableEffect('r', 13))
+	let fNoBuyables = player.f && inChallenge('f', 13)
+	if (!fNoBuyables && tmp.g.buyables && tmp.g.buyables[12]) gain = gain.times(buyableEffect('g', 12))
+	if (!fNoBuyables && tmp.m.buyables && tmp.m.buyables[12]) gain = gain.times(buyableEffect('m', 12))
+	if (!fNoBuyables && tmp.u && tmp.u.buyables && tmp.u.buyables[11]) gain = gain.times(buyableEffect('u', 11).pow(0.1))
+	if (!fNoBuyables && tmp.r && tmp.r.buyables && tmp.r.buyables[11]) gain = gain.times(buyableEffect('r', 11))
+	if (!fNoBuyables && tmp.r && tmp.r.buyables && tmp.r.buyables[13]) gain = gain.times(buyableEffect('r', 13))
 	// Achievements
 	if (hasAchievement('a', 11)) gain = gain.times(1.5)
 	if (hasAchievement('a', 12)) gain = gain.times(1.5)
@@ -164,6 +193,11 @@ function getPointGen() {
 	if (player.o && inChallenge('o', 11)) gain = gain.pow(0.2)
 	if (player.o && inChallenge('o', 13)) gain = gain.pow(0.1)
 	if (player.o && inChallenge('o', 14)) gain = gain.pow(0.05)
+	if (player.o && inChallenge('o', 15)) gain = gain.pow(0.01)
+	if (player.f && inChallenge('f', 11)) gain = gain.pow(0.1)
+	if (player.f && inChallenge('f', 12)) gain = gain.pow(0.05)
+	if (player.f && inChallenge('f', 13)) gain = gain.pow(0.1)
+	if (player.f && inChallenge('f', 14)) gain = gain.pow(0.02)
 	return gain
 }
 
@@ -195,6 +229,7 @@ var displayThings = [
 	function() { if (player.r && player.r.unlocked) return "R: "+format(tmp.r.effect)+"x | "+formatWhole(player.r.points)+" shards | "+formatWhole(player.r.stability)+" stability" },
 	function() { if (player.s2 && player.s2.unlocked) return "S: "+format(tmp.s2.effect)+"x | "+formatWhole(player.s2.points)+" singularities | Field: "+format(player.s2.field) },
 	function() { if (player.o && player.o.unlocked) return "Ω: "+format(tmp.o.effect)+"x | "+formatWhole(player.o.points)+" omniverse energy | Field: "+format(player.o.field) },
+	function() { if (player.f && player.f.unlocked) return "F: "+format(tmp.f.effect)+"x | "+formatWhole(player.f.points)+" finality | Sigils: "+player.f.sigils },
 	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11) || (player.u && inChallenge('u',11)) || (player.r && (inChallenge('r',11) || inChallenge('r',12))) || (player.s2 && (inChallenge('s2',11) || inChallenge('s2',12) || inChallenge('s2',21) || inChallenge('s2',22))) || (player.o && (inChallenge('o',11) || inChallenge('o',12) || inChallenge('o',13) || inChallenge('o',14)))) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
 ]
 
@@ -251,4 +286,11 @@ function fixOldSave(oldVersion){
 		if (player.u && !player.u.dice) player.u.dice = { points: new Decimal(0), d6: new Decimal(0), d12: new Decimal(0), d20: new Decimal(0), luck: new Decimal(0) };
 		if (player.u && !player.u.ng) player.u.ng = { points: new Decimal(0), ngBoosters: new Decimal(0), metaGenerators: new Decimal(0), hyperTime: new Decimal(0) };
 	}
+	// v0.8 Full Release — Finality and the three deep realms
+	if (!player.f) player.f = getStartLayerData("f");
+	if (player.f && player.f.sigils === undefined) player.f.sigils = 0;
+	if (player.f && player.f.burstTimer === undefined) player.f.burstTimer = 0;
+	if (player.u && !player.u.galaxy) player.u.galaxy = { points: new Decimal(0), stars: new Decimal(0) };
+	if (player.u && !player.u.synergism) player.u.synergism = { points: new Decimal(0), nodes: new Decimal(0) };
+	if (player.u && !player.u.circuit) player.u.circuit = { points: new Decimal(0), volts: new Decimal(0) };
 }
