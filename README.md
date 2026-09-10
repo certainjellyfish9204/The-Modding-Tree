@@ -49,6 +49,38 @@ have no separate source game and say so in-game. The `U` layer's buyables are
 Classic+'s own reinterpretation of each game, balanced as part of this mod; the bundled
 copies in `trees/` are the genuine article, unmodified apart from unique save keys.
 
+### v0.9 — the Universe Switcher
+
+The terminal is not just buttons any more. `js/technical/multiverse.js` adds a
+**Universe Switcher** microtab to the Multiverse row with three view modes:
+
+| Mode | What runs | Use it for |
+|---|---|---|
+| **scan** | *nothing* — reads the 11 trees' own `cpt_*` saves off this origin | a live dashboard of every realm's real progress |
+| **reel** | one iframe, auto-cycling (`⏮ ▶/⏸ ⏭`, 4–60 s/realm) | touring the multiverse without tab-hopping |
+| **swarm** | a grid of live trees, `IntersectionObserver`-gated to a cap (default 4) | several games open at once; **Σ ALL** lifts the cap |
+
+Two more pieces:
+
+- **Hard cut** — teleporting parks the hub (`opacity:0; pointer-events:none`, so
+  TMT's `updateWidth()`/`resizeCanvas()` still see a real layout and your run
+  keeps ticking and autosaving) and the other tree owns the viewport. Its
+  ◀ RETURN pill is *injected into the child document* at runtime: same-origin,
+  so nothing under `trees/` needs editing, and `MULTIVERSE.flushChild()` calls
+  the child's own global `save()` before a frame is unloaded.
+- **Multiverse Convergence (upgrade U-66)** — each bundled tree you actually
+  play boosts the Universe effect by `+5·√log₁₀(progress)`, capped at ×100 per
+  realm. Foreign saves are parsed defensively (four on-disk formats, including
+  `atob` + `unescape(encodeURIComponent())`, PT:R's `allSaves` slot wrapper,
+  legacy `{mantissa, exponent}` Decimals and the Particle Tree's pako-packed
+  `formatsave`) and a digest is only redone when a save's fingerprint changes,
+  so the 20 fps tick never pays for a megabyte of `JSON.parse`.
+
+```bash
+node test/multiverse_bridge_test.js   # save formats, bonus curve, drift guards
+node test/multiverse_dom_test.js      # modes, caps, frame lifecycle (needs jsdom)
+```
+
 See [`trees/README.md`](trees/README.md) for provenance (commit SHAs), measured line
 counts, and exactly which changes were made to each copy. Full attribution:
 [`CREDITS.md`](CREDITS.md).

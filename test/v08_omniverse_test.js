@@ -93,8 +93,10 @@ check("Row 7 Omniverse layer (o) registered", L.o !== undefined);
 check("Omniverse layer row is 7", L.o.row === 7, String(L.o.row));
 check("Omniverse layer symbol is Ω", L.o.symbol === "Ω", L.o.symbol);
 check("Omniverse has 15 upgrades", Object.keys(L.o.upgrades).length >= 15, String(Object.keys(L.o.upgrades).length));
-check("Omniverse has 4 buyables (Cores)", Object.keys(L.o.buyables).length === 4, String(Object.keys(L.o.buyables).length));
-check("Omniverse has 4 Omega Challenges", Object.keys(L.o.challenges).length === 4, String(Object.keys(L.o.challenges).length));
+// v0.8 full release added the Omega Reactor + Transfinite Loom buyables and the
+// 5th (Final) Omega Challenge, so these are >= checks against the original 4/4.
+check("Omniverse has at least 4 buyables (Cores)", Object.keys(L.o.buyables).length >= 4, String(Object.keys(L.o.buyables).length));
+check("Omniverse has at least 4 Omega Challenges", Object.keys(L.o.challenges).length >= 4, String(Object.keys(L.o.challenges).length));
 check("Omniverse has 8 milestones", Object.keys(L.o.milestones).length === 8, String(Object.keys(L.o.milestones).length));
 check("Omniverse has 4x4 Omni-Matrix grid", L.o.grid && L.o.grid.rows === 4 && L.o.grid.cols === 4);
 
