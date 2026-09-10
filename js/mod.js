@@ -3,7 +3,7 @@ let modInfo = {
 	id: "classicPlusFull", // <- keep this unique! Change if you fork
 	author: "You",
 	pointsName: "points",
-	modFiles: ["layers.js", "layers/universe.js", "layers/reality.js", "layers/singularity.js", "tree.js"],
+	modFiles: ["layers.js", "layers/universe.js", "layers/reality.js", "layers/singularity.js", "layers/omniverse.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
@@ -13,108 +13,55 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.7.5",
-	name: "Buy Max",
+	num: "0.8",
+	name: "The Omniverse & Expanded Multiverse",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.8 - The Omniverse & Expanded Multiverse (Developer Preview)</h3><br>
+		- <b>NEW ROW 7: The Omniverse (Ω / O)</b> — the ultimate metaphysical layer above Singularity, transcending all multiverse timelines into pure Omniverse Energy.<br>
+		- <b>4x4 Omni-Matrix Grid</b> (16 cosmic synthesis cells) — synthesize Void (🌌) → Particle (⚛️) → Energy (💠) → Singulon (🔮) → Omniverse (👑) for monumental exponential multipliers.<br>
+		- <b>4 Omniverse Cores (Buyables)</b>: Cosmic Synthesizer (point & Singularity multiplier), Dimensional Loom (O energy multiplier), Chrono-Nexus (Field speed), and Infinity Engine (overall exponent booster).<br>
+		- <b>15 Omniverse Upgrades</b>: Transfinite Awakening, Multiverse Synthesis, Reality-Singularity Bridge, Cosmic Field, Omni-Matrix Unlocked, Core Resonance, Transfinite Rift, Automated Synthesis, Multiverse Transcendence, Omnipresent Horizon, Ultimate Compression, Temporal Transcendence, Cosmological Constant, Omniverse Singularity Loop, The Absolute Omega.<br>
+		- <b>4 Omega Challenges</b>: Omega Void (^0.02 power limit), Paradox Matrix (disabled Reality & Singularity), Chrono-Freeze (10% game speed), and Grand Omega Multiverse (all penalties combined).<br>
+		- <b>8 Omniverse Milestones</b>: Automated Singularity resets, passive Singularity gain (100%/s), automatic Omni-Grid synthesis, and Transcendent Victory at 50 O.<br>
+		- <b>5 NEW COMMUNITY UNIVERSES (12 Total in Multiverse Hub!)</b>:<br>
+			• <b>Universe DIM (PT: Dimensions by loader3229)</b> — 10488 lines, Spatial Shards, Dimension 1-2, Dimension Boost, x2.5 active bonus.<br>
+			• <b>Universe PART (The Particle Increment Tree by cokecole526)</b> — 614 lines, Electrons, Protons, Neutrons, Quarks, x2.6 active bonus.<br>
+			• <b>Universe PRO (The Pro Tree by chuangyou123)</b> — 240,000+ lines (40+ layers), Ants, Grass, Supernova Core, Void Energy, x2.8 active bonus.<br>
+			• <b>Universe DICE (The Dice Tree by chuangyou123)</b> — 60649 lines, D6/D12/D20 Rollers, Pip Multipliers, Luck Charm, x3.0 active bonus.<br>
+			• <b>Universe NG (PT: Rewritten NG+ by Seder3214)</b> — 12492 lines, NG+ Boosters, Meta-Generators, Hyper-Time Warp, x3.2 active bonus.<br>
+			• Alongside Classic 1.0, PT: Rewritten, TMT Demo, Incrementreeverse, The Basic Tree, The Milestone Tree, and Classic+ Hub.<br>
+		- <b>Core Layer Expansions</b>: Reality upgrades 33-34 and Omni Dimension buyable; Singularity Singular Horizon buyable and Omnipresent Rift challenge; expanded Mastery side layer tracking all 13 core layers and 12 universes.<br>
+		- <b>25+ New Achievements (Rows 22-24)</b>: Omniverse Awakened, Matrix Synthesizer, Grand Omega Conqueror, Master of Twelve Realms, and Transfinite Milestones.<br>
+		- <b>Official Save Bank Expanded</b>: Added premade saves for Omniverse Start, Dimensions Tree, Particle Tree, Pro Tree, Dice Tree, NG+ Tree, and 100% Mastery Endgame.<br>
+		- <i>Developer Preview — Balance and endgame tuning in progress!</i><br><br>
 	<h3>v0.7.5 - Buy Max Everything (below Eternity)</h3><br>
 		- <b>Every buyable below Eternity (P, B, G, M, T, W, H, Q) is now buy-maxable</b>: click buys as many levels as you can afford, Shift+click buys a single level.<br>
 		- Static layers below Eternity now buy max on prestige: B no longer needs milestone 2, and H + Q get it from the start.<br>
 		- B milestone 2 (6 boosters) reworked to "B cost /1.5" since buy max is free now.<br>
 		- Eternity and above (E, U, R, S) are unchanged - still one at a time.<br><br>
-<h3>v0.7.4 - Notation fixes</h3><br>
-   - Fixed the two Eternal Notations presets that never rendered: <b>Simplified Written</b> and <b>Numeric Dominoes</b> are factory presets (<code>SimplifiedWritten(base)</code>, <code>NumericDominoes(highest)</code>) that were being handed to <code>format()</code> un-called, so they silently fell back to TMT and logged a warning every frame. They now build with base 10 / a double-six domino set.<br>
-   - <code>setNotation()</code> validates that a preset is really a Notation before enabling it, so any future un-mapped factory degrades to TMT once, with one clear console warning, instead of throwing on every number drawn.<br>
-   - Hyper and Quantum now buy the maximum affordable reset amount after their best total reaches 100, so this automation remains unlocked after later resets.<br><br>
-	<h3>v0.7.4 - Warp autoreset fix</h3><br>
-		- <b>Fixed:</b> Warp upgrade 32 ("Auto-warp prestige") permanently forced auto-prestige on, resetting rows 0-2 (points, P/B/G/M/T) every tick with no way to stop it.<br>
-		- Auto-warp is now an ON/OFF toggle on Warp milestone 1, matching Booster and Reality automation. It starts OFF, including on affected saves.<br><br>
-	<h3>v0.7.3 - UI Fonts</h3><br>
-		- Options → UI Font restyles the whole game (Orbitron default, plus Arcade, Pixel, CRT, Fantasy, Blackletter, Typewriter, <b>LaTeX / Computer Modern</b>, math italic, STIX Two).<br><br>
-	<h3>v0.7.2 - Warp unlock</h3><br>
-		- Warp (W) now actually unlocks from Time upgrade 21 or 25 Time shards (as advertised), not only 35 Generators + 25 Mana.<br>
-		- Quantum no longer appears before Warp exists (it still spends Warp shards).<br><br>
-	<h3>v0.7.1 - Official Save Bank</h3><br>
-		- Replaced the personal \"deposit\" bank with a real <b>official Save Bank</b> (community TMT style: Communitree / Multitree / AD).<br>
-		- Premade snapshots: new game, each hub row, Eternity, Multiverse, Singularity, plus Classic / Rewritten / Basic Tree / Milestone Tree / Incrementreeverse / Demo universe starts.<br>
-		- Info → Official Save Bank, or Options → Open Save Bank. Load replaces the current run (export/slots first).<br><br>
+	<h3>v0.7.4 - Notation & Save Fixes</h3><br>
+		- Fixed Eternal Notations factory presets (Simplified Written and Numeric Dominoes).<br>
+		- Fixed Warp upgrade 32 auto-reset loop by adding an ON/OFF toggle on Warp milestone 1.<br><br>
 	<h3>v0.7 - Singularity & Mastery</h3><br>
-		- <b>MASSIVE CONTENT UPDATE</b> — Every layer expanded with new upgrades, milestones, and challenges!<br>
-		- <b>P Layer:</b> 8 new upgrades (rows 5-6), 3 new milestones (6-8), 2 new challenges (Prestige Purge, Ultimate Prestige), 1 new buyable (Prestige Singularity), P effect softcap removable<br>
-		- <b>B Layer:</b> 7 new upgrades (rows 4-5), 2 new milestones (7-8), 1 new challenge (Booster Overdrive), B effect softcap removable, B effect ^2 at milestone 8<br>
-		- <b>G Layer:</b> 7 new upgrades (rows 4-5), 3 new milestones (6-8), 1 new challenge (Generator Overload), G effect ^2 at milestone 7<br>
-		- <b>M Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (4-5), 1 new challenge (Mana Storm), M effect ^1.5/^2 at milestones 4/5<br>
-		- <b>T Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (6-7), T effect ^2 at milestone 7<br>
-		- <b>W Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (4-5), W effect ^2 at milestone 5<br>
-		- <b>H Layer:</b> 5 new upgrades (rows 4-5), 2 new milestones (5-6), H effect softcap removable, H effect ^2 at milestone 6<br>
-		- <b>Q Layer:</b> 4 new upgrades (rows 4-5), 2 new milestones (4-5), Q effect ^2 at milestone 5<br>
-		- <b>E Layer:</b> 4 new upgrades (rows 4-5), 2 new milestones (4-5), E effect softcap removable, E effect ^2 at milestone 5<br>
-		- <b>25+ new achievements</b> (rows 7-10): Booster God, Generator God, Mana God, Challenge Master, Billionaire→Googol, Multiverse Master, Full Completionist, Infinite Power<br>
-		- <b>NEW: Mastery side layer (MA)</b> — tracks overall completion %, layer breakdown, achievements, lore<br>
-		- All passive generation increased at high milestones (up to 100%)<br>
-		- <b>NEW UNIVERSE: The Basic Tree</b> — gapples2/The-Modding-Tree, 6 buyables + travel<br>
-		- <b>NEW ROW 6: Singularity (S)</b> — Collapse Grid, Singularity Field, Rift Challenges<br>
-		- 7 total universes in the Multiverse!<br><br>
-		- <b>NEW ROW 6: Singularity (S)</b> — the ultimate endgame layer, merging Universe (U) and Reality (R) branches<br>
-		- Singularities collapse all multiverse timelines into a single point of infinite power<br>
-		- <b>Collapse Grid</b> (3x3) — compress tiles (⬛→🔮→✦) for exponential bonuses. Grid Mastery auto-compresses.<br>
-		- <b>Singularity Field</b> — passive multiplier that grows over time (unlocks at S upgrade 14)<br>
-		- <b>10 upgrades</b>: Timeline Collapse, Dimensional Crunch, Multiverse Merge, Singularity Field, Collapse Grid, Singulon Amplifier, Rift Breaker, Eternal Singularity, Grid Mastery, Absolute Singularity<br>
-		- <b>2 buyables</b>: Singulon Core (amplifies S effect), Timeline Compressor (boosts all points)<br>
-		- <b>3 Rift Challenges</b>: Singularity Rift Alpha (all effects ^0.1), Rift Omega (all effects disabled), Collapsed Timeline (auto-resets)<br>
-		- <b>5 milestones</b>: from 1 to 20 Singularities, culminating in ULTIMATE VICTORY<br>
-		- <b>2 clickables</b>: Compress Tile (spend S to compress grid), Grid Overload (mass compress)<br>
-		- New endgame: 20 Singularities, 25 U + 25 R, or 1e500 points<br>
-		- <b>NEW UNIVERSE: The Basic Tree</b> — <code>gapples2/The-Modding-Tree</code> by gapples2 & thepaperpilot — 831 lines, 7 layers (b/c/d/e/f/g/a), "dust" currency — git cloned to <code>/tmp/The-Basic-Tree</code> — ported as6 buyables (B/C/D/E/F/G) + travel clickable + lore infobox — from <a href="https://modding-tree.fandom.com/wiki/List_of_mods" target="_blank">List of Mods</a> (finished, 2 days)<br>
-		- <i>Developer Preview — balance may change!</i><br><br>
+		- <b>NEW ROW 6: Singularity (S)</b> — the ultimate endgame layer, merging Universe (U) and Reality (R) branches.<br>
+		- Collapse Grid (3x3), Singularity Field, Rift Challenges, Singulon Cores.<br>
+		- Mastery side layer (MA) tracking game completion percentage.<br><br>
 	<h3>v0.6 - Fractured Reality</h3><br>
-		- <b>NEW ROW 5 BRANCH: Reality (R)</b> — a full second path branching directly from Eternity alongside Universe<br>
-		- Reality Shards, Stability, two Dimension buyables, nine upgrades, five milestones, two Reality Fracture challenges, and automation<br>
-		- Reality boosts point and Eternity gain; master the branch at 25 Reality Shards for an alternate victory<br><br>
-	<h3>v0.5 - Eternal Notations (by MathCookie17) — Every Preset!</h3><br>
-		- <b>Eternal Notations</b> by <b>MathCookie17</b> — <a href="https://github.com/MathCookie17/Eternal-Notations" target="_blank">GitHub</a> (MIT, <b>144 presets + 65 notations + 144 HTML presets = 288 total</b>, built on break_eternity, up to 10^^(10^308)) — <code>js/utils/eternal_notations.js</code> (1.2M, 17122 lines) + <code>.min.js</code> + updated <code>break_eternity.js</code> (now supports <code>mod</code>/<code>slog</code>)<br>
-		- <b>Every preset added</b> (146 options: TMT + 145 Eternal) — including <b>HTML presets like Colored Dominoes</b> (requires <code>eternal_notations_images/dominoes.css</code> + <code>dominoes.png</code> — <b>both included</b> at <code>eternal_notations_images/</code> and loaded via <code>index.html</code> + <code>v-html</code> for points)<br>
-		- <b>Options → Notation</b> switcher: TMT (default), Default, Scientific, Standard, Infinity, Eternity, Dominoes, <b>Colored Dominoes</b>, Hyperscientific, Tetration, Boundless, + 135 more — cycle via button, saved in <code>options.notation</code><br>
-		- Updated <code>break_eternity.js</code> to Eternal Notations\' break_eternity (56K) — from <code>/tmp/Eternal-Notations/break_eternity stuff/break_eternity.min.js</code><br>
-		- Rewrote <code>js/utils/NumberFormating.js</code> (146 NOTATIONS, 521 lines) to wrap Eternal: keeps TMT <code>formatTMT()</code> as fallback, <code>format()</code> now calls <code>currentEternalNotation.format(decimal)</code> — credit in code and <code>CREDITS.md</code><br>
-		- New win: still 10 E/25 U/1e500, but now displayable as <code>1.00∞</code> / <code>֎0.001</code> / <span class="domino_box"> domino </span> with Infinity/Eternity/Colored Dominoes<br><br>
-	<h3>v0.4 - Multiverse (Universe Layer) — Now with List of Mods!</h3><br>
-		- <b>NEW ROW 5: Universe (U)</b> — Travel the Multiverse!<br>
-		- Git cloned <code>/tmp/PT-Classic</code> (7889 lines, 7 rows), <code>/tmp/PT-Rewritten</code> (9915 lines, 30 layers), <code>/tmp/Incrementreeverse</code> (pg132, 8182 lines, 16 layers from <a href="https://modding-tree.fandom.com/wiki/List_of_mods" target="_blank">List of Mods</a>), and <code>js/Demo</code> (Acamaeda Demo) — porting every layer incrementally<br>
-		- 5 playable universes: <b>Classic 1.0</b> (P/B/G), <b>Rewritten</b> (P/B/T), <b>Demo</b> (C/F), <b>Incrementreeverse</b> (I/P from Incrementreeverse, finished 10 days), <b>Classic+ Hub</b> (this mod)<br>
-		- 13 new Universe upgrades, 9 Universe buyables (Classic P/B/G + Rewritten P/B/T + Demo C/F + Incrementreeverse I/P + Multiverse Core), 3 Universe challenges, 5 travel clickables<br>
-		- Universe effect boosts ALL points (x5^U, x1.5/x1.8/x2/x2.2/x2.5 by active universe + progress)<br>
-		- Travel cooldown, bars, infoboxes documenting porting + <b>CREDITS.md</b> with full attribution for every cloned game<br>
-		- New win: still 10 Eternity, but Universe gives x1e100+ boost to push 1e500 and 25 U also wins<br><br>
-	<h3>v0.3 - Way More Content (Massive Expansion)</h3><br>
-		- <b>4 NEW LAYERS</b>: Mana (M, row 1), Warp (W, row 2), Quantum (Q, row 3), Eternity (E, row 4 - ENDGAME)<br>
-		- <b>Stats side layer</b> (S) with lore, bars, and breakdowns<br>
-		- <b>~70 new upgrades</b> across all layers, 15 new buyables, 9 new challenges, 6 new milestones per layer<br>
-		- P: +7 upgrades, 2 buyables, new challenge, bar, QOL milestones<br>
-		- B: +6 upgrades, 2 buyables, challenge, bar<br>
-		- G: +7 upgrades, 2 buyables, grid, challenges<br>
-		- T: +5 upgrades, 2 buyables, 3 new challenges, clickables<br>
-		- H: +7 upgrades, 2 buyables, challenges, bar<br>
-		- Achievements: 8 → 24 (including secret & grindy)<br>
-		- New win: 10 Eternity Points or 1e500 points!<br><br>
-	<h3>v0.2 - Safe Storage Fallback</h3><br>
-		- Added localStorage fallback: if storage is blocked/full/private-mode, game now uses sessionStorage → memory fallback instead of crashing<br>
-		- Shows red banner + popup when in memory-only mode (Export reminder)<br>
-		- Saves are now wrapped in try/catch, auto-migrate back to localStorage when it recovers<br><br>
+		- <b>NEW ROW 5 BRANCH: Reality (R)</b> — Reality Shards, Stability, Dimension buyables.<br><br>
+	<h3>v0.5 - Eternal Notations (by MathCookie17)</h3><br>
+		- 146 Notation options including Colored Dominoes, Scientific, Infinity, Eternity.<br><br>
+	<h3>v0.4 - Multiverse (Universe Layer)</h3><br>
+		- Universe travel and ported community trees.<br><br>
+	<h3>v0.3 - Way More Content</h3><br>
+		- Mana, Warp, Quantum, Eternity layers added.<br><br>
 	<h3>v0.1 - The Classic+ Starter</h3><br>
-		- 5 main layers (P, B, G, T, H) + Achievements<br>
-		- Upgrades, Milestones, Buyables, Clickables, Challenges, Bars, Achievements<br>
-		- Two Row-1 branches that combine into Row-2<br>
-		- Try to reach 5 Hyper Points to beat the game!<br><br>
-	<h3>v0.0</h3><br>
-		- Added things.<br>
-		- Added stuff.`
+		- Initial 5 layers.<br>`
 
-let winText = `Congratulations! You have mastered the Classic+ Tree v0.7 — THE SINGULARITY! <br><br> You reached 20 Singularities, 25 Universe Points, 25 Reality Shards, or 1e500 points. You collapsed all timelines into a single point of infinite power. The multiverse is yours.`
+let winText = `Congratulations! You have mastered the Classic+ Tree v0.8 — THE OMNIVERSE & EXPANDED MULTIVERSE! <br><br> You attained 50 Omniverse Energy, mastered all 12 community multiverse realms, conquered the Omni-Matrix, or surpassed 1e1000 points. You have achieved complete Transcendent Omnipotence.`
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
-// (The ones here are examples, all official functions are already taken care of)
 var doNotCallTheseFunctionsEveryTick = ["blowUpEverything"]
 
 function getStartPoints(){
@@ -150,25 +97,38 @@ function getPointGen() {
 	// Row 4
 	if (tmp.e.effect) gain = gain.times(tmp.e.effect)
 	// Row 5 branches - Universe and Reality
-	// Shattered Timeline disables both capstone effects while the challenge is active.
-	if (tmp.u && tmp.u.effect && !(player.r && inChallenge('r', 11))) gain = gain.times(tmp.u.effect)
-	if (tmp.r && tmp.r.effect && !inChallenge('r', 11)) gain = gain.times(tmp.r.effect)
+	if (tmp.u && tmp.u.effect && !(player.r && inChallenge('r', 11)) && !(player.o && inChallenge('o', 12))) gain = gain.times(tmp.u.effect)
+	if (tmp.r && tmp.r.effect && !inChallenge('r', 11) && !(player.o && inChallenge('o', 12))) gain = gain.times(tmp.r.effect)
 	if (player.r && hasUpgrade('r', 11)) gain = gain.times(upgradeEffect('r', 11))
 	if (player.r && hasMilestone('r', 0)) gain = gain.times(2)
-	// Row 6 - Singularity (guarded so it never crashes pre-Singularity saves)
-	if (player.s2 && player.s2.unlocked) {
+	if (player.r && hasUpgrade('r', 34)) gain = gain.times("1e100")
+	// Row 6 - Singularity
+	if (player.s2 && player.s2.unlocked && !(player.o && inChallenge('o', 12))) {
 		if (tmp.s2 && tmp.s2.effect) gain = gain.times(tmp.s2.effect)
 		try { if (layers.s2 && typeof layers.s2.getGridEffect === 'function') gain = gain.times(layers.s2.getGridEffect()) } catch(e) {}
-		if (hasUpgrade('s2', 13)) gain = gain.times(1e50)
+		if (hasUpgrade('s2', 13)) gain = gain.times("1e50")
 		if (hasUpgrade('s2', 14) && player.s2.field) gain = gain.times(player.s2.field.add(1).pow(0.5))
 		if (hasUpgrade('s2', 33)) gain = gain.pow(1.5)
 		try { if (typeof buyableEffect === 'function' && tmp.s2 && tmp.s2.buyables && tmp.s2.buyables[12]) gain = gain.times(buyableEffect('s2', 12)) } catch(e) {}
+		try { if (typeof buyableEffect === 'function' && tmp.s2 && tmp.s2.buyables && tmp.s2.buyables[13]) gain = gain.times(buyableEffect('s2', 13)) } catch(e) {}
+	}
+	// Row 7 - The Omniverse (Ω)
+	if (player.o && player.o.unlocked) {
+		if (tmp.o && tmp.o.effect) gain = gain.times(tmp.o.effect)
+		try { if (layers.o && typeof layers.o.getGridEffect === 'function') gain = gain.times(layers.o.getGridEffect()) } catch(e) {}
+		if (hasUpgrade('o', 14) && player.o.field) gain = gain.times(player.o.field.add(1).pow(0.5))
+		if (hasUpgrade('o', 43)) gain = gain.times("1e500")
+		if (hasMilestone('o', 0)) gain = gain.times(10)
+		if (hasMilestone('o', 6)) gain = gain.pow(1.2)
+		if (hasChallenge('o', 14)) gain = gain.times("1e100")
+		try { if (typeof buyableEffect === 'function' && tmp.o && tmp.o.buyables && tmp.o.buyables[11]) gain = gain.times(buyableEffect('o', 11)) } catch(e) {}
 	}
 	// Buyable point boosts
 	if (tmp.g.buyables && tmp.g.buyables[12]) gain = gain.times(buyableEffect('g', 12))
 	if (tmp.m.buyables && tmp.m.buyables[12]) gain = gain.times(buyableEffect('m', 12))
 	if (tmp.u && tmp.u.buyables && tmp.u.buyables[11]) gain = gain.times(buyableEffect('u', 11).pow(0.1))
 	if (tmp.r && tmp.r.buyables && tmp.r.buyables[11]) gain = gain.times(buyableEffect('r', 11))
+	if (tmp.r && tmp.r.buyables && tmp.r.buyables[13]) gain = gain.times(buyableEffect('r', 13))
 	// Achievements
 	if (hasAchievement('a', 11)) gain = gain.times(1.5)
 	if (hasAchievement('a', 12)) gain = gain.times(1.5)
@@ -178,16 +138,14 @@ function getPointGen() {
 	if (hasAchievement('a', 16)) gain = gain.times(1.3)
 	if (hasAchievement('a', 31)) gain = gain.times(1.5)
 	if (hasAchievement('a', 32)) gain = gain.times(2)
-	// Row 7-10 achievements
 	if (hasAchievement('a', 91)) gain = gain.times(achievementEffect('a', 91))
 	if (hasAchievement('a', 92)) gain = gain.times(achievementEffect('a', 92))
 	if (hasAchievement('a', 93)) gain = gain.times(achievementEffect('a', 93))
 	if (hasAchievement('a', 96)) gain = gain.times(achievementEffect('a', 96))
-	// Milestone / challenge boosts
 	if (hasMilestone('p', 4)) gain = gain.times(2)
 	if (hasMilestone('b', 5)) gain = gain.times(3)
 	if (hasAchievement('a', 33)) gain = gain.pow(1.05)
-	// Inside challenges (debuffs)
+	// Challenge debuffs
 	if (inChallenge('t', 11)) gain = gain.pow(0.5)
 	if (inChallenge('t', 12)) gain = gain.pow(0.7)
 	if (inChallenge('t', 21)) gain = gain.pow(0.6)
@@ -200,12 +158,18 @@ function getPointGen() {
 	if (inChallenge('u', 12)) gain = gain.pow(0.5)
 	if (player.r && inChallenge('r', 11)) gain = gain.pow(0.35)
 	if (player.r && inChallenge('r', 12)) gain = gain.pow(0.25)
+	if (player.s2 && inChallenge('s2', 11)) gain = gain.pow(0.15)
+	if (player.s2 && inChallenge('s2', 12)) gain = gain.pow(0.05)
+	if (player.s2 && inChallenge('s2', 22)) gain = gain.pow(0.1)
+	if (player.o && inChallenge('o', 11)) gain = gain.pow(0.2)
+	if (player.o && inChallenge('o', 13)) gain = gain.pow(0.1)
+	if (player.o && inChallenge('o', 14)) gain = gain.pow(0.05)
 	return gain
 }
 
-// You can add non-layer related variables that should to into "player" and be saved here, along with default values
-function addedPlayerData() { return {
-}}
+function addedPlayerData() {
+	return {}
+}
 
 // Display extra things at the top of the page
 var displayThings = [
@@ -230,30 +194,25 @@ var displayThings = [
 	function() { if (player.u && player.u.unlocked) return "U: "+format(tmp.u.effect)+"x ("+player.u.activeUniverse+") | "+formatWhole(player.u.points)+" U" },
 	function() { if (player.r && player.r.unlocked) return "R: "+format(tmp.r.effect)+"x | "+formatWhole(player.r.points)+" shards | "+formatWhole(player.r.stability)+" stability" },
 	function() { if (player.s2 && player.s2.unlocked) return "S: "+format(tmp.s2.effect)+"x | "+formatWhole(player.s2.points)+" singularities | Field: "+format(player.s2.field) },
-	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11) || (player.u && inChallenge('u',11)) || (player.r && (inChallenge('r',11) || inChallenge('r',12)))) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
+	function() { if (player.o && player.o.unlocked) return "Ω: "+format(tmp.o.effect)+"x | "+formatWhole(player.o.points)+" omniverse energy | Field: "+format(player.o.field) },
+	function() { if (inChallenge('t', 11) || inChallenge('t', 12) || inChallenge('t', 21) || inChallenge('w', 11) || inChallenge('q', 11) || inChallenge('e', 11) || (player.u && inChallenge('u',11)) || (player.r && (inChallenge('r',11) || inChallenge('r',12))) || (player.s2 && (inChallenge('s2',11) || inChallenge('s2',12) || inChallenge('s2',21) || inChallenge('s2',22))) || (player.o && (inChallenge('o',11) || inChallenge('o',12) || inChallenge('o',13) || inChallenge('o',14)))) return "<b style='color:red; background:#330000; padding:1px 6px'>⚠️ In Challenge!</b>" },
 ]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return (player.s2 && player.s2.points.gte(new Decimal(20))) || (player.u && player.u.points.gte(new Decimal(25))) || (player.r && player.r.points.gte(new Decimal(25))) || player.points.gte(new Decimal("1e500"))
+	return (player.o && player.o.points.gte(new Decimal(50))) ||
+	       (player.s2 && player.s2.points.gte(new Decimal(50))) ||
+	       (player.u && player.u.points.gte(new Decimal(100))) ||
+	       (player.r && player.r.points.gte(new Decimal(50))) ||
+	       player.points.gte(new Decimal("1e1000"))
 }
 
+var backgroundStyle = {}
 
-
-// Less important things beyond this point!
-
-// Style for the background, can be a function
-var backgroundStyle = {
-
-}
-
-// You can change this if you have things that can be messed up by long tick lengths
 function maxTickLength() {
-	return(3600) // Default is 1 hour which is just arbitrarily large
+	return 3600
 }
 
-// Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
-// you can cap their current resources with this.
 function fixOldSave(oldVersion){
 	if (oldVersion < "0.3") {
 		if (!player.m) player.m = getStartLayerData("m");
@@ -280,5 +239,16 @@ function fixOldSave(oldVersion){
 		if (player.s2 && player.s2.collapses === undefined) player.s2.collapses = 0;
 		if (player.u && !player.u.basic) player.u.basic = { points: new Decimal(0), cheapeners: new Decimal(0), darkness: new Decimal(0), exponents: new Decimal(0), funity: new Decimal(0), games: new Decimal(0) };
 		if (player.u && !player.u.miletree) player.u.miletree = { points: new Decimal(0), prestige: new Decimal(0), superPrestige: new Decimal(0), transcend: new Decimal(0), reincarnate: new Decimal(0) };
+	}
+	if (oldVersion < "0.8") {
+		if (!player.o) player.o = getStartLayerData("o");
+		if (player.o && player.o.field === undefined) player.o.field = new Decimal(0);
+		if (player.o && player.o.syntheses === undefined) player.o.syntheses = 0;
+		if (player.o && player.o.pulseTimer === undefined) player.o.pulseTimer = 0;
+		if (player.u && !player.u.dimensions) player.u.dimensions = { points: new Decimal(0), dim1: new Decimal(0), dim2: new Decimal(0), dimBoost: new Decimal(0) };
+		if (player.u && !player.u.particles) player.u.particles = { points: new Decimal(0), electrons: new Decimal(0), protons: new Decimal(0), neutrons: new Decimal(0), quarks: new Decimal(0) };
+		if (player.u && !player.u.pro) player.u.pro = { points: new Decimal(0), ants: new Decimal(0), grass: new Decimal(0), supernova: new Decimal(0), void: new Decimal(0) };
+		if (player.u && !player.u.dice) player.u.dice = { points: new Decimal(0), d6: new Decimal(0), d12: new Decimal(0), d20: new Decimal(0), luck: new Decimal(0) };
+		if (player.u && !player.u.ng) player.u.ng = { points: new Decimal(0), ngBoosters: new Decimal(0), metaGenerators: new Decimal(0), hyperTime: new Decimal(0) };
 	}
 }

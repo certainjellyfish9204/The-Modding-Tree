@@ -141,6 +141,18 @@ addLayer("r", {
             cost: new Decimal(30),
             unlocked() { return hasUpgrade("r", 31) && hasMilestone("r", 4) },
         },
+        33: {
+            title: "Transfinite Stabilization",
+            description: "Reality Stability max cap increased to 500 and boosts Omniverse Energy.",
+            cost: new Decimal(50),
+            unlocked() { return hasUpgrade("r", 32) },
+        },
+        34: {
+            title: "Cosmic Fabric",
+            description: "Multiply point gain by 1e100 and raise Reality effect ^1.25.",
+            cost: new Decimal(100),
+            unlocked() { return hasUpgrade("r", 33) },
+        },
     },
 
     buyables: {
@@ -175,6 +187,22 @@ addLayer("r", {
                 setBuyableAmount("r", this.id, getBuyableAmount("r", this.id).add(1))
             },
             style: {"height":"130px", "background-color":"#35206E"},
+        },
+        13: {
+            title: "Omni Dimension",
+            cost(x) { return new Decimal(10).times(Decimal.pow(3, x)) },
+            effect(x) { return Decimal.pow(1e5, x) },
+            display() {
+                let data = tmp.r.buyables[this.id]
+                return "Anchor multidimensional reality shards.<br>Cost: "+formatWhole(data.cost)+" reality shards<br>Amount: "+formatWhole(getBuyableAmount("r", this.id))+"<br>Effect: "+format(data.effect)+"x to ALL point gains"
+            },
+            unlocked() { return hasUpgrade("r", 33) },
+            canAfford() { return player.r.points.gte(tmp.r.buyables[this.id].cost) },
+            buy() {
+                player.r.points = player.r.points.sub(tmp.r.buyables[this.id].cost)
+                setBuyableAmount("r", this.id, getBuyableAmount("r", this.id).add(1))
+            },
+            style: {"height":"130px", "background-color":"#1a4455"},
         },
     },
 
@@ -243,8 +271,21 @@ addLayer("r", {
             toggles: [["r", "auto"]],
             unlocked() { return hasMilestone("r", 3) },
         },
+        5: {
+            requirementDescription: "50 reality shards",
+            effectDescription: "Reality Stability never resets and passively generates +5/s.",
+            done() { return player.r.best.gte(50) },
+            unlocked() { return hasMilestone("r", 4) },
+        },
     },
 
+    update(diff) {
+        if (!player.r) return
+        if (hasMilestone("r", 5)) {
+            let maxStab = hasUpgrade("r", 33) ? 500 : 100
+            player.r.stability = player.r.stability.add(new Decimal(5).times(diff)).min(maxStab)
+        }
+    },
     tabFormat: {
         "Reality": {
             content: ["main-display", ["display-text", function() { return tmp.r.prestigeButtonText }], "blank", "resource-display", "blank", ["infobox", "lore"], "blank", ["bar", "realityBar"], "blank", "milestones", "blank", "upgrades"],

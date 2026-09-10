@@ -879,8 +879,6 @@ addLayer("h", {
         return eff
     },
     effectDescription() { return "which are boosting ALL previous gains by "+format(tmp.h.effect)+"x" },
-    // Once 100 Hyper has been reached, future Hyper resets buy the maximum affordable amount.
-    canBuyMax() { return player.h.best.gte(100) },
     prestigeButtonText() {
         let gain = (typeof tmp !== 'undefined' && tmp.h && tmp.h.resetGain instanceof Decimal) ? tmp.h.resetGain : getResetGain(this.layer)
         let at = (typeof tmp !== 'undefined' && tmp.h && tmp.h.nextAt instanceof Decimal) ? tmp.h.nextAt : getNextAt(this.layer)
@@ -983,8 +981,6 @@ addLayer("q", {
         return eff;
     },
     effectDescription(){ return "which boost points, warp, and hyper by "+format(tmp.q.effect)+"x"},
-    // Once 100 Quantum has been reached, future Quantum resets buy the maximum affordable amount.
-    canBuyMax(){ return player.q.best.gte(100) },
     prestigeButtonText(){
         let gain=(tmp.q && tmp.q.resetGain instanceof Decimal) ? tmp.q.resetGain : getResetGain(this.layer);
         let at=(tmp.q && tmp.q.nextAt instanceof Decimal) ? tmp.q.nextAt : getNextAt(this.layer);
@@ -1318,6 +1314,20 @@ addLayer("a", {
         223: { name: "Transcendent", done(){ return player.points.gte("1e10000000")}, tooltip: "Reach 1e10000000 points.", unlocked(){ return player.points.gte("1e1000000")} },
         224: { name: "Omnipotent", done(){ return player.points.gte("1e100000000")}, tooltip: "Reach 1e100000000 points.", unlocked(){ return player.points.gte("1e10000000")} },
         225: { name: "The End", done(){ return player.points.gte("1e1000000000")}, tooltip: "Reach 1e1000000000 points. Is there even more?", unlocked(){ return player.points.gte("1e100000000")} },
+        // Row 23 — Omniverse Achievements (v0.8)
+        231: { name: "Omniverse Awakened", done(){ return player.o && player.o.best.gte(1)}, tooltip: "Attain 1 Omniverse Energy. Transend reality!", unlocked(){ return player.o && player.o.unlocked} },
+        232: { name: "Cosmic Field Pioneer", done(){ return player.o && player.o.field && player.o.field.gte(100)}, tooltip: "Reach 100 Omniverse Field.", unlocked(){ return player.o && hasUpgrade('o', 14)} },
+        233: { name: "Matrix Synthesizer", done(){ return player.o && player.o.syntheses >= 10}, tooltip: "Perform 10 Omni-Matrix syntheses.", unlocked(){ return player.o && hasUpgrade('o', 21)} },
+        234: { name: "Omega Challenger", done(){ return hasChallenge('o', 11) || hasChallenge('o', 12) || hasChallenge('o', 13) || hasChallenge('o', 14)}, tooltip: "Complete any Omega Challenge.", unlocked(){ return player.o && hasUpgrade('o', 23)} },
+        235: { name: "Omniverse Master", done(){ return player.o && player.o.best.gte(20)}, tooltip: "Reach 20 Omniverse Energy.", unlocked(){ return player.o && player.o.best.gte(5)} },
+        236: { name: "Grand Omega Conqueror", done(){ return hasChallenge('o', 11) && hasChallenge('o', 12) && hasChallenge('o', 13) && hasChallenge('o', 14)}, tooltip: "Complete ALL 4 Omega Challenges!", unlocked(){ return player.o && hasUpgrade('o', 23)} },
+        // Row 24 — 12-Universe Voyager Achievements (v0.8)
+        241: { name: "Dimensional Voyager", done(){ return player.u && player.u.dimensions && player.u.dimensions.points.gte(50)}, tooltip: "Reach 50 Dimensional Shards in PT: Dimensions universe.", unlocked(){ return player.u && hasUpgrade('u', 51)} },
+        242: { name: "Subatomic Master", done(){ return player.u && player.u.particles && player.u.particles.points.gte(50)}, tooltip: "Reach 50 Atoms in Particle Increment Tree universe.", unlocked(){ return player.u && hasUpgrade('u', 52)} },
+        243: { name: "Alphabet Overlord", done(){ return player.u && player.u.pro && player.u.pro.points.gte(50)}, tooltip: "Reach 50 Pro Points in The Pro Tree universe.", unlocked(){ return player.u && hasUpgrade('u', 53)} },
+        244: { name: "High Roller", done(){ return player.u && player.u.dice && player.u.dice.points.gte(50)}, tooltip: "Roll 50 Dice in The Dice Tree universe.", unlocked(){ return player.u && hasUpgrade('u', 54)} },
+        245: { name: "Next-Gen Pioneer", done(){ return player.u && player.u.ng && player.u.ng.points.gte(50)}, tooltip: "Reach 50 NG Points in PT: Rewritten NG+ universe.", unlocked(){ return player.u && hasUpgrade('u', 55)} },
+        246: { name: "Master of Twelve Realms", done(){ return player.u && player.u.best.gte(25) && (player.o && player.o.best.gte(1))}, tooltip: "Attain 25 Universe points and enter the Omniverse.", unlocked(){ return player.u && player.u.unlocked} },
     },
     tabFormat: ["main-display", "achievements"],
     achievementPopups: true,
@@ -1366,7 +1376,7 @@ addLayer("s", {
     },
 })
 
-// ---------------- SIDE: MASTERY (MA) - NEW v0.7 ----------------
+// ---------------- SIDE: MASTERY (MA) - EXPANDED v0.8 ----------------
 addLayer("ma", {
     startData(){ return { unlocked: true }},
     color: "#FFD700",
@@ -1380,8 +1390,9 @@ addLayer("ma", {
                 ["display-text", function(){
                     let total = 0
                     let max = 0
+                    let allLayers = ["p","b","g","m","t","w","h","q","e","u","r","s2","o"]
                     // Count milestones
-                    for (let l of ["p","b","g","m","t","w","h","q","e"]){
+                    for (let l of allLayers){
                         if (layers[l] && layers[l].milestones){
                             for (let id in layers[l].milestones){
                                 max++
@@ -1390,7 +1401,7 @@ addLayer("ma", {
                         }
                     }
                     // Count upgrades
-                    for (let l of ["p","b","g","m","t","w","h","q","e"]){
+                    for (let l of allLayers){
                         if (layers[l] && layers[l].upgrades){
                             for (let id in layers[l].upgrades){
                                 max++
@@ -1411,8 +1422,8 @@ addLayer("ma", {
                 "blank",
                 ["display-text", function(){
                     let txt = "<b>Layer Progress:</b><br>"
-                    let layerIds = ["p","b","g","m","t","w","h","q","e"]
-                    let names = ["Prestige","Boosters","Generators","Mana","Time","Warp","Hyper","Quantum","Eternity"]
+                    let layerIds = ["p","b","g","m","t","w","h","q","e","u","r","s2","o"]
+                    let names = ["Prestige","Boosters","Generators","Mana","Time","Warp","Hyper","Quantum","Eternity","Universe","Reality","Singularity","Omniverse"]
                     for (let i = 0; i < layerIds.length; i++){
                         let l = layerIds[i]
                         let ups = 0, upsMax = 0, ms = 0, msMax = 0
@@ -1445,14 +1456,13 @@ addLayer("ma", {
         "Lore": {
             content: [
                 ["display-text", function(){
-                    return "<h3>The Mastery System</h3><br>Mastery tracks your overall progress through the Classic+ Tree. Complete upgrades, milestones, and achievements to reach 100% mastery.<br><br>"+
-                    "<b>Current Goal:</b> "+(player.e && player.e.best.gte(10) ? "You have reached Eternity! Now explore the multiverse through Universe (U) and Reality (R)." : "Reach 10 Eternity Points to achieve the first victory.")+"<br><br>"+
-                    "<b>Secret Goals:</b><br>"+
-                    "• Reach 1e500 points<br>"+
-                    "• Complete all challenges<br>"+
-                    "• Get 50+ achievements<br>"+
-                    "• Unlock all layers<br>"+
-                    "• Reach 20 Singularities (v0.7)"
+                    return "<h3>The Mastery System (v0.8 Omniverse)</h3><br>Mastery tracks your overall progress across all 13 core layers and 12 multiverse universes. Complete upgrades, milestones, and achievements to reach 100% mastery.<br><br>"+
+                    "<b>Current Goal:</b> "+(player.o && player.o.best.gte(50) ? "You have reached Transcendent Victory!" : player.s2 && player.s2.best.gte(20) ? "You have reached the Singularity! Now transcend reality in the Omniverse (Ω)." : "Explore the tree to reach Eternity, Universe, Reality, Singularity, and the Omniverse.")+"<br><br>"+
+                    "<b>Ultimate Goals:</b><br>"+
+                    "• Reach 1e1000 points<br>"+
+                    "• Complete all Omega challenges<br>"+
+                    "• Attain 50 Omniverse Energy (v0.8)<br>"+
+                    "• Master all 12 universes in the Multiverse Hub"
                 }]
             ]
         }
