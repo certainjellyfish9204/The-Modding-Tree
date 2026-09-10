@@ -21,21 +21,77 @@ function getStartOptions() {
 }
 
 const GAME_FONTS = {
-	classic: { name: "Classic (Inconsolata)", family: '"Inconsolata"', node: "40px", letter: "0", weight: "bold" },
-	orbitron: { name: "Sci-Fi (Orbitron)", family: '"Orbitron"', node: "32px", letter: "0.04em", weight: "700" },
-	audiowide: { name: "Arcade (Audiowide)", family: '"Audiowide"', node: "30px", letter: "0.02em", weight: "400" },
-	exo2: { name: "Clean Tech (Exo 2)", family: '"Exo 2"', node: "36px", letter: "0.02em", weight: "700" },
-	rajdhani: { name: "HUD (Rajdhani)", family: '"Rajdhani"', node: "40px", letter: "0.06em", weight: "700" },
-	sharetech: { name: "Terminal Mono", family: '"Share Tech Mono"', node: "34px", letter: "0", weight: "400" },
-	vt323: { name: "CRT (VT323)", family: '"VT323"', node: "42px", letter: "0.02em", weight: "400" },
-	pressstart: { name: "Pixel (Press Start)", family: '"Press Start 2P"', node: "16px", letter: "0", weight: "400" },
-	rubik: { name: "Modern (Rubik)", family: '"Rubik"', node: "34px", letter: "0", weight: "700" },
-	cinzel: { name: "Fantasy (Cinzel)", family: '"Cinzel"', node: "28px", letter: "0.08em", weight: "700" },
-	specialelite: { name: "Typewriter", family: '"Special Elite"', node: "28px", letter: "0.02em", weight: "400" },
-	unifraktur: { name: "Blackletter", family: '"UnifrakturMaguntia"', node: "30px", letter: "0", weight: "400" },
-	latex: { name: "LaTeX (Computer Modern)", family: '"KaTeX_Main", "KaTeX_Math", "Computer Modern Serif", "STIX Two Text"', node: "32px", letter: "0", weight: "400", generic: "serif" },
-	latexitalic: { name: "LaTeX Math Italic", family: '"KaTeX_Math", "KaTeX_Main", "STIX Two Text"', node: "34px", letter: "0", weight: "400", generic: "serif" },
-	stix: { name: "STIX Two (journal math)", family: '"STIX Two Text"', node: "34px", letter: "0", weight: "400", generic: "serif" },
+	// --- Sci-Fi & Cyberpunk ---
+	orbitron: { name: "Sci-Fi: Orbitron (Default)", family: '"Orbitron"', node: "32px", letter: "0.04em", weight: "700" },
+	audiowide: { name: "Sci-Fi: Audiowide", family: '"Audiowide"', node: "30px", letter: "0.02em", weight: "400" },
+	exo2: { name: "Sci-Fi: Exo 2", family: '"Exo 2"', node: "36px", letter: "0.02em", weight: "700" },
+	rajdhani: { name: "Sci-Fi: Rajdhani (HUD)", family: '"Rajdhani"', node: "40px", letter: "0.06em", weight: "700" },
+	electrolize: { name: "Sci-Fi: Electrolize", family: '"Electrolize"', node: "32px", letter: "0.02em", weight: "400" },
+	chakrapetch: { name: "Sci-Fi: Chakra Petch", family: '"Chakra Petch"', node: "32px", letter: "0.03em", weight: "700" },
+	teko: { name: "Sci-Fi: Teko (Condensed)", family: '"Teko"', node: "44px", letter: "0.05em", weight: "700" },
+	michroma: { name: "Sci-Fi: Michroma", family: '"Michroma"', node: "26px", letter: "0.04em", weight: "400" },
+	russo: { name: "Sci-Fi: Russo One", family: '"Russo One"', node: "32px", letter: "0.02em", weight: "400" },
+	quantico: { name: "Sci-Fi: Quantico", family: '"Quantico"', node: "32px", letter: "0.03em", weight: "700" },
+	syncopate: { name: "Sci-Fi: Syncopate (Wide)", family: '"Syncopate"', node: "22px", letter: "0.08em", weight: "700" },
+	megrim: { name: "Sci-Fi: Megrim (Cyber)", family: '"Megrim"', node: "34px", letter: "0.04em", weight: "400" },
+
+	// --- Code & Monospace ---
+	classic: { name: "Code: Inconsolata (Classic)", family: '"Inconsolata"', node: "40px", letter: "0", weight: "bold" },
+	firacode: { name: "Code: Fira Code", family: '"Fira Code"', node: "32px", letter: "0", weight: "700" },
+	jetbrains: { name: "Code: JetBrains Mono", family: '"JetBrains Mono"', node: "32px", letter: "0", weight: "700" },
+	spacemono: { name: "Code: Space Mono", family: '"Space Mono"', node: "30px", letter: "0", weight: "700" },
+	robotomono: { name: "Code: Roboto Mono", family: '"Roboto Mono"', node: "32px", letter: "0", weight: "700" },
+	courier: { name: "Code: Courier Prime", family: '"Courier Prime"', node: "32px", letter: "0", weight: "700" },
+	sharetech: { name: "Code: Share Tech Mono", family: '"Share Tech Mono"', node: "34px", letter: "0", weight: "400" },
+	novamono: { name: "Code: Nova Mono", family: '"Nova Mono"', node: "34px", letter: "0", weight: "400" },
+	specialelite: { name: "Code: Typewriter (Special Elite)", family: '"Special Elite"', node: "28px", letter: "0.02em", weight: "400" },
+
+	// --- Retro, Pixel & Gaming ---
+	pressstart: { name: "Retro: Press Start 2P (Pixel)", family: '"Press Start 2P"', node: "16px", letter: "0", weight: "400" },
+	vt323: { name: "Retro: VT323 (CRT Terminal)", family: '"VT323"', node: "42px", letter: "0.02em", weight: "400" },
+	silkscreen: { name: "Retro: Silkscreen", family: '"Silkscreen"', node: "24px", letter: "0.02em", weight: "700" },
+	dotgothic: { name: "Retro: DotGothic16", family: '"DotGothic16"', node: "30px", letter: "0", weight: "400" },
+	monoton: { name: "Retro: Monoton (Neon)", family: '"Monoton"', node: "28px", letter: "0.05em", weight: "400" },
+	bungee: { name: "Retro: Bungee", family: '"Bungee"', node: "26px", letter: "0.02em", weight: "400" },
+	bungeeshade: { name: "Retro: Bungee Shade", family: '"Bungee Shade"', node: "26px", letter: "0.02em", weight: "400" },
+	blackops: { name: "Retro: Black Ops One", family: '"Black Ops One"', node: "30px", letter: "0.03em", weight: "400" },
+	fasterone: { name: "Retro: Faster One", family: '"Faster One"', node: "26px", letter: "0.02em", weight: "400" },
+	creepster: { name: "Retro: Creepster (Horror)", family: '"Creepster"', node: "32px", letter: "0.03em", weight: "400" },
+
+	// --- Modern Clean Sans ---
+	inter: { name: "Clean: Inter", family: '"Inter"', node: "34px", letter: "0", weight: "700" },
+	montserrat: { name: "Clean: Montserrat", family: '"Montserrat"', node: "32px", letter: "0.02em", weight: "700" },
+	poppins: { name: "Clean: Poppins", family: '"Poppins"', node: "32px", letter: "0.01em", weight: "700" },
+	outfit: { name: "Clean: Outfit", family: '"Outfit"', node: "34px", letter: "0.01em", weight: "700" },
+	spacegrotesk: { name: "Clean: Space Grotesk", family: '"Space Grotesk"', node: "32px", letter: "0.02em", weight: "700" },
+	rubik: { name: "Clean: Rubik", family: '"Rubik"', node: "34px", letter: "0", weight: "700" },
+	righteous: { name: "Clean: Righteous", family: '"Righteous"', node: "30px", letter: "0.03em", weight: "400" },
+	comfortaa: { name: "Clean: Comfortaa (Rounded)", family: '"Comfortaa"', node: "30px", letter: "0", weight: "700" },
+	fredoka: { name: "Clean: Fredoka (Friendly)", family: '"Fredoka"', node: "32px", letter: "0", weight: "700" },
+
+	// --- Fantasy, Serif & Academic ---
+	cinzel: { name: "Fantasy: Cinzel", family: '"Cinzel"', node: "28px", letter: "0.08em", weight: "700", generic: "serif" },
+	cinzeldec: { name: "Fantasy: Cinzel Decorative", family: '"Cinzel Decorative"', node: "26px", letter: "0.08em", weight: "700", generic: "serif" },
+	playfair: { name: "Fantasy: Playfair Display", family: '"Playfair Display"', node: "32px", letter: "0", weight: "600", generic: "serif" },
+	medieval: { name: "Fantasy: MedievalSharp", family: '"MedievalSharp"', node: "32px", letter: "0.02em", weight: "400", generic: "serif" },
+	pirata: { name: "Fantasy: Pirata One (Gothic)", family: '"Pirata One"', node: "34px", letter: "0.03em", weight: "400", generic: "serif" },
+	almendra: { name: "Fantasy: Almendra", family: '"Almendra"', node: "30px", letter: "0.02em", weight: "700", generic: "serif" },
+	marcellus: { name: "Fantasy: Marcellus (Roman)", family: '"Marcellus"', node: "30px", letter: "0.04em", weight: "400", generic: "serif" },
+	uncial: { name: "Fantasy: Uncial Antiqua", family: '"Uncial Antiqua"', node: "28px", letter: "0.03em", weight: "400", generic: "serif" },
+	caesar: { name: "Fantasy: Caesar Dressing", family: '"Caesar Dressing"', node: "32px", letter: "0.03em", weight: "400", generic: "serif" },
+	unifraktur: { name: "Fantasy: Blackletter (Unifraktur)", family: '"UnifrakturMaguntia"', node: "30px", letter: "0", weight: "400", generic: "serif" },
+
+	// --- LaTeX & Mathematical ---
+	latex: { name: "Math: LaTeX (Computer Modern)", family: '"KaTeX_Main", "KaTeX_Math", "Computer Modern Serif", "STIX Two Text"', node: "32px", letter: "0", weight: "400", generic: "serif" },
+	latexitalic: { name: "Math: LaTeX Math Italic", family: '"KaTeX_Math", "KaTeX_Main", "STIX Two Text"', node: "34px", letter: "0", weight: "400", generic: "serif" },
+	stix: { name: "Math: STIX Two (Journal)", family: '"STIX Two Text"', node: "34px", letter: "0", weight: "400", generic: "serif" },
+
+	// --- Handwritten & Fun ---
+	marker: { name: "Fun: Permanent Marker", family: '"Permanent Marker"', node: "26px", letter: "0.02em", weight: "400", generic: "cursive" },
+	comic: { name: "Fun: Comic Neue", family: '"Comic Neue"', node: "32px", letter: "0", weight: "700", generic: "cursive" },
+	bangers: { name: "Fun: Bangers (Comic Book)", family: '"Bangers"', node: "34px", letter: "0.04em", weight: "400", generic: "cursive" },
+	caveat: { name: "Fun: Caveat (Handwritten)", family: '"Caveat"', node: "38px", letter: "0", weight: "700", generic: "cursive" },
+	pacifico: { name: "Fun: Pacifico (Brush Script)", family: '"Pacifico"', node: "28px", letter: "0", weight: "400", generic: "cursive" },
 }
 
 function getFontOptions() {
