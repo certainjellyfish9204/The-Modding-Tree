@@ -86,6 +86,18 @@ addLayer("u", {
             metaGenerators: new Decimal(0),
             hyperTime: new Decimal(0),
         },
+        galaxy: {
+            points: new Decimal(0),
+            stars: new Decimal(0),
+        },
+        synergism: {
+            points: new Decimal(0),
+            nodes: new Decimal(0),
+        },
+        circuit: {
+            points: new Decimal(0),
+            volts: new Decimal(0),
+        },
     }},
     color: "#AA00FF",
     requires: new Decimal(10), // 10 Eternity
@@ -218,6 +230,55 @@ addLayer("u", {
             fillStyle: {'background-color': "#00FF7F"},
             unlocked() { return player.u.activeUniverse === "ng" },
         },
+        demoProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return (player.u.demo ? player.u.demo.points : new Decimal(0)).div(100).toNumber() },
+            display() { return "Demo Candies: "+formatWhole(player.u.demo ? player.u.demo.points : 0)+" / 100"},
+            fillStyle: {'background-color': "#00CC88"},
+            unlocked() { return player.u.activeUniverse === "demo" },
+        },
+        incrementProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return (player.u.incrementverse ? player.u.incrementverse.points : new Decimal(0)).div(100).toNumber() },
+            display() { return "Incrementreeverse: "+formatWhole(player.u.incrementverse ? player.u.incrementverse.points : 0)+" / 100"},
+            fillStyle: {'background-color': "#FF44AA"},
+            unlocked() { return player.u.activeUniverse === "incrementverse" },
+        },
+        basicProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return (player.u.basic ? player.u.basic.points : new Decimal(0)).div(100).toNumber() },
+            display() { return "Basic Tree: "+formatWhole(player.u.basic ? player.u.basic.points : 0)+" / 100"},
+            fillStyle: {'background-color': "#446688"},
+            unlocked() { return player.u.activeUniverse === "basic" },
+        },
+        miletreeProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return (player.u.miletree ? player.u.miletree.points : new Decimal(0)).div(100).toNumber() },
+            display() { return "Miletree: "+formatWhole(player.u.miletree ? player.u.miletree.points : 0)+" / 100"},
+            fillStyle: {'background-color': "#66AA44"},
+            unlocked() { return player.u.activeUniverse === "miletree" },
+        },
+        galaxyProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return (player.u.galaxy ? player.u.galaxy.points : new Decimal(0)).div(100).toNumber() },
+            display() { return "Galactic Power: "+formatWhole(player.u.galaxy ? player.u.galaxy.points : 0)+" / 100"},
+            fillStyle: {'background-color': "#5555CC"},
+            unlocked() { return player.u.activeUniverse === "galaxy" },
+        },
+        synergismProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return (player.u.synergism ? player.u.synergism.points : new Decimal(0)).div(100).toNumber() },
+            display() { return "Synergy: "+formatWhole(player.u.synergism ? player.u.synergism.points : 0)+" / 100"},
+            fillStyle: {'background-color': "#CC4488"},
+            unlocked() { return player.u.activeUniverse === "synergism" },
+        },
+        circuitProgress: {
+            direction: RIGHT, width: 300, height: 18,
+            progress() { return (player.u.circuit ? player.u.circuit.points : new Decimal(0)).div(100).toNumber() },
+            display() { return "Circuit Power: "+formatWhole(player.u.circuit ? player.u.circuit.points : 0)+" / 100"},
+            fillStyle: {'background-color': "#88AA22"},
+            unlocked() { return player.u.activeUniverse === "circuit" },
+        },
     },
     infoboxes: {
         lore: {
@@ -276,6 +337,12 @@ addLayer("u", {
         53: { description: "Unlock The Pro Tree universe.", cost: new Decimal(7500), unlocked(){ return hasUpgrade('u',52)} },
         54: { description: "Unlock The Dice Tree universe.", cost: new Decimal(9000), unlocked(){ return hasUpgrade('u',53)} },
         55: { description: "Unlock PT: Rewritten NG+ universe.", cost: new Decimal(12000), unlocked(){ return hasUpgrade('u',54)} },
+        // Row 6 — The Deep Realms (v0.8 Full)
+        61: { description: "Unlock The Galaxy Tree universe.", cost: new Decimal(20000), unlocked(){ return hasUpgrade('u',55)} },
+        62: { description: "Unlock Synergism universe.", cost: new Decimal(30000), unlocked(){ return hasUpgrade('u',61)} },
+        63: { description: "Unlock The Circuit Tree universe.", cost: new Decimal(50000), unlocked(){ return hasUpgrade('u',62)} },
+        64: { description: "Universe effect ^1.15.", cost: new Decimal(75000), unlocked(){ return hasUpgrade('u',63)} },
+        65: { description: "Active universe bonus ^1.5.", cost: new Decimal(100000), unlocked(){ return hasUpgrade('u',64)} },
     },
     buyables: {
         // Classic buyables
@@ -466,6 +533,170 @@ addLayer("u", {
             style:{'height':'120px', 'background-color':"#00cc66"},
         },
 
+        // TMT Demo buyables (v0.8 Full)
+        41: {
+            title: "Demo: Candy Machine",
+            cost(x){ return Decimal.pow(18, x).times(40) },
+            effect(x){ return Decimal.pow(2.8, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x sweetness" },
+            unlocked(){ return hasUpgrade('u', 34) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.demo) player.u.demo.candies=player.u.demo.candies.add(1); },
+            style:{'height':'120px', 'background-color':"#00CC88"},
+        },
+        42: {
+            title: "Demo: Candy Farm",
+            cost(x){ return Decimal.pow(30, x).times(120) },
+            effect(x){ return Decimal.pow(4, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x harvest" },
+            unlocked(){ return hasUpgrade('u', 34) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.demo) player.u.demo.farm=player.u.demo.farm.add(1); },
+            style:{'height':'120px', 'background-color':"#009966"},
+        },
+
+        // Incrementreeverse buyables (v0.8 Full)
+        43: {
+            title: "Incrementree: Incrementy Gen",
+            cost(x){ return Decimal.pow(16, x).times(30) },
+            effect(x){ return Decimal.pow(2.4, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x incrementy" },
+            unlocked(){ return hasUpgrade('u', 35) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.incrementverse) player.u.incrementverse.incrementy=player.u.incrementverse.incrementy.add(1); },
+            style:{'height':'120px', 'background-color':"#FF44AA"},
+        },
+        44: {
+            title: "Incrementree: Prestige Tree",
+            cost(x){ return Decimal.pow(28, x).times(90) },
+            effect(x){ return Decimal.pow(3.4, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x mini-prestige" },
+            unlocked(){ return hasUpgrade('u', 35) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.incrementverse) player.u.incrementverse.prestige=player.u.incrementverse.prestige.add(1); },
+            style:{'height':'120px', 'background-color':"#CC2288"},
+        },
+
+        // The Basic Tree buyables (v0.8 Full)
+        45: {
+            title: "Basic: Cheapener",
+            cost(x){ return Decimal.pow(14, x).times(25) },
+            effect(x){ return Decimal.pow(2.2, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x cheapness" },
+            unlocked(){ return hasUpgrade('u', 42) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.basic) player.u.basic.cheapeners=player.u.basic.cheapeners.add(1); },
+            style:{'height':'120px', 'background-color':"#446688"},
+        },
+        46: {
+            title: "Basic: Darkness Amp",
+            cost(x){ return Decimal.pow(26, x).times(80) },
+            effect(x){ return Decimal.pow(3.2, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x darkness" },
+            unlocked(){ return hasUpgrade('u', 42) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.basic) player.u.basic.darkness=player.u.basic.darkness.add(1); },
+            style:{'height':'120px', 'background-color':"#222244"},
+        },
+        47: {
+            title: "Basic: Exponent Bolt",
+            cost(x){ return Decimal.pow(45, x).times(220) },
+            effect(x){ return Decimal.pow(5, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x exponents" },
+            unlocked(){ return hasUpgrade('u', 42) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.basic) player.u.basic.exponents=player.u.basic.exponents.add(1); },
+            style:{'height':'120px', 'background-color':"#111122"},
+        },
+
+        // The Milestone Tree buyables (v0.8 Full)
+        51: {
+            title: "Miletree: Prestige",
+            cost(x){ return Decimal.pow(20, x).times(50) },
+            effect(x){ return Decimal.pow(3, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x mini-milestones" },
+            unlocked(){ return hasUpgrade('u', 43) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.miletree) player.u.miletree.prestige=player.u.miletree.prestige.add(1); },
+            style:{'height':'120px', 'background-color':"#66AA44"},
+        },
+        52: {
+            title: "Miletree: Super Prestige",
+            cost(x){ return Decimal.pow(38, x).times(150) },
+            effect(x){ return Decimal.pow(4.5, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x super prestige" },
+            unlocked(){ return hasUpgrade('u', 43) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.miletree) player.u.miletree.superPrestige=player.u.miletree.superPrestige.add(1); },
+            style:{'height':'120px', 'background-color':"#448822"},
+        },
+
+        // The Galaxy Tree buyables (v0.8 Full)
+        111: {
+            title: "Galaxy: Star Core",
+            cost(x){ return Decimal.pow(22, x).times(60) },
+            effect(x){ return Decimal.pow(3.6, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x starlight" },
+            unlocked(){ return hasUpgrade('u', 61) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.galaxy) player.u.galaxy.stars=player.u.galaxy.stars.add(1); },
+            style:{'height':'120px', 'background-color':"#5555CC"},
+        },
+        112: {
+            title: "Galaxy: Galactic Engine",
+            cost(x){ return Decimal.pow(44, x).times(180) },
+            effect(x){ return Decimal.pow(5.5, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x gravity" },
+            unlocked(){ return hasUpgrade('u', 61) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.galaxy) player.u.galaxy.points=player.u.galaxy.points.add(1); },
+            style:{'height':'120px', 'background-color':"#3333AA"},
+        },
+
+        // Synergism buyables (v0.8 Full)
+        121: {
+            title: "Synergism: Synergy Node",
+            cost(x){ return Decimal.pow(25, x).times(70) },
+            effect(x){ return Decimal.pow(4, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x synergy" },
+            unlocked(){ return hasUpgrade('u', 62) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.synergism) player.u.synergism.nodes=player.u.synergism.nodes.add(1); },
+            style:{'height':'120px', 'background-color':"#CC4488"},
+        },
+        122: {
+            title: "Synergism: Synergic Overlord",
+            cost(x){ return Decimal.pow(50, x).times(250) },
+            effect(x){ return Decimal.pow(6, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x overlordship" },
+            unlocked(){ return hasUpgrade('u', 62) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.synergism) player.u.synergism.points=player.u.synergism.points.add(1); },
+            style:{'height':'120px', 'background-color':"#992266"},
+        },
+
+        // The Circuit Tree buyables (v0.8 Full)
+        131: {
+            title: "Circuit: Volt Coil",
+            cost(x){ return Decimal.pow(28, x).times(80) },
+            effect(x){ return Decimal.pow(4.2, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x voltage" },
+            unlocked(){ return hasUpgrade('u', 63) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.circuit) player.u.circuit.volts=player.u.circuit.volts.add(1); },
+            style:{'height':'120px', 'background-color':"#88AA22"},
+        },
+        132: {
+            title: "Circuit: Quantum Circuit",
+            cost(x){ return Decimal.pow(55, x).times(300) },
+            effect(x){ return Decimal.pow(6.5, x) },
+            display(){ let d=tmp[this.layer].buyables[this.id]; return "Cost: "+format(d.cost)+" U<br>Lvl: "+formatWhole(player.u.buyables[this.id])+"<br>Eff: "+format(d.effect)+"x current" },
+            unlocked(){ return hasUpgrade('u', 63) },
+            canAfford(){ return player.u.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy(){ player.u.points=player.u.points.sub(tmp[this.layer].buyables[this.id].cost); setBuyableAmount(this.layer,this.id,getBuyableAmount(this.layer,this.id).add(1)); if(player.u.circuit) player.u.circuit.points=player.u.circuit.points.add(1); },
+            style:{'height':'120px', 'background-color':"#557711"},
+        },
+
         // Multiverse Core
         31: {
             title: "Multiverse Core",
@@ -633,6 +864,51 @@ addLayer("u", {
             style(){ return {'background-color': player.u.activeUniverse==="ng" ? "#00aa00" : "#005522", 'height':'100px'}},
             unlocked(){ return hasUpgrade('u',55)},
         },
+        22: {
+            title: "Travel: The Galaxy Tree",
+            display(){ return player.u.activeUniverse==="galaxy" ? "<b>ACTIVE</b><br>The Galaxy Tree<br>Bonus: x3.4" : "Travel to<br><b>The Galaxy Tree</b><br>Cost: 6 U<br>Bonus: x3.4" },
+            canClick(){ return player.u.points.gte(6) && player.u.activeUniverse !== "galaxy" && (player.u.travelCooldown||0)<=0 },
+            onClick(){
+                if(player.u.points.gte(6)){
+                    player.u.points = player.u.points.sub(6);
+                    player.u.activeUniverse = "galaxy";
+                    player.u.travelCooldown = 5;
+                    doPopup("none","Traveled to The Galaxy Tree! Point gain x3.4","Universe Shift",3,"#6666FF");
+                }
+            },
+            style(){ return {'background-color': player.u.activeUniverse==="galaxy" ? "#00aa00" : "#222266", 'height':'100px'}},
+            unlocked(){ return hasUpgrade('u',61)},
+        },
+        23: {
+            title: "Travel: Synergism",
+            display(){ return player.u.activeUniverse==="synergism" ? "<b>ACTIVE</b><br>Synergism<br>Bonus: x3.6" : "Travel to<br><b>Synergism</b><br>Cost: 8 U<br>Bonus: x3.6" },
+            canClick(){ return player.u.points.gte(8) && player.u.activeUniverse !== "synergism" && (player.u.travelCooldown||0)<=0 },
+            onClick(){
+                if(player.u.points.gte(8)){
+                    player.u.points = player.u.points.sub(8);
+                    player.u.activeUniverse = "synergism";
+                    player.u.travelCooldown = 5;
+                    doPopup("none","Traveled to Synergism! Point gain x3.6","Universe Shift",3,"#FF66AA");
+                }
+            },
+            style(){ return {'background-color': player.u.activeUniverse==="synergism" ? "#00aa00" : "#662244", 'height':'100px'}},
+            unlocked(){ return hasUpgrade('u',62)},
+        },
+        24: {
+            title: "Travel: The Circuit Tree",
+            display(){ return player.u.activeUniverse==="circuit" ? "<b>ACTIVE</b><br>The Circuit Tree<br>Bonus: x3.8" : "Travel to<br><b>The Circuit Tree</b><br>Cost: 10 U<br>Bonus: x3.8" },
+            canClick(){ return player.u.points.gte(10) && player.u.activeUniverse !== "circuit" && (player.u.travelCooldown||0)<=0 },
+            onClick(){
+                if(player.u.points.gte(10)){
+                    player.u.points = player.u.points.sub(10);
+                    player.u.activeUniverse = "circuit";
+                    player.u.travelCooldown = 5;
+                    doPopup("none","Traveled to The Circuit Tree! Point gain x3.8","Universe Shift",3,"#AAFF66");
+                }
+            },
+            style(){ return {'background-color': player.u.activeUniverse==="circuit" ? "#00aa00" : "#445522", 'height':'100px'}},
+            unlocked(){ return hasUpgrade('u',63)},
+        },
     },
     challenges: {
         11: {
@@ -661,9 +937,20 @@ addLayer("u", {
         3: { requirementDescription: "20 universe points", effectDescription: "Gain 10% universe passively, keep buyables", done(){ return player.u.best.gte(20)}, unlocked(){return hasMilestone('u',2)} },
         4: { requirementDescription: "50 universe points", effectDescription: "Travel cooldown halved (5s → 2.5s)", done(){ return player.u.best.gte(50)}, unlocked(){return hasMilestone('u',3)} },
         5: { requirementDescription: "100 universe points", effectDescription: "Omniversal Link: All universe buyables ^1.2", done(){ return player.u.best.gte(100)}, unlocked(){return hasMilestone('u',4)} },
+        6: { requirementDescription: "1,000 universe points", effectDescription: "Active universe bonus +0.5", done(){ return player.u.best.gte(1000)}, unlocked(){return hasMilestone('u',5)} },
+        7: { requirementDescription: "10,000 universe points", effectDescription: "Active universe bonus x2", done(){ return player.u.best.gte(10000)}, unlocked(){return hasMilestone('u',6)} },
     },
     update(diff){
         if(player.u.travelCooldown>0) player.u.travelCooldown = Math.max(0, player.u.travelCooldown - diff);
+        // Passive universe generation (upgrade 13: 10%/s, milestone 3: +10%/s)
+        let rate = 0;
+        if (hasUpgrade('u', 13)) rate += 0.1;
+        if (hasMilestone('u', 3)) rate += 0.1;
+        if (rate > 0 && tmp.u && tmp.u.resetGain instanceof Decimal && tmp.u.resetGain.gte(1)) {
+            player.u.points = player.u.points.add(tmp.u.resetGain.times(rate).times(diff));
+            player.u.best = player.u.best.max(player.u.points);
+            player.u.total = player.u.total.add(tmp.u.resetGain.times(rate).times(diff));
+        }
     },
     microtabs: {
         universes: {
@@ -675,7 +962,9 @@ addLayer("u", {
                     "blank",
                     ["row", [["clickable",17],["clickable",18],["clickable",19],["clickable",20],["clickable",21]]],
                     "blank",
-                    ["display-text", function(){ return "Travel costs Universe Points and switches your active bonus. Each universe's buyables are <i>ported from the original game's code</i>."}],
+                    ["row", [["clickable",22],["clickable",23],["clickable",24]]],
+                    "blank",
+                    ["display-text", function(){ return "Travel costs Universe Points and switches your active bonus. Each universe's buyables are <i>ported from the original game's code</i>. New in v0.8 Full: <b>The Galaxy Tree, Synergism, and The Circuit Tree!</b>"}],
                     "blank",
                     ["infobox","lore"],
                     "blank",
@@ -752,13 +1041,83 @@ addLayer("u", {
                     ["row", [["buyable",101],["buyable",102]]],
                 ]
             },
+            "demo": {
+                content: [
+                    ["infobox","demoLore"],
+                    "blank",
+                    ["display-text", function(){ return "Demo Progress: "+formatWhole(player.u.demo ? player.u.demo.points : 0)+" Candies"}],
+                    ["bar","demoProgress"],
+                    "blank",
+                    ["row", [["buyable",41],["buyable",42]]],
+                ]
+            },
+            "incrementverse": {
+                content: [
+                    ["infobox","incrementLore"],
+                    "blank",
+                    ["display-text", function(){ return "Incrementreeverse Progress: "+formatWhole(player.u.incrementverse ? player.u.incrementverse.points : 0)+" Points"}],
+                    ["bar","incrementProgress"],
+                    "blank",
+                    ["row", [["buyable",43],["buyable",44]]],
+                ]
+            },
+            "basic": {
+                content: [
+                    ["infobox","basicLore"],
+                    "blank",
+                    ["display-text", function(){ return "Basic Tree Progress: "+formatWhole(player.u.basic ? player.u.basic.points : 0)+" Points"}],
+                    ["bar","basicProgress"],
+                    "blank",
+                    ["row", [["buyable",45],["buyable",46],["buyable",47]]],
+                ]
+            },
+            "miletree": {
+                content: [
+                    ["infobox","miletreeLore"],
+                    "blank",
+                    ["display-text", function(){ return "Miletree Progress: "+formatWhole(player.u.miletree ? player.u.miletree.points : 0)+" Points"}],
+                    ["bar","miletreeProgress"],
+                    "blank",
+                    ["row", [["buyable",51],["buyable",52]]],
+                ]
+            },
+            "galaxy": {
+                content: [
+                    ["infobox","galaxyLore"],
+                    "blank",
+                    ["display-text", function(){ return "Galaxy Progress: "+formatWhole(player.u.galaxy ? player.u.galaxy.points : 0)+" | Stars: "+formatWhole(player.u.galaxy ? player.u.galaxy.stars : 0)}],
+                    ["bar","galaxyProgress"],
+                    "blank",
+                    ["row", [["buyable",111],["buyable",112]]],
+                ]
+            },
+            "synergism": {
+                content: [
+                    ["infobox","synergismLore"],
+                    "blank",
+                    ["display-text", function(){ return "Synergism Progress: "+formatWhole(player.u.synergism ? player.u.synergism.points : 0)+" | Nodes: "+formatWhole(player.u.synergism ? player.u.synergism.nodes : 0)}],
+                    ["bar","synergismProgress"],
+                    "blank",
+                    ["row", [["buyable",121],["buyable",122]]],
+                ]
+            },
+            "circuit": {
+                content: [
+                    ["infobox","circuitLore"],
+                    "blank",
+                    ["display-text", function(){ return "Circuit Progress: "+formatWhole(player.u.circuit ? player.u.circuit.points : 0)+" | Volts: "+formatWhole(player.u.circuit ? player.u.circuit.volts : 0)}],
+                    ["bar","circuitProgress"],
+                    "blank",
+                    ["row", [["buyable",131],["buyable",132]]],
+                ]
+            },
         },
     },
     tabFormat: {
         "Multiverse": {
             content: [
                 "main-display",
-                ["display-text", function(){ return tmp.u.prestigeButtonText}],
+                "prestige-button",
                 "blank",
                 "resource-display",
                 "blank",

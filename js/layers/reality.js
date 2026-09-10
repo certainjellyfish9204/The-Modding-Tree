@@ -153,6 +153,27 @@ addLayer("r", {
             cost: new Decimal(100),
             unlocked() { return hasUpgrade("r", 33) },
         },
+        // Row 4 — Reality Mastery (v0.8 Full)
+        41: {
+            title: "Hyperstability",
+            description: "Reality effect ^1.3.",
+            cost: new Decimal(250),
+            unlocked() { return hasUpgrade("r", 34) },
+        },
+        42: {
+            title: "Resonant Collapse",
+            description: "Reality Shards boost Singularity gain.",
+            cost: new Decimal(600),
+            effect() { return player.r.points.add(1).pow(0.15) },
+            effectDisplay() { return format(this.effect()) + "x S gain" },
+            unlocked() { return hasUpgrade("r", 41) },
+        },
+        43: {
+            title: "Stability Overload",
+            description: "Stability cap raised to 1,000 and each point of Stability is stronger.",
+            cost: new Decimal(1500),
+            unlocked() { return hasUpgrade("r", 42) },
+        },
     },
 
     buyables: {
@@ -211,7 +232,8 @@ addLayer("r", {
             title: "Stabilize Reality",
             display() { return "Convert 1 Eternity Point into 1 Stability.<br>Stability: "+formatWhole(player.r.stability)+"<br>Each Stability strengthens the Reality effect." },
             unlocked() { return hasUpgrade("r", 14) },
-            canClick() { return player.e.points.gte(1) && player.r.stability.lt(100) },
+            canClick() { return player.e.points.gte(1) && player.r.stability.lt(this.maxStab()) },
+            maxStab() { return hasUpgrade("r", 43) ? 1000 : (hasUpgrade("r", 33) ? 500 : 100) },
             onClick() {
                 player.e.points = player.e.points.sub(1)
                 player.r.stability = player.r.stability.add(1).min(100)
@@ -288,7 +310,7 @@ addLayer("r", {
     },
     tabFormat: {
         "Reality": {
-            content: ["main-display", ["display-text", function() { return tmp.r.prestigeButtonText }], "blank", "resource-display", "blank", ["infobox", "lore"], "blank", ["bar", "realityBar"], "blank", "milestones", "blank", "upgrades"],
+            content: ["main-display", "prestige-button", "blank", "resource-display", "blank", ["infobox", "lore"], "blank", ["bar", "realityBar"], "blank", "milestones", "blank", "upgrades"],
         },
         "Stability": {
             content: ["main-display", ["bar", "stabilityBar"], "blank", "clickables", "blank", "buyables"],
@@ -307,6 +329,8 @@ addLayer("r", {
             if (hasMilestone("r", 1)) keep.push("upgrades")
             if (hasMilestone("r", 2)) keep.push("milestones", "buyables")
             if (hasMilestone("r", 3)) keep.push("stability")
+            // Finality milestone 0: the Reality branch is woven into Finality and survives ascension
+            if (hasMilestone("f", 0)) keep.push("upgrades", "milestones", "buyables", "points", "best", "total", "stability")
             layerDataReset("r", keep)
         }
     },

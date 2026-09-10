@@ -49,6 +49,8 @@ addLayer("o", {
         if (hasUpgrade('o', 11)) mult = mult.times(upgradeEffect('o', 11))
         if (hasUpgrade('o', 13)) mult = mult.times(2.5)
         if (hasUpgrade('o', 22)) mult = mult.times(buyableEffect('o', 12))
+        if (hasUpgrade('o', 51)) mult = mult.times(10)
+        if (hasUpgrade('o', 53) && tmp.o && tmp.o.buyables && tmp.o.buyables[16]) mult = mult.times(buyableEffect('o', 16))
         if (hasChallenge('o', 13)) mult = mult.times(3)
         if (player.o.syntheses >= 10) mult = mult.times(2)
         return mult
@@ -66,6 +68,7 @@ addLayer("o", {
         if (hasUpgrade('o', 12)) eff = eff.pow(1.5)
         if (hasUpgrade('o', 22)) eff = eff.times(buyableEffect('o', 11))
         if (hasUpgrade('o', 33)) eff = eff.pow(1.3)
+        if (hasUpgrade('o', 53)) eff = eff.pow(1.2)
         if (hasChallenge('o', 11)) eff = eff.times(100)
         if (player.o.pulseTimer > 0) eff = eff.times(10)
         // Softcap at 1e2000
@@ -230,11 +233,35 @@ addLayer("o", {
             cost: new Decimal(250),
             unlocked() { return hasUpgrade('o', 42) },
         },
+        // Row 5 — The Final Horizon (v0.8 Full)
+        51: {
+            title: "Final Horizon",
+            description: "Omniverse gain x10. The edge of the Omniverse comes into view...",
+            cost: new Decimal(400),
+            unlocked() { return hasUpgrade('o', 43) },
+        },
+        52: {
+            title: "Transfinite Matrix",
+            description: "Omni-Matrix effect ^1.25.",
+            cost: new Decimal(700),
+            unlocked() { return hasUpgrade('o', 51) },
+        },
+        53: {
+            title: "Omega Paragon",
+            description: "Omniverse effect ^1.2, unlock the Omega Reactor & Transfinite Loom, and all active universe bonuses +2.",
+            cost: new Decimal(1200),
+            unlocked() { return hasUpgrade('o', 52) },
+        },
     },
     buyables: {
         11: {
             title: "Cosmic Synthesizer",
-            cost(x) { return Decimal.pow(2, x).times(2) },
+            cost(x) {
+                let c = Decimal.pow(2, x).times(2)
+                if (hasMilestone('o', 6)) c = c.div(10)
+                if (player.f && hasUpgrade('f', 42)) c = c.div(10)
+                return c
+            },
             effect(x) {
                 let eff = Decimal.pow(1e10, x)
                 if (hasUpgrade('o', 33)) eff = eff.pow(1.5)
@@ -256,7 +283,12 @@ addLayer("o", {
         },
         12: {
             title: "Dimensional Loom",
-            cost(x) { return Decimal.pow(2.5, x).times(3) },
+            cost(x) {
+                let c = Decimal.pow(2.5, x).times(3)
+                if (hasMilestone('o', 6)) c = c.div(10)
+                if (player.f && hasUpgrade('f', 42)) c = c.div(10)
+                return c
+            },
             effect(x) {
                 let eff = Decimal.pow(2, x)
                 return eff
@@ -277,7 +309,12 @@ addLayer("o", {
         },
         13: {
             title: "Chrono-Nexus",
-            cost(x) { return Decimal.pow(3, x).times(5) },
+            cost(x) {
+                let c = Decimal.pow(3, x).times(5)
+                if (hasMilestone('o', 6)) c = c.div(10)
+                if (player.f && hasUpgrade('f', 42)) c = c.div(10)
+                return c
+            },
             effect(x) { return Decimal.pow(1.5, x) },
             display() {
                 let d = tmp[this.layer].buyables[this.id]
@@ -295,7 +332,12 @@ addLayer("o", {
         },
         14: {
             title: "Infinity Engine",
-            cost(x) { return Decimal.pow(4, x).times(10) },
+            cost(x) {
+                let c = Decimal.pow(4, x).times(10)
+                if (hasMilestone('o', 6)) c = c.div(10)
+                if (player.f && hasUpgrade('f', 42)) c = c.div(10)
+                return c
+            },
             effect(x) { return new Decimal(1).add(x.times(0.05)) },
             display() {
                 let d = tmp[this.layer].buyables[this.id]
@@ -310,6 +352,50 @@ addLayer("o", {
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             style: { 'height': '130px', 'background-color': "#332200" },
+        },
+        15: {
+            title: "Omega Reactor",
+            cost(x) {
+                let c = Decimal.pow(5, x).times(20)
+                if (player.f && hasUpgrade('f', 42)) c = c.div(10)
+                return c
+            },
+            effect(x) { return Decimal.pow(1e50, x) },
+            display() {
+                let d = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(d.cost) + " omniverse energy<br>Amount: " + formatWhole(player.o.buyables[this.id]) +
+                    "<br>Effect: " + format(d.effect) + "x to all point gains"
+            },
+            unlocked() { return hasUpgrade('o', 53) },
+            canAfford() { return player.o.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy() {
+                let c = tmp[this.layer].buyables[this.id].cost
+                player.o.points = player.o.points.sub(c)
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: { 'height': '130px', 'background-color': "#004433" },
+        },
+        16: {
+            title: "Transfinite Loom",
+            cost(x) {
+                let c = Decimal.pow(8, x).times(50)
+                if (player.f && hasUpgrade('f', 42)) c = c.div(10)
+                return c
+            },
+            effect(x) { return Decimal.pow(3, x) },
+            display() {
+                let d = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(d.cost) + " omniverse energy<br>Amount: " + formatWhole(player.o.buyables[this.id]) +
+                    "<br>Effect: " + format(d.effect) + "x to Omniverse Energy gain"
+            },
+            unlocked() { return hasUpgrade('o', 53) },
+            canAfford() { return player.o.points.gte(tmp[this.layer].buyables[this.id].cost) },
+            buy() {
+                let c = tmp[this.layer].buyables[this.id].cost
+                player.o.points = player.o.points.sub(c)
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            style: { 'height': '130px', 'background-color': "#112233" },
         },
     },
     clickables: {
@@ -399,6 +485,14 @@ addLayer("o", {
             canComplete() { return player.points.gte("1e300") },
             rewardDescription: "Point gain multiplied by 1e100x and achieve TRANSCENDENT VICTORY.",
             unlocked() { return hasChallenge('o', 13) },
+        },
+        15: {
+            name: "Final Omega",
+            challengeDescription: "Everything is powered to ^0.001. Point gain ^0.01. Beyond the Grand Omega lies only this.",
+            goalDescription: "Reach 1e500 points",
+            canComplete() { return player.points.gte("1e500") },
+            rewardDescription: "Finality gain exponent +25%.",
+            unlocked() { return hasChallenge('o', 14) },
         },
     },
     milestones: {
@@ -497,6 +591,7 @@ addLayer("o", {
             else if (tier === 4) mult = mult.times(1e25)
         }
         if (hasUpgrade('o', 33)) mult = mult.pow(1.5)
+        if (hasUpgrade('o', 52)) mult = mult.pow(1.25)
         return mult
     },
     update(diff) {
@@ -512,8 +607,12 @@ addLayer("o", {
             let rate = player.o.points.add(1).pow(0.5)
             if (hasChallenge('o', 12)) rate = rate.times(3)
             if (hasUpgrade('o', 34)) rate = rate.times(10)
+            if (hasUpgrade('f', 14)) rate = rate.times(25)   // Finality: Omniverse Nexus
             if (hasUpgrade('o', 22) && tmp.o && tmp.o.buyables && tmp.o.buyables[13]) {
                 rate = rate.times(buyableEffect('o', 13))
+            }
+            if (hasUpgrade('f', 41) && tmp.f && tmp.f.buyables && tmp.f.buyables[13]) {
+                try { rate = rate.times(buyableEffect('f', 13)) } catch (e) {}
             }
             tmp.o.fieldRate = rate
             player.o.field = player.o.field.add(rate.times(diff))
@@ -549,7 +648,7 @@ addLayer("o", {
         "Omniverse": {
             content: [
                 "main-display",
-                ["display-text", function() { return tmp.o.prestigeButtonText }],
+                "prestige-button",
                 "blank",
                 "resource-display",
                 "blank",
@@ -610,10 +709,12 @@ addLayer("o", {
                     txt += "Total Matrix Syntheses: " + player.o.syntheses + "<br>"
                     txt += "Matrix Multiplier: " + format(layers.o.getGridEffect()) + "x<br>"
                     txt += "Omniverse Total Multiplier: " + format(tmp.o.effect) + "x<br><br>"
-                    txt += "<b>The 12 Multiverse Realms:</b><br>"
+                    txt += "<b>The 15 Multiverse Realms:</b><br>"
                     txt += "1. Classic (1.0) | 2. Rewritten (PT:R) | 3. TMT Demo | 4. Incrementreeverse<br>"
                     txt += "5. Classic+ Hub | 6. The Basic Tree | 7. The Milestone Tree | 8. PT: Dimensions<br>"
                     txt += "9. Particle Increment Tree | 10. The Pro Tree | 11. The Dice Tree | 12. PT: Rewritten NG+<br>"
+                    txt += "13. The Galaxy Tree | 14. Synergism | 15. The Circuit Tree<br><br>"
+                    txt += "<i>Beyond all fifteen: <b>Finality (F)</b> — if you can reach 25 Omniverse Energy...</i>"
                     return txt
                 }]
             ]

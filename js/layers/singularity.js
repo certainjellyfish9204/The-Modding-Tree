@@ -208,6 +208,25 @@ addLayer("s2", {
             cost: new Decimal(200),
             unlocked() { return hasUpgrade('s2', 43) },
         },
+        // Row 5 — The Deep End (v0.8 Full)
+        51: {
+            title: "Eternal Collapse",
+            description: "Singularity effect ^1.5.",
+            cost: new Decimal(300),
+            unlocked() { return hasUpgrade('s2', 44) },
+        },
+        52: {
+            title: "Multiverse Overlord",
+            description: "Universe and Reality effects x25 each.",
+            cost: new Decimal(500),
+            unlocked() { return hasUpgrade('s2', 51) },
+        },
+        53: {
+            title: "Singularity Dominion",
+            description: "Singularity gain x10 and Collapse Grid effect ^1.5.",
+            cost: new Decimal(1000),
+            unlocked() { return hasUpgrade('s2', 52) },
+        },
     },
     buyables: {
         11: {
@@ -298,6 +317,14 @@ addLayer("s2", {
             canComplete() { return player.points.gte("1e120") },
             rewardDescription: "Keep ALL upgrades across all resets. Ultimate persistence.",
             unlocked() { return hasChallenge('s2', 12) },
+        },
+        22: {
+            name: "Rift Omega+",
+            challengeDescription: "ALL effects ^0.001. Point gain ^0.01. The rift beyond the rift.",
+            goalDescription: "Reach 1e250 points",
+            canComplete() { return player.points.gte("1e250") },
+            rewardDescription: "Singularity effect ^1.5, permanently.",
+            unlocked() { return hasChallenge('s2', 21) },
         },
     },
     milestones: {
@@ -420,7 +447,10 @@ addLayer("s2", {
         for (let k in grid) { if (grid[k] === 1) compressed++; if (grid[k] === 2) singulons++ }
         let mult = new Decimal(1)
         mult = mult.times(Decimal.pow(2, compressed))
-        mult = mult.times(Decimal.pow(hasUpgrade('s2', 32) ? 30 : 10, singulons))
+        let perSingulon = hasUpgrade('s2', 32) ? 30 : 10
+        if (hasUpgrade('s2', 41)) perSingulon = perSingulon * 2   // Singularity Expansion: Singulons give double bonus
+        mult = mult.times(Decimal.pow(perSingulon, singulons))
+        if (hasUpgrade('s2', 53)) mult = mult.pow(1.5)            // Singularity Dominion: grid effect ^1.5
         return mult
     },
     passiveGeneration() {
@@ -435,6 +465,8 @@ addLayer("s2", {
             if (hasMilestone('s2', 0)) keep.push("milestones")
             if (hasMilestone('s2', 2)) keep.push("buyables")
             if (hasChallenge('s2', 21)) keep.push("upgrades")
+            // Finality milestone 0: keep all Singularity progress on Finality resets
+            if (hasMilestone('f', 0)) keep.push("milestones", "upgrades", "buyables", "points", "best", "total", "field", "collapses")
             layerDataReset(this.layer, keep)
         }
     },
@@ -462,7 +494,7 @@ addLayer("s2", {
         "Main": {
             content: [
                 "main-display",
-                ["display-text", function() { return tmp.s2.prestigeButtonText }],
+                "prestige-button",
                 "blank",
                 "resource-display",
                 "blank",
