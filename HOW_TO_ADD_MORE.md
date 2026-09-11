@@ -194,6 +194,27 @@ Row resets: Row 2 resets Row 0+1, Row 3 resets Row 2, etc. `doReset` in each lay
 19. Add `displayThings` at top: show current best hyper gain
 20. Add `branches` colors: `[["b","#FF8800"]]` for orange lines
 
+## 6b. Adding a Universe: the Bridge Checklist
+
+A new realm in `js/technical/transport.js` is only half the job. If the tree is
+vendored (a real game under `trees/`), also register it in `MULTIVERSE.REALMS`
+in `js/technical/multiverse.js`:
+
+```js
+{ key: "mytree", label: "My Tree", save: "cpt_mytree", probe: ["points", "p.points"] },
+```
+
+- `save` **must** equal the vendored copy's `modInfo.id` (or the literal it passes to
+  `localStorage.setItem`). `test/multiverse_bridge_test.js` fails the build if it drifts,
+  which is the difference between "x1.0 boost" and a silently dead button.
+- `probe` is optional: with no paths the digest sweeps any `{ <layer>: { points } }`
+  object anyway, which covers most TMT forks.
+- Set `packed: true` only if the tree gzips its save (`formatsave`) — the bridge then
+  decodes it asynchronously and shows "no signal" on browsers without
+  `DecompressionStream`.
+- Give the copy its own `cpt_*` id, or it will clobber another tree's save on this
+  origin. See `trees/README.md`.
+
 ## 7. How to Test & Share
 
 - **Local:** Just open `index.html` in Chrome/Firefox. Hit F12 if something breaks — console tells you line.

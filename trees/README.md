@@ -57,6 +57,13 @@ which each tree vendors its own copy of.
 Everything else is untouched. Each modification is deliberate and necessary for the
 copies to coexist on one origin.
 
+> **v0.9 note:** the Universe Switcher (hard cut, swarm grid, save bridge) added **no
+> further edits**. The hub talks to each tree *from outside* — every copy is same-origin,
+> so `js/technical/multiverse.js` injects the ◀ RETURN pill into the child document and
+> calls the child's own global `save()` when it unloads a frame. There is deliberately no
+> `cpt-return.js` include in these `index.html` files: upstream stays byte-for-byte clean
+> apart from the two items below, so re-vendoring a newer commit stays a one-file diff.
+
 ### 1. Unique save keys (important)
 
 `localStorage` is scoped **per origin**, not per path. So every bundled tree shares

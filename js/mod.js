@@ -13,11 +13,18 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.8",
-	name: "The Omniverse & Finality — FULL RELEASE",
+	num: "0.9",
+	name: "The Universe Switcher",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h3>v0.9 — The Universe Switcher</h3><br>
+		- <b>TRANSPORT IS NOW A REAL TELEPORT.</b> The Multiverse Transport Terminal became a <b>UNIVERSE SWITCHER</b> (new microtab on the Multiverse row) with three view modes: <b>scan</b>, <b>reel</b> and <b>swarm</b>.<br>
+		- <b>Hard cut:</b> toggle it and teleporting parks the Classic+ hub entirely (invisible, unclickable — still ticking and still saving) and hands the whole viewport to the other tree, with a ◀ RETURN pill living inside that tree. <i>Esc</i> still works.<br>
+		- <b>Σ ALL:</b> the mass-transport action — every sourced tree mounted at once in the swarm grid, behind a cap you can raise (and a confirmation, because 11 engines on one main thread is exactly as heavy as it sounds).<br>
+		- <b>Multiverse Convergence (upgrade U-66):</b> the hub now reads each bundled game's <i>own</i> save off this origin and digests it — real progress inside PT: Rewritten, The Pro Tree, the Milestone Tree and the rest boosts the Universe effect by <b>+5%·√log₁₀(progress)</b> per realm, capped at x100 each. Playing the originals is finally optimal, not just sightseeing.<br>
+		- The hub stops printing raw save keys: realm names are labelled everywhere, and <i>no file under</i> <b>trees/</b> <i>was modified for this</i> — the bridge reaches into each same-origin frame at runtime.<br>
+		- <i>Also: Multiverse Scan (milestone 1) now describes a feature that exists, and</i> <code>test/multiverse_bridge_test.js</code> <i>+ </i><code>test/multiverse_dom_test.js</code> <i>cover the save-decoding formats, the bonus curve, the cap logic and the frame lifecycle.</i><br><br>
 	<h3>v0.8 FULL RELEASE — The Omniverse, Finality & The Fifteen Realms</h3><br>
 		- <b>NEW ROW 8: FINALITY (F)</b> — the layer beyond the Omniverse! Ascend with 25 Omniverse Energy and reach the <b>TRUE ENDING at 8 Finality</b>.<br>
 		- <b>Finality content:</b> 14 upgrades (ending in THE END AND THE BEGINNING), the Eternal Spire (4 buyables: Eternal Spire, Apotheosis Engine, Chronos Terminal, Absolute Core), permanent <b>Sigils of Power</b>, <b>The Final Trigger</b> (30s of 1e10x points), 8 milestones, and <b>4 Final Challenges</b> culminating in THE FINAL CHALLENGE.<br>

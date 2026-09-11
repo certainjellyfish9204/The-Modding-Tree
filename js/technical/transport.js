@@ -18,7 +18,22 @@
 //  unique `cpt_*` key, because localStorage is shared per-origin. Without
 //  this, PT: Rewritten and PT: Rewritten NG+ (both `ptr`) would overwrite
 //  each other's saves. Do not "restore" the original ids.
+//
+//  Two things were added since the first version, both driven from
+//  js/technical/multiverse.js:
+//    - TRANSPORT_OPT.cut ("hard cut"): the hub is parked (opacity 0, no pointer
+//      events — still ticking, still saving) and the bar is hidden, so the
+//      other tree owns the viewport outright.
+//    - MULTIVERSE.dressFrame(): every bundled tree is same-origin, so the hub
+//      injects a ◀ RETURN pill into the child's own document and calls the
+//      child's global save() before unloading. No file under trees/ is touched.
 // ============================================================================
+
+// Live options for the transport layer. multiverse.js writes to these.
+var TRANSPORT_OPT = {
+	cut: false,      // hard cut instead of overlay-with-bar
+	dress: true,     // inject a return pill inside the framed tree
+}
 
 var TRANSPORT_TREES = {
 	// ---- Real, vendored open-source trees ---------------------------------
@@ -225,6 +240,10 @@ function transportInjectStyles() {
 	}
 	#transportOverlay.tp-open { display: flex; }
 	#transportOverlay.tp-shown { opacity: 1; }
+	/* hard cut: no bar, the other tree owns the screen (its own ◀ RETURN pill
+	   comes from cpt-return.js, and Esc still works from the parent handler) */
+	#transportOverlay.tp-cut #transportBar { display: none; }
+	#transportOverlay.tp-cut ~ #transportPill { bottom: 12px; }
 
 	#transportBar {
 		flex: 0 0 auto; display: flex; align-items: center; gap: 8px;
@@ -327,7 +346,8 @@ function transportBoot() {
 		let t = TRANSPORT_TREES[transportState.key]
 		if (!t) return
 		// bust the iframe cache so a reload truly reloads
-		transportState.frame.src = t.url + (t.url.indexOf("?") === -1 ? "?" : "&") + "r=" + Date.now()
+		let base = transportFrameSrc(t)
+		transportState.frame.src = base + (base.indexOf("?") === -1 ? "?" : "&") + "r=" + Date.now()
 	}
 	root.querySelector("#transportNewTab").onclick = () => {
 		if (!transportState.key) return
@@ -341,6 +361,14 @@ function transportBoot() {
 		try {
 			transportState.frame.contentWindow.addEventListener("keydown", transportKeyHandler)
 		} catch (e) { /* cross-origin or not-ready; parent handler still works */ }
+		// Put a return pill inside the tree itself, when we can reach its DOM.
+		if (TRANSPORT_OPT.dress && typeof MULTIVERSE !== "undefined" && MULTIVERSE.dressFrame) {
+			MULTIVERSE.dressFrame(transportState.frame, {
+				label: "RETURN TO CLASSIC+",
+				hint: "You are playing another tree inside the Classic+ multiverse. The hub keeps running behind this frame.",
+				onReturn: function () { closeTransport() },
+			})
+		}
 	})
 
 	transportState.booted = true
@@ -356,7 +384,13 @@ function transportKeyHandler(e) {
 // ---------------------------------------------------------------------------
 //  Open / close
 // ---------------------------------------------------------------------------
-function openTransport(key) {
+function transportFrameSrc(t) {
+	if (!t || !t.url) return "about:blank"
+	return t.url
+}
+
+function openTransport(key, opts) {
+	opts = opts || {}
 	let t = TRANSPORT_TREES[key]
 	if (!t) { console.warn("openTransport: unknown tree '" + key + "'"); return }
 	if (!t.url) { transportNoSource(t); return }
@@ -370,8 +404,16 @@ function openTransport(key) {
 		(t.repo ? ` &nbsp;•&nbsp; <a href="${t.repo}" target="_blank" rel="noopener">source ↗</a>` : "")
 	transportState.newTabEl.style.display = t.url ? "" : "none"
 
-	if (transportState.frame.getAttribute("src") !== t.url) {
-		transportState.frame.src = t.url
+	// hard cut wins over the persisted toggle unless explicitly overridden
+	var cut = opts.cut === undefined ? TRANSPORT_OPT.cut : !!opts.cut
+	transportState.root.classList[cut ? "add" : "remove"]("tp-cut")
+	transportState.cut = cut
+	if (typeof MULTIVERSE !== "undefined" && MULTIVERSE.park) MULTIVERSE.park(cut)
+
+	let want = transportFrameSrc(t)
+	// compare ignoring the cache-buster we may have added on reload
+	if ((transportState.frame.getAttribute("src") || "").split("&r=")[0] !== want) {
+		transportState.frame.src = want
 	}
 
 	// Teleport flash
@@ -390,19 +432,34 @@ function openTransport(key) {
 	document.getElementById("transportPill").style.display = "block"
 	transportState.visible = true
 
-	doPopup && doPopup("none", "Transporting to <b>" + t.name + "</b>…", "Multiverse Transport", 2, t.color)
+	doPopup && doPopup("none",
+		(cut ? "Hub parked — " : "Transporting to ") + "<b>" + t.name + "</b>…" +
+		(cut ? "<br><small>The Classic+ Tree is invisible but still running and saving.</small>" : ""),
+		cut ? "Hard Cut" : "Multiverse Transport", cut ? 3 : 2, t.color)
 }
 
 function closeTransport() {
 	if (!transportState.booted) return
 	transportState.root.classList.remove("tp-shown")
 	transportState.visible = false
+	if (transportState.cut) {
+		transportState.root.classList.remove("tp-cut")
+		transportState.cut = false
+		if (typeof MULTIVERSE !== "undefined" && MULTIVERSE.park) MULTIVERSE.park(MULTIVERSE.open && MULTIVERSE.cut)
+	}
 	document.getElementById("transportPill").style.display = "none"
 	setTimeout(() => {
 		if (!transportState.visible) transportState.root.classList.remove("tp-open")
 	}, 290)
 	// NOTE: we deliberately do NOT clear the iframe src — the other tree keeps
 	// its state (and its own autosave) if you jump back in later.
+	// Ask it to write that save now, so the hub's scan sees current progress.
+	try {
+		if (typeof MULTIVERSE !== "undefined" && MULTIVERSE.flushChild) MULTIVERSE.flushChild(transportState.frame)
+	} catch (e) {}
+	if (typeof MULTIVERSE !== "undefined" && MULTIVERSE.dirty) {
+		setTimeout(() => { try { MULTIVERSE.scan(true) } catch (e) {} }, 350)
+	}
 }
 
 function transportNoSource(t) {
@@ -431,6 +488,17 @@ function transportButtonHTML(key, extra) {
 	}
 	let bg = t.real && !t.self ? "linear-gradient(135deg, " + t.color + ", #2a0055)" : "#333355"
 	let disabled = (!t.real || t.self) ? "tp-disabled" : ""
+	// If multiverse.js is loaded, show whether this realm has a *real* save on
+	// this origin — the same signal that feeds the Convergence bonus.
+	let bridge = ""
+	if (!t.self && t.real && typeof MULTIVERSE !== "undefined" && MULTIVERSE.record) {
+		let rec = MULTIVERSE.record(key)
+		if (rec) {
+			bridge = rec.found
+				? `<span style="color:#8dffb0">◉ real save seen</span> · ${typeof MULTIVERSE.fmtLog === "function" ? MULTIVERSE.fmtLog(rec.log) : ""}`
+				: `<span style="color:#ff8899">○ no save on this origin yet</span>`
+		}
+	}
 	return `<div class="tp-transport-wrap" style="margin-top:8px">
 		<div class="tp-transport-btn ${disabled}" data-transport="${key}" style="
 			display:inline-block; cursor:${(!t.real || t.self) ? "default" : "pointer"};
@@ -440,7 +508,7 @@ function transportButtonHTML(key, extra) {
 			opacity:${(!t.real || t.self) ? 0.55 : 1}; transition:transform .12s;">
 			${label}
 		</div>
-		<div style="font-size:11px; color:#bbb; margin-top:3px">${sub}${extra ? " &nbsp;•&nbsp; " + extra : ""}</div>
+		<div style="font-size:11px; color:#bbb; margin-top:3px">${sub}${extra ? " &nbsp;•&nbsp; " + extra : ""}${bridge ? "<br>" + bridge : ""}</div>
 	</div>`
 }
 

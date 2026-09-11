@@ -4,7 +4,32 @@
 //  Clones located at /tmp/PT-Classic, /tmp/PT-Rewritten, /tmp/The-Basic-Tree,
 //  /tmp/Incrementreeverse, /tmp/PT-Dimensions, /tmp/The-Particle-Tree,
 //  /tmp/The-Pro-Tree, /tmp/The-Dice-Tree, /tmp/PT-Rewritten-NG.
+//
+//  v0.9: the transport terminal became a full UNIVERSE SWITCHER (scan / reel /
+//  swarm) and the vendored trees now feed back into this layer through the
+//  Multiverse Convergence bonus — see js/technical/multiverse.js.
 // ============================================================================
+
+// Display names for every realm. Keys match TRANSPORT_TREES in
+// js/technical/transport.js, so the raw save key never leaks into the UI again.
+var UNIVERSE_LABELS = {
+    classicPlus: "Classic+ Hub",
+    classic: "Classic 1.0",
+    rewritten: "PT: Rewritten",
+    ng: "PT: Rewritten NG+",
+    demo: "TMT Demo",
+    incrementverse: "Incrementreeverse",
+    basic: "The Basic Tree",
+    miletree: "The Milestone Tree",
+    dimensions: "PT: Dimensions",
+    particles: "The Particle Tree",
+    pro: "The Pro Tree",
+    dice: "The Dice Tree",
+    galaxy: "The Galaxy Tree",
+    synergism: "Synergism",
+    circuit: "The Circuit Tree",
+}
+function universeLabel(key) { return UNIVERSE_LABELS[key] || key }
 
 addLayer("u", {
     name: "multiverse",
@@ -144,27 +169,28 @@ addLayer("u", {
         if (player.u.dice && player.u.dice.points.gt(0)) eff = eff.times(player.u.dice.points.add(1).pow(0.15));
         if (player.u.ng && player.u.ng.points.gt(0)) eff = eff.times(player.u.ng.points.add(1).pow(0.18));
 
+        // Multiverse Convergence (upgrade 66): the REAL progress saved inside the
+        // bundled trees feeds back in. multiverse.js reads each tree's own save
+        // key off this origin's localStorage and caches the digest, so this costs
+        // nothing per tick and never touches localStorage from the game loop.
+        if (hasUpgrade('u', 66) && typeof MULTIVERSE !== "undefined" && MULTIVERSE.bonusDecimal) {
+            eff = eff.times(MULTIVERSE.bonusDecimal());
+        }
+
         if (eff.gte("1e100")) eff = eff.div("1e100").pow(0.5).times("1e100");
         return eff;
     },
     effectDescription() {
         let active = player.u.activeUniverse;
-        const nameMap = {
-            "classic": "Classic 1.0",
-            "rewritten": "PT: Rewritten",
-            "demo": "TMT Demo",
-            "incrementverse": "Incrementreeverse",
-            "basic": "The Basic Tree",
-            "miletree": "The Milestone Tree",
-            "dimensions": "PT: Dimensions",
-            "particles": "The Particle Increment Tree",
-            "pro": "The Pro Tree",
-            "dice": "The Dice Tree",
-            "ng": "PT: Rewritten NG+",
-            "classicPlus": "Classic+ Hub",
-        };
-        let name = nameMap[active] || "Hub";
-        return "which boost ALL points by "+format(tmp.u.effect)+"x<br>Active Universe: <b>"+name+"</b>"
+        let name = universeLabel(active);
+        let out = "which boost ALL points by "+format(tmp.u.effect)+"x<br>Active Universe: <b>"+name+"</b>";
+        if (hasUpgrade('u', 66) && typeof MULTIVERSE !== "undefined" && MULTIVERSE.bonus) {
+            let b = MULTIVERSE.bonus();
+            out += "<br>Multiverse Convergence: <b>x"+format(b.mult)+"</b> from "
+                + b.hit + " real save" + (b.hit === 1 ? "" : "s")
+                + " in the bundled trees";
+        }
+        return out;
     },
     prestigeButtonText() {
         let gain = (tmp.u && tmp.u.resetGain instanceof Decimal) ? tmp.u.resetGain : getResetGain(this.layer);
@@ -343,6 +369,8 @@ addLayer("u", {
         63: { description: "Unlock The Circuit Tree universe.", cost: new Decimal(50000), unlocked(){ return hasUpgrade('u',62)} },
         64: { description: "Universe effect ^1.15.", cost: new Decimal(75000), unlocked(){ return hasUpgrade('u',63)} },
         65: { description: "Active universe bonus ^1.5.", cost: new Decimal(100000), unlocked(){ return hasUpgrade('u',64)} },
+        // Row 6 — Multiverse Convergence (v0.9): makes the *real* games pay back
+        66: { description: "Multiverse Convergence: each bundled tree you actually play boosts the Universe effect by +5%\u00b7\u221alog\u2081\u2080(progress), up to x100 per realm.", cost: new Decimal(150000), unlocked(){ return hasUpgrade('u',65)} },
     },
     buyables: {
         // Classic buyables
@@ -956,7 +984,7 @@ addLayer("u", {
         universes: {
             "hub": {
                 content: [
-                    ["display-text", function(){ return "Active: <b>"+player.u.activeUniverse+"</b> | Cooldown: "+format(player.u.travelCooldown||0)+"s"}],
+                    ["display-text", function(){ return "Active: <b>"+universeLabel(player.u.activeUniverse)+"</b> | Cooldown: "+format(player.u.travelCooldown||0)+"s"}],
                     "blank",
                     ["row", [["clickable",11],["clickable",12],["clickable",13],["clickable",15],["clickable",16]]],
                     "blank",
@@ -968,10 +996,28 @@ addLayer("u", {
                     "blank",
                     ["display-text", function(){ return "<h3>⟡ MULTIVERSE TRANSPORT TERMINAL</h3>Click a realm to drop into the <b>full, playable original game</b>. Your Classic+ run keeps going while you're gone."}],
                     ["raw-html", function(){ return transportHubHTML() }],
+                    ["raw-html", function(){ return typeof multiverseTerminalHTML === "function" ? multiverseTerminalHTML() : "" }],
                     "blank",
                     ["display-text", function(){ return "<i>⟡ = full standalone game bundled with this repo &nbsp;•&nbsp; ⌂ = this tree &nbsp;•&nbsp; ∅ = original to Classic+, no separate source</i>"}],
                     "blank",
                     ["infobox","lore"],
+                    "blank",
+                    ["bar","universeBar"],
+                ]
+            },
+            "switcher": {
+                unlocked(){ return hasMilestone('u',1) || hasUpgrade('u',66) },
+                buttonStyle: {'border-color': '#FFD700'},
+                content: [
+                    ["display-text", function(){ return "<h3>\u26c1 UNIVERSE SWITCHER</h3>"
+                        + (typeof MULTIVERSE === "undefined"
+                            ? "<span style='color:#ff8899'>js/technical/multiverse.js failed to load.</span>"
+                            : "scan = every realm\u2019s real save, no extra engines &nbsp;\u2022&nbsp; reel = one live tree, cycling &nbsp;\u2022&nbsp; swarm = many live trees at once")}],
+                    ["raw-html", function(){ return typeof multiverseSwitcherHTML === "function" ? multiverseSwitcherHTML() : "" }],
+                    "blank",
+                    ["display-text", function(){ return hasUpgrade('u',66)
+                        ? "<i>Convergence is online: progress you make inside a bundled tree raises this layer\u2019s multiplier on its own merits.</i>"
+                        : "<i>Multiverse Convergence (upgrade U-66) makes these real saves pay off. The switcher works without it.</i>"}],
                     "blank",
                     ["bar","universeBar"],
                 ]
